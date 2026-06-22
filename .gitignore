@@ -4,6 +4,7 @@ Thumbs.db
 desktop.ini
 
 # Editor
+.claude/
 .vscode/
 .idea/
 *.swp
@@ -17,3 +18,5 @@ desktop.ini
 
 # Generated articles
 1.md
+2.md
+todolist.md
