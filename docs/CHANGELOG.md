@@ -2,7 +2,37 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
-## v1.0.1
+## v1.3.0
+
+### ClawHub 安全审计修复（2026-06-23）
+
+#### security 声明修正
+- SKILL.md frontmatter security 字段重写，精确描述"技能自身不发起网络请求 + 引导用户手动调 API"
+
+#### 子能力路由安全
+- `/qa-team` 子能力路由从"关键词→直接执行"改为"匹配→用户确认→执行"，消除 Vague Triggers 风险
+
+#### API 凭证安全
+- `/qa-report` 新增"API 安全注意事项"区块，含最小权限 Token、域名核实、Token 轮换、报告脱敏建议
+- Bash 执行步骤追加凭证安全操作提醒
+
+#### 文件上传敏感数据警告
+- `/qa-report` 文件数据源追加 ⚠️ 敏感数据提示
+
+#### 示例来源标注
+- `login-demo.md` 中 AI 补充的用例（TC04/TC05）标注 `[AI补充]` 来源，避免虚构需求误解
+
+#### Description 触发优化
+- SKILL.md description 从 60 字扩至 200 字，穷举 6 指令的自然语言触发场景，采用"pushy"策略提升 Claude 调起率
+- 新增「指令路由边界」表格，解决 5 组易混淆指令的选路问题
+
+#### Eval 测试集
+- 新增 `evals/trigger-eval.json`，38 条 trigger query（25 should-trigger + 10 should-not-trigger + 3 边界），用于验证 description 触发准确性
+
+#### 版本号统一
+- VERSION / SKILL.md / README.md / user-manual.md / CHANGELOG 等全部文件版本号统一为 v1.3.0
+
+## v1.2.0
 
 ### 总监视角优化（2026-06-22）
 

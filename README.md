@@ -2,7 +2,7 @@
 
 > 将 AI Agent 嵌入软件测试全流程的开源技能包 — 不是替代测试人员，是让测试团队拥有统一的 AI 辅助标准。
 
-[![Version](https://img.shields.io/badge/version-v1.2.0-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.3.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Claude%20Code-orange)](https://claude.ai/code)
 [![SkillHub](https://img.shields.io/badge/SkillHub-ready-brightgreen)](./SKILL.md)
@@ -215,7 +215,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.0.1**
+当前版本：**v1.3.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 
