@@ -1,6 +1,6 @@
 # qa-team-skills 使用手册
 
-> 版本：v1.3.0 | 6 大指令覆盖测试全流程 | 注入防护+自检+业务分层+安全审计修复+完整示例
+> 版本：v1.3.1 | 6 大指令覆盖测试全流程 | 注入防护+自检+业务分层+安全审计修复+完整示例
 
 ## 1. 技能简介
 
@@ -17,8 +17,35 @@
 
 ## 2. 安装
 
+qa-team-skills 是纯 Prompt 工程，无外部依赖。提供三种安装方式：
+
+### 方式一：手动复制（通用）
+
+| AI Agent | 全局安装路径 | 项目内路径 |
+|----------|-------------|-----------|
+| **Claude Code** | `~/.claude/skills/` | `.claude/skills/` |
+| **OpenCode** | `~/.config/opencode/skills/` | `.config/opencode/skills/` |
+| **GitHub Copilot** | — | `.github/skills/` |
+| **OpenAI Codex CLI** | `~/.agents/skills/` | — |
+| **Cursor** | — | `.cursor/skills/` |
+
 ```bash
+# 示例：全局安装到 Claude Code
 cp -r qa-team-skills ~/.claude/skills/
+```
+
+### 方式二：一键安装
+
+```bash
+npx skills add Kokxi/qa-team-skills
+```
+
+自动检测当前 Agent（Claude Code / OpenCode / Codex / Cursor 等），安装到正确位置。
+
+### 方式三：ClawHub 安装
+
+```bash
+clawhub install qa-team-skills
 ```
 
 ## 3. 指令详解
@@ -190,4 +217,5 @@ bash ci/validate.sh
 |------|------|
 | v1.0.0 | 6 大指令初始发布 |
 | v1.2.0 | 注入防护+自检清单+业务分层+16维度Agent+完整示例+流程嵌入指南+版本治理 |
+| v1.3.1 | 多 Agent 安装方式（README/user-manual 同步）、skills.sh 提交、示例描述修正、line ending 修复 | |
 | v1.3.0 | ClawHub 安全审计修复：security 声明修正、子能力路由确认机制、API 凭证安全警告、文件敏感数据提示、示例来源标注；description 触发优化、指令路由边界定义、eval 测试集 |

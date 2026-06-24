@@ -2,6 +2,19 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.3.1
+
+### 平台兼容性（2026-06-24）
+
+#### 多 Agent 安装支持
+- README 安装章节按三种方式重构（手动复制 / npx skills / ClawHub），覆盖 Claude Code / OpenCode / Copilot / Codex CLI / Cursor / Windsurf
+- 新增 skills.sh 徽章和一键安装命令 `npx skills add Kokxi/qa-team-skills`
+- docs/user-manual.md 安装章节同步更新
+
+#### 文档修正
+- examples/README.md 描述修正：7 类型 × 6 方法 → 6 类型 × 9 方法
+- 全面版本号更新至 v1.3.1
+
 ## v1.3.0
 
 ### ClawHub 安全审计修复（2026-06-23）

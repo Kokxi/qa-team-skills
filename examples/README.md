@@ -7,7 +7,7 @@
 | 示例 | 指令 | 场景 | 亮点 |
 |------|------|------|------|
 | [prd-demo.md](./prd-demo.md) | `/qa-prd` | 订单改价功能需求评审 | 11 维度扫描 + 业务分层建议 |
-| [login-demo.md](./login-demo.md) | `/qa-case` | 登录功能用例设计 | 35 条用例，7 类型 × 6 方法 × 3 业务层 |
+| [login-demo.md](./login-demo.md) | `/qa-case` | 登录功能用例设计 | 35 条用例，6 类型 × 9 方法 × 3 业务层 |
 | [case-demo.md](./case-demo.md) | `/qa-case` | 订单改价功能用例设计 | 评审问题→用例自动转化 |
 | [agent-demo.md](./agent-demo.md) | `/qa-agent` | 智能客服 Agent 测试 | 16 维度覆盖，含 RAG + 幻觉 + 偷懒 |
 | [bug-demo.md](./bug-demo.md) | `/qa-bug` | 支付超时缺陷分析 | 不达标被驳回 → 补全 → 根因分析 + 批量 |

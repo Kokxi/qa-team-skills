@@ -20,3 +20,9 @@ desktop.ini
 1.md
 2.md
 todo.md
+
+# IDE
+.vscode/
+.idea/
+.claude/
+.omo/

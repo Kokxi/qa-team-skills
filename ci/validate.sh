@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # qa-team-skills CI 校验脚本
 # 用途：检查技能文件结构完整性、禁止硬编码行业词
 # 使用方式：在 qa-team-skills 目录下运行 bash ci/validate.sh
@@ -120,7 +120,7 @@ if [[ ${#ERRORS[@]} -gt 0 ]]; then
   exit 1
 else
   VERSION=$(cat "$VERSION_FILE")
-  echo "✅ qa-team-skills v$VERSION 校验通过"
+  echo "✅ qa-team-skills $VERSION 校验通过"
   echo "   - 6 个指令 Prompt 完整（含注入防护+自检）"
   echo "   - SKILL.md 字段完整"
   echo "   - 模板文件完整"
