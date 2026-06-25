@@ -1,6 +1,6 @@
 # qa-team-skills
 
-> 覆盖需求评审、用例设计、缺陷分析、报告生成等测试核心环节的 AI 辅助技能包 — 让测试团队拥有统一的 AI 辅助标准。
+> 为测试团队设计的统一 AI 辅助能力——6 个标准化指令覆盖需求评审到团队管理。
 
 [![Version](https://img.shields.io/badge/version-v1.3.3-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)

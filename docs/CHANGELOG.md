@@ -2,6 +2,32 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.3.3
+
+### 定位与内容清理（2026-06-25）
+
+#### SKILL.md 前端元数据精简
+- 移除 `metadata` 嵌套层级，`agents`、`categories` 冗余字段
+- 新增 `trigger` 触发关键词字段
+- 压缩 `description` 和 `security` 描述长度
+- 移除 `/qa-report` 能力矩阵中的"API 拉取"表述
+- 整体版本号统一为 v1.3.3
+
+#### /qa-report API 拉取移除
+- `prompts/report/prompt.md`：移除整个「API 自动拉取模式」章节（含 curl 示例、Token 安全警告等）
+- 数据来源改为"二选一或混合"，新增"系统数据"选项
+- 同步在 README 和 user-manual 中清理 API 拉取残留
+
+#### README SEO 过优化清理
+- 徽章栏从 10 个精简至 3 个（version / license / skills.sh）
+- 删除「搜索关键词」段落（29 个关键词堆砌）
+- 「为什么选择 qa-team-skills」35 行精简为 4 行「适用人群」
+- 引用语移除"不是替代测试人员"否定表述
+
+#### 定位表述修正
+- 移除全站"全流程"夸大表述（SKILL.md description / 1.md）
+- CHANGELOG 中 v1.3.0 "pushy"策略改写为中性描述
+
 ## v1.3.1
 
 ### 平台兼容性（2026-06-24）
@@ -36,7 +62,7 @@ All notable changes to qa-team-skills will be documented in this file.
 - `login-demo.md` 中 AI 补充的用例（TC04/TC05）标注 `[AI补充]` 来源，避免虚构需求误解
 
 #### Description 触发优化
-- SKILL.md description 从 60 字扩至 200 字，穷举 6 指令的自然语言触发场景，采用"pushy"策略提升 Claude 调起率
+- SKILL.md description 补充自然语言触发场景，提升 AI 调起准确性
 - 新增「指令路由边界」表格，解决 5 组易混淆指令的选路问题
 
 #### Eval 测试集
