@@ -1,0 +1,95 @@
+{
+  "skill_name": "qa-team-skills",
+  "version": "v1.4.0",
+  "description": "功能性测试评估集 — 验证每个子指令的产出质量",
+  "evals": [
+    {
+      "id": "prd-001",
+      "name": "需求评审-支付接口",
+      "prompt": "/qa-prd\n产品/模块：支付接口\n需求内容：用户可发起支付，选择余额/银行卡/微信/支付宝四种方式，调用第三方网关完成扣款，网关异步回调通知结果，订单状态从'待支付'更新为'支付成功'或'支付失败'。",
+      "expected_output": "输出需求评审报告，包含11个维度的检查结果、业务分层建议、澄清问题清单",
+      "assertions": [
+        {"name": "覆盖11个评审维度", "expected": true, "description": "输出中应包含全部11个评审维度的检查结果"},
+        {"name": "给出业务分层建议", "expected": true, "description": "输出中应有业务分层建议（核心层/体验层/增值层）"},
+        {"name": "包含澄清问题清单", "expected": true, "description": "输出中应有需澄清的问题列表"},
+        {"name": "严重程度分级正确", "expected": true, "description": "问题标注了高/中/低严重程度"},
+        {"name": "不包含评审结论", "expected": false, "description": "不应包含'通过/不通过'等评审结论"}
+      ]
+    },
+    {
+      "id": "case-001",
+      "name": "用例设计-登录功能",
+      "prompt": "/qa-case\n产品/模块：登录功能\n需求描述：用户通过用户名和密码登录系统，验证成功后跳转至首页，失败时显示错误提示。连续5次失败后账号锁定30分钟。",
+      "expected_output": "生成结构化的测试用例集，覆盖6种测试类型，每种类型至少1条用例",
+      "assertions": [
+        {"name": "覆盖6种测试类型", "expected": true, "description": "包含功能/边界/异常/安全/性能/兼容性全部6种"},
+        {"name": "每条标注业务分层", "expected": true, "description": "每条用例都有核心层/体验层/增值层标注"},
+        {"name": "每条标注设计方法", "expected": true, "description": "每条用例都有黑盒设计方法标注"},
+        {"name": "核心层用例至少3条", "expected": true, "description": "核心层用例数不少于3条"},
+        {"name": "包含账号锁定场景", "expected": true, "description": "应包含连续5次失败的锁定场景用例"},
+        {"name": "步骤以动词开头", "expected": true, "description": "每条用例的步骤以动词开头"}
+      ]
+    },
+    {
+      "id": "bug-001",
+      "name": "缺陷分析-单条",
+      "prompt": "/qa-bug\n缺陷标题：支付成功但订单状态未更新\n复现步骤：1. 使用余额支付100元 2. 支付网关返回成功 3. 返回订单页面\n期望结果：订单状态显示'支付成功'\n实际结果：订单状态仍显示'待支付'\n产品/模块：支付接口",
+      "expected_output": "先输出缺陷描述质量评估，信息充分后再输出根因分析报告",
+      "assertions": [
+        {"name": "先输出质量评估", "expected": true, "description": "先对缺陷描述进行评估，再输出根因分析"},
+        {"name": "有根因分析", "expected": true, "description": "包含根因分类、可能根因、置信度"},
+        {"name": "有修复建议", "expected": true, "description": "包含建议修复方向和位置"},
+        {"name": "有回归测试要点", "expected": true, "description": "包含回归测试要点"},
+        {"name": "置信度标注", "expected": true, "description": "根因分析标注了置信度（高/中/低）"}
+      ]
+    },
+    {
+      "id": "report-001",
+      "name": "报告生成-日报",
+      "prompt": "/qa-report\n报告类型：日报\n日期：2026-06-30\n姓名：张三\n今日执行用例：25条（P0:5, P1:10, P2:8, P3:2）\n今日发现缺陷：3个（致命:0, 严重:1, 一般:2, 建议:0）\n进行中模块：支付接口\n阻塞：无\n明日计划：完成支付接口剩余用例执行",
+      "expected_output": "生成标准日报格式的测试报告",
+      "assertions": [
+        {"name": "报告类型正确", "expected": true, "description": "输出为日报格式"},
+        {"name": "包含简明摘要", "expected": true, "description": "报告开头有30秒速览的简明摘要"},
+        {"name": "数据完整", "expected": true, "description": "包含执行用例数、发现缺陷数、进行中模块、明日计划"},
+        {"name": "来源标注", "expected": true, "description": "数据来源标注为'直接输入'"}
+      ]
+    },
+    {
+      "id": "team-001",
+      "name": "团队管理-进度看板",
+      "prompt": "/qa-team\n我想看下这周的测试进度\n团队/版本：v2.5迭代\n模块列表：\n- 订单模块, 张三, 计划80条, 已执行65条\n- 支付模块, 李四, 计划60条, 已执行20条\n- 用户模块, 王五, 计划40条, 已执行38条",
+      "expected_output": "输出测试进度看板，标注风险模块",
+      "assertions": [
+        {"name": "子能力匹配正确", "expected": true, "description": "匹配到'测试进度看板'子能力"},
+        {"name": "输出进度表格", "expected": true, "description": "包含模块/负责人/计划用例/已执行/进度的表格"},
+        {"name": "标红延期风险", "expected": true, "description": "支付模块33%进度应标注延期风险"},
+        {"name": "有简明摘要", "expected": true, "description": "包含面向管理者的简明摘要"}
+      ]
+    },
+    {
+      "id": "agent-001",
+      "name": "Agent测试-智能客服",
+      "prompt": "/qa-agent\nAgent名称/类型：智能客服 Agent（HelpBot）\nAgent能力描述：基于RAG架构，接入产品知识库（帮助文档、FAQ、政策条款），支持多轮对话记忆上下文，调用工具：查询订单状态、查询物流信息、提交退款申请",
+      "expected_output": "输出覆盖16个维度的Agent专项测试用例",
+      "assertions": [
+        {"name": "覆盖16个维度", "expected": true, "description": "测试用例覆盖全部16个测试维度"},
+        {"name": "RAG维度适用", "expected": true, "description": "维度14-16（RAG相关）标注为适用而非'不适用'"},
+        {"name": "每种维度至少1条", "expected": true, "description": "每个维度下至少生成1条用例"},
+        {"name": "设计方法必填", "expected": true, "description": "每条用例标注了设计方法"},
+        {"name": "有简明摘要", "expected": true, "description": "包含维度和优先级分布的简明摘要"}
+      ]
+    },
+    {
+      "id": "qa-001",
+      "name": "统一入口-多步任务",
+      "prompt": "/qa\n先评审这个支付需求的PRD，再基于评审结果设计测试用例\n产品/模块：支付接口\n需求内容：用户可发起支付，选择余额/银行卡两种方式，调用第三方网关完成扣款，网关异步回调通知结果。",
+      "expected_output": "解析为多步任务（prd→case），生成执行计划，用户确认后逐步骤执行",
+      "assertions": [
+        {"name": "解析为多步任务", "expected": true, "description": "意图解析结果为multi，包含prd和case两个步骤"},
+        {"name": "生成执行计划", "expected": true, "description": "输出包含步骤1和步骤2的执行计划"},
+        {"name": "步骤间数据传递", "expected": true, "description": "第二步引用了第一步的输出作为输入"}
+      ]
+    }
+  ]
+}

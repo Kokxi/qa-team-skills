@@ -2,7 +2,7 @@
 
 > 为测试团队设计的统一 AI 辅助能力——6 个标准化指令覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.3.3-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.4.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -68,6 +68,7 @@ SKILL.md 中专门有一章「人工校验规则」，不是给 AI 看的——�
 
 | 指令           | 做什么        | 适合谁        | 核心亮点                             |
 | ------------ | ---------- | ---------- | -------------------------------- |
+| `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理          |
 | `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单      |
 | `/qa-case`   | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
 | `/qa-agent`  | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
@@ -134,6 +135,7 @@ clawhub install qa-team-skills  # 安装技能
 ### 使用
 
 ```bash
+/qa          # 自然语言下达测试任务 → 自动解析 → 路由 → 记忆管理
 /qa-prd      # 粘贴 PRD → 11 维度评审报告 + 业务分层建议
 /qa-case     # 输入需求 → 6 类型 × 9 方法结构化用例
 /qa-agent    # 描述 Agent → 16 维度专项测试用例（含 RAG）
@@ -162,23 +164,28 @@ clawhub install qa-team-skills  # 安装技能
 
 ```
 qa-team-skills/
-├── SKILL.md                      # 技能入口：6 指令总览 + 人工校验规则
+├── SKILL.md                      # 技能入口：7 指令总览 + 架构概览 + 人工校验规则
 ├── VERSION                       # 当前版本
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT
-├── prompts/                      # 6 个指令的 Prompt 定义
-│   ├── prd/prompt.md             #   需求评审（11 维度 + 业务分层）
-│   ├── case/prompt.md            #   用例设计（9 方法 × 6 类型 + 业务分层）
-│   ├── agent/prompt.md           #   Agent 专项（16 维度含 RAG）
-│   ├── bug/prompt.md             #   缺陷分析（质量评估 + 根因 + 批量）
-│   ├── report/prompt.md          #   报告生成（5 种）
-│   └── team/prompt.md            #   团队管理（11 子能力 + 路由）
+├── prompts/                      # 7 个指令的 Prompt 定义
+│   ├── qa/prompt.md             #   统一入口：意图解析 → 任务编排 → 记忆管理
+│   ├── prd/prompt.md            #   需求评审（11 维度 + 业务分层）
+│   ├── case/prompt.md           #   用例设计（9 方法 × 6 类型 + 业务分层）
+│   ├── agent/prompt.md          #   Agent 专项（16 维度含 RAG）
+│   ├── bug/prompt.md            #   缺陷分析（质量评估 + 根因 + 批量）
+│   ├── report/prompt.md         #   报告生成（5 种）
+│   └── team/prompt.md           #   团队管理（11 子能力 + 路由）
+├── memory/                       # 记忆模块（v1.4.0 新增）
+│   ├── README.md                 #   模块说明
+│   └── schema/                   #   6 个 JSON Schema 数据模型
 ├── templates/                    # 输出模板
 │   ├── requirement.md            #   通用测试用例模板
 │   ├── agent-test.md             #   Agent 专项模板（含中文 Payload）
 │   └── error-output.md           #   统一错误格式
 ├── examples/
-│   └── login-demo.md             # 登录功能 35 条用例完整示例
+│   ├── README.md
+│   └── *-demo.md                 # 7 个示例（覆盖全部 7 指令 + /qa 场景）
 ├── team/                         # 行业配置（可选引用）
 │   ├── roles.json                #   角色映射
 │   └── standards.json            #   合规标准参考
@@ -229,7 +236,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.3.3**
+当前版本：**v1.4.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 
