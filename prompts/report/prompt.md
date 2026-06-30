@@ -248,8 +248,8 @@
 
 当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
 
-- **写入**：输出中的报告类型、时间段、关键指标等，自动按 `memory/schema/report.json` 结构化存入报告库
-- **读取**：自动检索报告库（`memory/data/report/`）中同类型的历史报告，辅助同比/环比趋势分析；自动检索用例库和缺陷库，汇总数据生成报告
+- **写入**：输出中的报告类型、时间段、关键指标等，自动按 `memory/schema/report.json` 结构化存入 `data/products/{module}/reports/`
+- **读取**：自动检索 `data/products/{module}/reports/` 中同类型的历史报告，辅助同比/环比趋势分析；自动检索 `data/products/{module}/test-cases/` 和 `data/products/{module}/bugs/`，汇总数据生成报告
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 

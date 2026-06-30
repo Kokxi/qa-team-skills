@@ -64,14 +64,14 @@
 
 当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
 
-- **写入**：输出中的产品/模块、问题清单、业务分层建议等关键字段，自动按 `memory/schema/review.json` 结构化存入评审库
+- **写入**：输出中的产品/模块、问题清单、业务分层建议等关键字段，自动按 `memory/schema/review.json` 结构化存入 `data/products/{module}/reviews/`
 - **读取**：当前无读取需求，评审结果供后续 `/qa-case` 复用
 
 当直接调用时，用户仍可手动粘贴记忆库数据：
 
 ```
 ## 记忆上下文（手动提供）
-- 来源：memory/data/review/review-YYYYMMDD-NNN.json
+- 来源：data/products/payment/reviews/review-YYYYMMDD-NNN.json
 ```
 
 ## 输出前自检（必须逐条核对，不通过不输出）

@@ -176,5 +176,6 @@
 
 当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
 
-- **写入**：输出中的测试用例、类型分布、优先级分布等，自动按 `memory/schema/test-case.json` 结构化存入用例库
-- **读取**：自动检索评审库（`memory/data/review/`）中同一模块的最近评审记录，将问题清单转化为用例
+- **写入**：输出中的测试用例、类型分布、优先级分布等，自动按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`
+- **读取规范**：自动检索 `data/products/{module}/standards.json` 中的 checklist，补充到用例中
+- **读取历史**：自动检索 `data/products/{module}/test-cases/latest.json` 中同一模块的历史用例，避免重复设计缺陷覆盖场景

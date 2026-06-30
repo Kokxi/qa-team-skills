@@ -93,8 +93,8 @@
 
 当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
 
-- **写入**：输出中的测试用例，自动按 `memory/schema/test-case.json` 结构化存入用例库（与 `/qa-case` 共用同一个用例库，便于统一检索）
-- **读取**：自动检索用例库（`memory/data/test-case/`）中同类型 Agent 的历史用例，辅助维度覆盖判断
+- **写入**：输出中的测试用例，自动按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（与 `/qa-case` 共用同一个用例库，便于统一检索）
+- **读取**：自动检索 `data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
