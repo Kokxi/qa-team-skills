@@ -2,6 +2,42 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.4.0
+
+### 交互层：统一入口 `/qa`（2026-06-30）
+
+#### 新增 `/qa` 指令
+- 自然语言任务入口："对支付接口做全量回归并输出缺陷报告"等复合指令
+- **意图解析**：将用户输入拆解为单步或多步任务结构
+- **任务编排**：生成执行计划，用户确认后逐步骤执行
+- **指令路由**：自动分派到 `/qa-prd`、`/qa-case`、`/qa-bug`、`/qa-report`、`/qa-team`、`/qa-agent`
+- **多步数据传递**：`prd→case` 评审问题自动转化用例；`bug→report` 缺陷数据自动汇入报告；`bug→team` 缺陷分类辅助漏测复盘
+
+#### 新增记忆模块（`memory/`）
+- **用例库**（`memory/schema/test-case.json`）：沉淀测试用例，支持按模块/类型/方法检索复用
+- **缺陷库**（`memory/schema/bug.json`）：沉淀缺陷分析结果，支持根因归类与趋势分析
+- **评审库**（`memory/schema/review.json`）：沉淀需求评审结果，问题清单可转化为用例
+- **报告库**（`memory/schema/report.json`）：沉淀历史报告，支持同比/环比趋势
+- **规范库**（`memory/schema/standard.json`）：沉淀团队 Checklist、最佳实践、经验教训
+- **任务会话**（`memory/schema/task-session.json`）：完整记录每次 `/qa` 任务执行的全过程
+- **文件级持久化**：JSON 格式本地存储，无需外部数据库
+- **自动读写**：由 `/qa` 统一入口在步骤间自动管理记忆写入与检索
+
+#### 现有指令记忆集成
+- `/qa-prd`：输出自动写入评审库
+- `/qa-case`：自动从评审库读取评审记录，输出写入用例库
+- `/qa-bug`：自动从缺陷库检索历史记录，输出写入缺陷库
+- `/qa-report`：自动从报告/用例/缺陷库汇总数据，输出写入报告库
+- `/qa-team`：自动从报告/缺陷库读取辅助趋势分析与效能统计
+- `/qa-agent`：输出写入用例库（与 `/qa-case` 共用）
+
+#### 架构文档
+- `prompts/qa/prompt.md`：统一入口 Prompt（158 行）
+- `memory/README.md`：记忆模块完整说明
+- `memory/schema/`：6 个 JSON Schema 数据模型定义
+- SKILL.md：新增架构概览图、`/qa` 指令、记忆模块章节
+- 版本号统一为 v1.4.0
+
 ## v1.3.3
 
 ### 定位与内容清理（2026-06-25）
