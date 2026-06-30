@@ -58,6 +58,7 @@
 | 当前步骤 | 数据路径 | 检索方式 |
 |---------|---------|---------|
 | `case`（用例设计） | `data/products/{module}/reviews/` | 读取同 module 的最近评审记录，转化问题为用例 |
+| `case`（用例设计） | `data/products/{module}/bugs/` | 读取历史缺陷，高频根因自动转化为补充用例 |
 | `case`（用例设计） | `data/products/{module}/standards.json` | 读取 checklist，补充到用例中 |
 | `bug`（缺陷分析） | `data/products/{module}/bugs/` | 查找同一模块的历史缺陷，辅助根因归类、复发检测 |
 | `report`（报告生成） | `data/products/{module}/reports/` | 汇总历史报告做同比/环比 |
@@ -83,3 +84,33 @@
 | `/qa-team` 漏测复盘输出预防措施 | `data/products/{module}/standards.json` | `checklist` |
 
 写入前检查同 module 同内容的条目是否已存在，避免重复沉淀。
+
+## 增量合并规则（写入后执行）
+
+每次 `/qa-case` 或 `/qa-agent` 写入新版本后，必须执行一次 latest.json 合并：
+
+| 步骤 | 操作 |
+|------|------|
+| ① 读取 | 扫描 `data/products/{module}/test-cases/` 下的全部版本文件 |
+| ② 去重 | 同标题+同步骤保留最早版本；同场景更优的保留新版本 |
+| ③ 重新编号 | 全部用例统一重新编号（TC001、TC002…） |
+| ④ 标记来源 | 每条用例标注 source_version（来自 v1.0 / v1.1 / v1.2） |
+| ⑤ 写入 | `data/products/{module}/test-cases/latest.json` |
+| ⑥ 更新索引 | 更新 `summary.json` 中的 total_test_cases、coverage_by_type 等 |
+
+## 历史缺陷→用例转化规则
+
+当记忆简报显示历史缺陷数据时，按以下规则自动转化：
+
+| 历史缺陷类型 | 用例类型 | 优先级 |
+|-------------|---------|--------|
+| 并发/竞态 | 安全测试-并发防重 | P0 |
+| 超时/回调 | 异常测试-超时补偿 | P0 |
+| 边界遗漏 | 边界测试-补充边界值 | P1 |
+| 安全/注入 | 安全测试-注入防护 | P0 |
+| 配置/环境 | 异常测试-Mock验证 | P1 |
+
+转化规则：
+- 同类型的缺陷累计出现 ≥ 2 次 → 必须转化
+- 已被 latest.json 覆盖的 → 跳过
+- 转化后在简明摘要中标注来源
