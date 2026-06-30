@@ -6,6 +6,7 @@
 
 | 示例 | 指令 | 场景 | 亮点 |
 |------|------|------|------|
+| [qa-demo.md](./qa-demo.md) | `/qa` | 统一入口：支付接口全量回归 | 多步任务编排 + 步骤间数据自动传递 |
 | [prd-demo.md](./prd-demo.md) | `/qa-prd` | 订单改价功能需求评审 | 11 维度扫描 + 业务分层建议 |
 | [login-demo.md](./login-demo.md) | `/qa-case` | 登录功能用例设计 | 35 条用例，6 类型 × 9 方法 × 3 业务层 |
 | [case-demo.md](./case-demo.md) | `/qa-case` | 订单改价功能用例设计 | 评审问题→用例自动转化 |
@@ -18,6 +19,7 @@
 
 | 你想做什么 | 看哪个示例 |
 |-----------|-----------|
+| 通过自然语言下达完整测试任务 | [qa-demo.md](./qa-demo.md) |
 | 评审一份 PRD，找问题 | [prd-demo.md](./prd-demo.md) |
 | 设计测试用例，覆盖全面 | [login-demo.md](./login-demo.md) |
 | 拿到评审问题，转化为用例 | [case-demo.md](./case-demo.md) |

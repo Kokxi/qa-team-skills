@@ -20,14 +20,17 @@
       "id": "case-001",
       "name": "用例设计-登录功能",
       "prompt": "/qa-case\n产品/模块：登录功能\n需求描述：用户通过用户名和密码登录系统，验证成功后跳转至首页，失败时显示错误提示。连续5次失败后账号锁定30分钟。",
-      "expected_output": "生成结构化的测试用例集，覆盖6种测试类型，每种类型至少1条用例",
+      "expected_output": "生成结构化的测试用例集，覆盖6种测试类型，包含格式校验、长度边界和信息泄露防护检查",
       "assertions": [
         {"name": "覆盖6种测试类型", "expected": true, "description": "包含功能/边界/异常/安全/性能/兼容性全部6种"},
         {"name": "每条标注业务分层", "expected": true, "description": "每条用例都有核心层/体验层/增值层标注"},
         {"name": "每条标注设计方法", "expected": true, "description": "每条用例都有黑盒设计方法标注"},
         {"name": "核心层用例至少3条", "expected": true, "description": "核心层用例数不少于3条"},
         {"name": "包含账号锁定场景", "expected": true, "description": "应包含连续5次失败的锁定场景用例"},
-        {"name": "步骤以动词开头", "expected": true, "description": "每条用例的步骤以动词开头"}
+        {"name": "步骤以动词开头", "expected": true, "description": "每条用例的步骤以动词开头"},
+        {"name": "包含用户名格式校验", "expected": true, "description": "应覆盖用户名特殊字符和格式校验"},
+        {"name": "包含长度边界测试", "expected": true, "description": "应覆盖空字符串、1字符、准确上限、超上限等长度边界"},
+        {"name": "包含信息泄露防护", "expected": true, "description": "应检查错误提示是否通用化（不区分用户不存在和密码错误）"}
       ]
     },
     {

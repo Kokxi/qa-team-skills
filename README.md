@@ -1,6 +1,6 @@
 # qa-team-skills
 
-> 为测试团队设计的统一 AI 辅助能力——6 个标准化指令覆盖需求评审到团队管理。
+> 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 6 个标准化指令 + 记忆模块，覆盖需求评审到团队管理。
 
 [![Version](https://img.shields.io/badge/version-v1.4.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
