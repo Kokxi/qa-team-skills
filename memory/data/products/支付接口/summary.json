@@ -1,0 +1,25 @@
+{
+  "product": "支付接口",
+  "last_updated": "2026-06-30T10:15:00Z",
+  "iteration_count": 1,
+  "test_cases": {
+    "total": 5,
+    "versions": ["v1.0"],
+    "by_type": {"功能测试":1,"边界测试":1,"异常测试":2,"安全测试":1,"性能测试":0,"兼容性测试":0},
+    "by_layer": {"核心层":4,"体验层":1,"增值层":0},
+    "by_priority": {"P0":3,"P1":1,"P2":1,"P3":0}
+  },
+  "bugs": {
+    "total": 3,
+    "by_severity": {"致命":1,"严重":2,"一般":0,"建议":0},
+    "by_root_cause": {"代码缺陷":1,"设计遗漏":2,"权限设计问题":0,"数据问题":0,"需求理解偏差":0,"第三方依赖":0},
+    "recurring_patterns": []
+  },
+  "standards": {
+    "total": 2,
+    "by_category": {"checklist":1,"lession_learned":1}
+  },
+  "iterations": [
+    {"version":"v1.0","date":"2026-06-30","new_test_cases":5,"new_bugs":3,"fix_rate":0}
+  ]
+}

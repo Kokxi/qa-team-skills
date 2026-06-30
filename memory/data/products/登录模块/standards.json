@@ -1,0 +1,16 @@
+[
+  {
+    "category": "lession_learned",
+    "title": "记住我Token必须设置过期时间",
+    "content": "登录模块第一轮测试发现，记住我功能Token未设置过期时间。所有记住我功能测试必须覆盖Token过期场景，包括过期后自动跳转登录、多设备Token有效期独立管理等。",
+    "source": "session-login-20260630",
+    "created_at": "2026-06-30T14:00:00Z"
+  },
+  {
+    "category": "checklist",
+    "title": "密码复杂度校验不可因前置校验短路",
+    "content": "密码复杂度校验应独立执行，不因邮箱格式校验失败而跳过。测试时需验证前后端均分别校验密码复杂度。",
+    "source": "session-login-20260630",
+    "created_at": "2026-06-30T14:00:00Z"
+  }
+]

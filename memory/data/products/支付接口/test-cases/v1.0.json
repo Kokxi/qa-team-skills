@@ -1,0 +1,57 @@
+{
+  "session_id": "session-20260630-001",
+  "created_at": "2026-06-30T10:00:00Z",
+  "module": "支付接口",
+  "entries": [
+    {
+      "id": "PAY-TC001",
+      "title": "余额支付正常流程",
+      "type": "功能测试",
+      "business_layer": "核心层",
+      "design_method": "场景法",
+      "priority": "P0",
+      "steps": ["选择余额支付", "确认支付", "网关返回成功"],
+      "expected_results": ["订单→支付成功", "余额扣减"]
+    },
+    {
+      "id": "PAY-TC002",
+      "title": "余额不足支付失败",
+      "type": "异常测试",
+      "business_layer": "核心层",
+      "design_method": "等价类划分",
+      "priority": "P0",
+      "steps": ["余额30元", "支付50元订单"],
+      "expected_results": ["支付失败", "提示余额不足"]
+    },
+    {
+      "id": "PAY-TC003",
+      "title": "并发支付同一订单防重复",
+      "type": "安全测试",
+      "business_layer": "核心层",
+      "design_method": "错误推测",
+      "priority": "P0",
+      "steps": ["两客户端同时支付同一订单"],
+      "expected_results": ["仅一笔成功", "无重复扣款"]
+    },
+    {
+      "id": "PAY-TC004",
+      "title": "支付网关超时处理",
+      "type": "异常测试",
+      "business_layer": "核心层",
+      "design_method": "场景法",
+      "priority": "P1",
+      "steps": ["发起支付", "网关超时30s"],
+      "expected_results": ["订单→支付超时", "触发补偿机制"]
+    },
+    {
+      "id": "PAY-TC005",
+      "title": "支付金额为0元",
+      "type": "边界测试",
+      "business_layer": "体验层",
+      "design_method": "边界值分析",
+      "priority": "P2",
+      "steps": ["提交金额0元订单"],
+      "expected_results": ["系统拒绝零金额支付"]
+    }
+  ]
+}

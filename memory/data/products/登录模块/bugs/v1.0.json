@@ -1,0 +1,20 @@
+[
+  {
+    "bug_id": "BUG-L001",
+    "title": "记住我Token未设置过期时间",
+    "severity": "严重",
+    "root_cause_type": "设计遗漏",
+    "root_cause": "记住我功能实现了Token持久化，但未设置Token过期时间，Token永不过期存在安全风险",
+    "confidence": "高",
+    "fix_suggestion": "设置Token有效期（建议7天），到期后自动失效要求重新登录"
+  },
+  {
+    "bug_id": "BUG-L002",
+    "title": "密码复杂度校验在邮箱格式错误时被跳过",
+    "severity": "一般",
+    "root_cause_type": "代码缺陷",
+    "root_cause": "邮箱格式校验失败后直接返回错误，密码复杂度校验逻辑未执行——虽然结果正确但校验链路不完整",
+    "confidence": "中",
+    "fix_suggestion": "建议前后端分别校验，避免逻辑短路掩盖密码校验的覆盖"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "session_id": "session-20260630-001",
+  "created_at": "2026-06-30T10:05:00Z",
+  "module": "支付接口",
+  "entries": [
+    {
+      "bug_id": "BUG-001",
+      "title": "并发支付导致两次扣款",
+      "severity": "致命",
+      "root_cause_type": "代码缺陷",
+      "root_cause": "并发场景下缺少乐观锁，两次支付请求同时通过校验",
+      "confidence": "高",
+      "fix_suggestion": "在订单状态更新SQL中增加version字段乐观锁"
+    },
+    {
+      "bug_id": "BUG-002",
+      "title": "支付网关超时后订单卡死",
+      "severity": "严重",
+      "root_cause_type": "设计遗漏",
+      "root_cause": "超时补偿机制未实现，网关超时后订单永远停在'支付中'",
+      "confidence": "高",
+      "fix_suggestion": "增加定时补偿任务，处理超时订单"
+    },
+    {
+      "bug_id": "BUG-003",
+      "title": "银行卡支付回调签名验证缺失",
+      "severity": "严重",
+      "root_cause_type": "设计遗漏",
+      "root_cause": "回调接口未验证网关签名，可被伪造回调",
+      "confidence": "高",
+      "fix_suggestion": "增加HMAC签名验证"
+    }
+  ]
+}
