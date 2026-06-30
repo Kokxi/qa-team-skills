@@ -10,6 +10,7 @@
 | "生成/出一份报告" | 单步-报告生成 | `/qa-report` |
 | "团队/进度/产出/效能" | 单步-团队管理 | `/qa-team` |
 | "测试这个 Agent/AI" | 单步-Agent 测试 | `/qa-agent` |
+| "看趋势/看质量变化/同比/环比/成长" | **趋势查询** | 读取 summary.json → 输出趋势报告 |
 
 ## 多步匹配
 
@@ -97,6 +98,19 @@
 | ④ 标记来源 | 每条用例标注 source_version（来自 v1.0 / v1.1 / v1.2） |
 | ⑤ 写入 | `data/products/{module}/test-cases/latest.json` |
 | ⑥ 更新索引 | 更新 `summary.json` 中的 total_test_cases、coverage_by_type 等 |
+
+## 索引文件维护规则
+
+每次写入后同步更新 `data/products/{module}/summary.json`：
+
+| 触发操作 | 更新字段 |
+|---------|---------|
+| `/qa-case` 合并 latest.json | test_cases 全部字段 |
+| `/qa-bug` 写入 | bugs 全部字段 |
+| 规范沉淀 | standards 字段 |
+| 任意写入 | last_updated, iteration_count |
+
+summary.json 的完整 Schema 见 `memory/schema/summary.json`。
 
 ## 历史缺陷→用例转化规则
 

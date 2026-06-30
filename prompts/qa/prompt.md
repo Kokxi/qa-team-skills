@@ -288,6 +288,62 @@
      "🔄 已将此经验沉淀到规范库，后续用例设计将自动参考。"
 ```
 
+### 索引文件维护（summary.json 更新）
+
+每次写入操作完成后，同步更新 `data/products/{module}/summary.json`：
+
+**更新规则**：
+
+| 写入操作 | 更新的字段 |
+|---------|-----------|
+| `/qa-case` 合并 latest.json | test_cases.total, test_cases.by_type, test_cases.by_layer, test_cases.by_priority |
+| `/qa-case` 写入增量 | iterations.push({version, date, new_test_cases}) |
+| `/qa-bug` 写入 | bugs.total, bugs.by_severity, bugs.by_root_cause（累加） |
+| `/qa-bug` 复发检测 | bugs.recurring_patterns（追加或更新 count/last_seen） |
+| `/qa-bug` 规范沉淀 | standards.total, standards.by_category（累加） |
+| `/qa-team` 规范沉淀 | standards.total, standards.by_category（累加） |
+| 任意写入 | last_updated, iteration_count |
+
+**更新格式**：
+
+```
+## 索引更新
+- 产品/模块：{{module}}
+- 操作：{{merge / append / standards_update}}
+- 更新字段：{{test_cases / bugs / standards / all}}
+- summary.json → 已同步
+```
+
+### 趋势查询（用户意图匹配）
+
+当用户说"看趋势"、"看质量变化"、"同比"、"环比"等时，走趋势分析流程：
+
+```
+① 解析 scope = "支付接口"
+② 读取 data/products/payment/summary.json
+③ 从 summary.iterations 中提取每轮数据
+④ 从 bugs.by_root_cause 中提取根因分布变化
+⑤ 输出趋势报告
+
+## 记忆成长趋势 — {{产品/模块}}
+### {{N}} 轮迭代数据
+| 指标 | v1.0 | v1.1 | v1.2 | 趋势 |
+|------|------|------|------|------|
+| 用例总数 | N | N | N | ↑ 增长 |
+| 发现缺陷 | N | N | N | ↓ 减少 |
+| 修复率 | N | N | N | ↑ 提升 |
+| 规范条目 | N | N | N | ↑ 积累 |
+
+### 根因分布变化
+- v1.0：代码缺陷(N%) > 设计遗漏(N%) > ...
+- v1.1：...
+- v1.2：...
+
+### 结论与建议
+- {{基于数据的分析结论}}
+- {{针对下一轮的建议}}
+```
+
 写入格式：
 
 ```
@@ -313,5 +369,7 @@
 - [ ] 每步执行后是否将输出写入到了对应的产品记忆路径？
 - [ ] 如果是 /qa-case 或 /qa-agent，是否执行了 latest.json 合并？
 - [ ] 如果是 /qa-case，是否将历史缺陷转化为了补充用例？
+- [ ] 每次写入后是否同步更新了 summary.json？
 - [ ] 是否有需要沉淀到规范库的共性根因或预防措施？（如有，是否已写入 standards.json？）
+- [ ] 用户是否在查询趋势？（如是，是否读取 summary.json 生成了趋势报告？）
 - [ ] 最后一个步骤完成后是否输出了最终汇总结果？

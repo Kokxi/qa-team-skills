@@ -21,7 +21,8 @@ memory/
 │   ├── bug.json            ← 缺陷记录模型
 │   ├── report.json         ← 报告记录模型
 │   ├── task-session.json   ← 任务会话模型
-│   └── standard.json       ← 测试规范模型
+│   ├── standard.json       ← 测试规范模型
+│   └── summary.json        ← 产品索引模型（v1.4.0 P2 新增）
 └── data/
     └── products/            ← 按产品/模块组织（由 AI 自动创建）
         ├── payment/         ← 支付模块
@@ -35,7 +36,7 @@ memory/
         │   ├── reviews/
         │   ├── reports/
         │   ├── standards.json   ← 本模块沉淀的规范/checklist
-        │   └── summary.json     ← 汇总索引（总用例数/缺陷分布/趋势）
+        │   └── summary.json     ← **索引文件**（自动维护，用于快速加载+趋势分析）
         │
         └── login/           ← 登录模块（同上结构）
             └── ...
@@ -130,6 +131,64 @@ Step 0: 历史加载
   → 生成规范条目（category: "lession_learned" 或 "checklist"）
   → 写入 data/products/{module}/standards.json
   → 后续 /qa-case 启动时自动读取，补充到用例中
+```
+
+### 索引文件管理（summary.json）
+
+每个产品模块的 `summary.json` 是快速检索入口，由 AI 在每次写入后自动维护。
+
+**数据来源**：
+
+| 写入操作 | 更新 summary.json 的字段 |
+|---------|------------------------|
+| `/qa-case` 写入 + 合并 latest.json | test_cases.total, test_cases.by_type, test_cases.by_layer, iterations[].new_test_cases |
+| `/qa-bug` 写入 | bugs.total, bugs.by_severity, bugs.by_root_cause, bugs.recurring_patterns, iterations[].new_bugs |
+| `/qa-bug` 规范沉淀 | standards.total, standards.by_category |
+| `/qa-team` 规范沉淀 | standards.total, standards.by_category |
+| 任意 | last_updated, iteration_count |
+
+**索引文件在历史加载中的作用**：
+
+```
+第零步扫描时：
+├─ 读取 summary.json（1 次文件读）→ 立即获得：
+│   ├─ 用例总数和覆盖率
+│   ├─ 缺陷总数和高频根因
+│   ├─ 复发模式（直接用于记忆简报）
+│   └─ 迭代记录（供趋势分析）
+│
+└─ 无需扫描全部历史文件 → 加载速度提升 10x+
+```
+
+### 趋势报告
+
+基于 `summary.json` 中的迭代记录和缺陷统计，可生成产品维度的趋势报告。
+
+**触发方式**：用户在 `/qa` 中说"看趋势"、"看下这个模块的质量变化"等。
+
+**输出格式**：
+
+```
+## 记忆成长趋势 — {{产品/模块}}
+
+| 指标 | v1.0 | v1.1 | v1.2 | 趋势 |
+|------|------|------|------|------|
+| 用例总数 | 12 | 20 | 28 | ↑ 增长 |
+| 核心层覆盖率 | 3/5 | 4/5 | 5/5 | ↑ 完善 |
+| 发现缺陷 | 8 | 6 | 4 | ↓ 减少 |
+| 修复率 | 75% | 83% | 100% | ↑ 提升 |
+| 遗留致命缺陷 | 2 | 1 | 0 | ↓ 清零 |
+| 规范条目 | 0 | 1 | 3 | ↑ 积累 |
+
+### 根因分布变化
+- v1.0：代码缺陷(62%) > 设计遗漏(25%) > 配置(13%)
+- v1.1：代码缺陷(50%) > 第三方(33%) > 配置(17%)
+- v1.2：代码缺陷(25%) > 设计遗漏(25%) > 第三方(25%) > 配置(25%)
+
+### 结论与建议
+- 缺陷数量持续下降，质量在提升
+- 代码缺陷占比在降低，但第三方依赖问题开始出现
+- 建议下一轮增加第三方 Mock 测试覆盖
 ```
 
 ### 清理
