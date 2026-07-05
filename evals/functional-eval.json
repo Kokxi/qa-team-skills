@@ -9,7 +9,7 @@
       "prompt": "/qa-prd\n产品/模块：支付接口\n需求内容：用户可发起支付，选择余额/银行卡/微信/支付宝四种方式，调用第三方网关完成扣款，网关异步回调通知结果，订单状态从'待支付'更新为'支付成功'或'支付失败'。",
       "expected_output": "输出需求评审报告，包含11个维度的检查结果、业务分层建议、澄清问题清单",
       "assertions": [
-        {"name": "覆盖11个评审维度", "expected": true, "description": "输出中应包含全部11个评审维度的检查结果"},
+        {"name": "覆盖11个评审维度", "expected": true, "description": "输出应覆盖全部 11 个评审维度的检查结果，维度名以 prompt 定义为准：1.完整性 2.清晰度 3.可测试性 4.一致性 5.隐形需求 6.边界需求 7.性能需求 8.安全需求 9.兼容性需求 10.可维护性需求 11.业务分层。不得用软件质量模型（功能正确性/可靠性/可用性等 ISO 25010 维度）替代"},
         {"name": "给出业务分层建议", "expected": true, "description": "输出中应有业务分层建议（核心层/体验层/增值层）"},
         {"name": "包含澄清问题清单", "expected": true, "description": "输出中应有需澄清的问题列表"},
         {"name": "严重程度分级正确", "expected": true, "description": "问题标注了高/中/低严重程度"},
@@ -92,6 +92,18 @@
         {"name": "解析为多步任务", "expected": true, "description": "意图解析结果为multi，包含prd和case两个步骤"},
         {"name": "生成执行计划", "expected": true, "description": "输出包含步骤1和步骤2的执行计划"},
         {"name": "步骤间数据传递", "expected": true, "description": "第二步引用了第一步的输出作为输入"}
+      ]
+    },
+    {
+      "id": "std-case-001",
+      "name": "规范库→用例全链路",
+      "prompt": "/qa-case\n产品/模块：支付接口\n需求描述：用户通过余额/银行卡两种方式完成支付，第三方网关异步回调。",
+      "expected_output": "生成的用例中引用规范库中的checklist和lession_learned，并标注来源",
+      "assertions": [
+        {"name": "加载规范库数据", "expected": true, "description": "读取到支付接口的standards.json"},
+        {"name": "规范转化为用例", "expected": true, "description": "每条规范至少转化1条用例"},
+        {"name": "用例标注来源", "expected": true, "description": "用例输出中标注了来源规范库"},
+        {"name": "输出规范引用统计", "expected": true, "description": "总结引用了多少条规范、转化了多少条用例"}
       ]
     }
   ]
