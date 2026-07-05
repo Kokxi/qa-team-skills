@@ -10,11 +10,12 @@ qa-team-skills 真·LLM 端到端评测器（P0）
   4. 归档报告到 evals/history/llm-report-<version>-<时间戳>.json
 
 使用方式：
-  export OR_KEY="sk-or-..."            # 必填，绝不写入文件（OpenRouter）
+  export DS_KEY="sk-..."              # 必填，绝不写入文件（DeepSeek）
   python ci/run_llm_eval.py                    # 跑全量 functional-eval
   python ci/run_llm_eval.py --smoke            # 只跑第一条（冒烟）
   python ci/run_llm_eval.py --eval evals/_smoke.json --concurrency 1
-  python ci/run_llm_eval.py --worker-model cohere/north-mini-code:free --judge-model cohere/north-mini-code:free
+  python ci/run_llm_eval.py --worker-model deepseek-chat --judge-model deepseek-chat
+  # 也兼容 OpenRouter（OR_KEY）/ Kimi（KIMI_API_KEY）
 
 注意：本脚本不写入 API key 到任何文件，仅从环境变量读取。
 """
@@ -30,12 +31,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 # ── 配置 ─────────────────────────────────────────────
-DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
-DEFAULT_MODEL = "cohere/north-mini-code:free"
+DEFAULT_BASE_URL = "https://api.deepseek.com/v1"
+DEFAULT_MODEL = "deepseek-chat"
 DEFAULT_TIMEOUT = 150
 DEFAULT_CONCURRENCY = 2
-# API key 环境变量名（OpenRouter 用 OR_KEY 或 OPENROUTER_API_KEY）
-API_KEY_ENV = ["OR_KEY", "OPENROUTER_API_KEY"]
+# API key 环境变量名（DeepSeek / OpenRouter / Kimi 均兼容）
+API_KEY_ENV = ["DS_KEY", "DEEPSEEK_API_KEY", "OR_KEY", "OPENROUTER_API_KEY", "KIMI_API_KEY"]
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
@@ -276,10 +277,12 @@ def main():
     parser.add_argument("--no-archive", action="store_true", help="不写归档报告")
     args = parser.parse_args()
 
-    api_key = os.environ.get("OR_KEY") or os.environ.get("OPENROUTER_API_KEY")
+    api_key = (os.environ.get("DS_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+               or os.environ.get("OR_KEY") or os.environ.get("OPENROUTER_API_KEY")
+               or os.environ.get("KIMI_API_KEY"))
     if not api_key:
-        print("❌ 未设置 OR_KEY 或 OPENROUTER_API_KEY 环境变量", file=sys.stderr)
-        print("   请先运行: export OR_KEY=\"sk-or-...\"", file=sys.stderr)
+        print("❌ 未设置 DS_KEY / DEEPSEEK_API_KEY / OR_KEY 等环境变量", file=sys.stderr)
+        print("   请先运行: export DS_KEY=\"sk-...\"", file=sys.stderr)
         sys.exit(2)
 
     # 读评测集
