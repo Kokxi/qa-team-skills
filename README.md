@@ -1,8 +1,8 @@
 # qa-team-skills
 
-> 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 6 个标准化指令 + 记忆模块，覆盖需求评审到团队管理。
+> 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.4.0-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.5.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -14,7 +14,7 @@
 
 同样是需求评审，张三把 PRD 粘贴给 AI 得到 3 个问题，李四用另一种问法得到 15 个——不是需求本身差异大，是每个人的 Prompt 水平差异大。用例设计更是重灾区：有人只写 Happy Path，有人忘了边界值，新人完全不知道该问 AI 什么。团队越大，这个问题越严重。评审会上的精力不是花在"讨论问题"上，而是花在"对齐标准"上。
 
-**qa-team-skills 解决的就是这个问题**：把测试团队最核心的 6 个工作环节——需求评审、用例设计、Agent 专项测试、缺陷分析、报告生成、团队管理——封装成 6 个标准化的 AI 指令。团队成员输入一样的东西，得到一样结构的输出。评审时的讨论对象从"格式对不对"变成了"问题有没有道理"。
+**qa-team-skills 解决的就是这个问题**：把测试团队最核心的 8 个工作环节——需求评审、用例设计、Agent 专项测试、缺陷分析、报告生成、团队管理、探索性测试——封装成 8 个标准化的 AI 指令。团队成员输入一样的东西，得到一样结构的输出。评审时的讨论对象从"格式对不对"变成了"问题有没有道理"。
 
 ***
 
@@ -64,17 +64,18 @@ SKILL.md 中专门有一章「人工校验规则」，不是给 AI 看的——�
 
 ***
 
-## 6 大指令
+## 8 大指令
 
 | 指令           | 做什么        | 适合谁        | 核心亮点                             |
 | ------------ | ---------- | ---------- | -------------------------------- |
-| `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理          |
+| `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理→自动规划（v1.5）          |
 | `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单      |
 | `/qa-case`   | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
 | `/qa-agent`  | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
 | `/qa-bug`    | 缺陷分析       | 测试工程师、开发   | 先评估描述质量 → 再分析根因，标注置信度，支持批量       |
 | `/qa-report` | 报告生成       | 测试工程师      | 日报/周报/阶段/季度/专项，支持 Jira/禅道等系统数据 |
 | `/qa-team`   | 团队管理       | 测试经理       | 11 项子能力，含进度看板/产出统计/准入准出/质量评估     |
+| `/qa-explore` | 探索性测试     | 测试工程师      | 三阶段设计（Session 笔记→疑似 Bug/学习经验分流→Debrief 沉淀） |
 
 ***
 
@@ -135,13 +136,14 @@ clawhub install qa-team-skills  # 安装技能
 ### 使用
 
 ```bash
-/qa          # 自然语言下达测试任务 → 自动解析 → 路由 → 记忆管理
+/qa          # 自然语言下达测试任务 → 自动解析 → 路由 → 记忆管理 → 自动规划
 /qa-prd      # 粘贴 PRD → 11 维度评审报告 + 业务分层建议
 /qa-case     # 输入需求 → 6 类型 × 9 方法结构化用例
 /qa-agent    # 描述 Agent → 16 维度专项测试用例（含 RAG）
 /qa-bug      # 粘贴缺陷 → 质量评估 → 根因分析（支持批量）
 /qa-report   # 填入数据 → 日报/周报/阶段报告
 /qa-team     # 汇总团队数据 → 管理看板/趋势/产出
+/qa-explore  # 探索性测试 → Session 笔记 → 疑似 Bug/学习经验分流 → Debrief 沉淀
 ```
 
 ### 示例
@@ -164,39 +166,57 @@ clawhub install qa-team-skills  # 安装技能
 
 ```
 qa-team-skills/
-├── SKILL.md                      # 技能入口：7 指令总览 + 架构概览 + 人工校验规则
+├── SKILL.md                      # 技能入口：8 指令总览 + 架构概览 + 人工校验规则
 ├── VERSION                       # 当前版本
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT
-├── prompts/                      # 7 个指令的 Prompt 定义
-│   ├── qa/prompt.md             #   统一入口：意图解析 → 任务编排 → 记忆管理
+├── prompts/                      # 8 个指令的 Prompt 定义
+│   ├── qa/prompt.md             #   统一入口：意图解析 → 任务编排 → 记忆管理 → 自动规划
+│   ├── qa/intent-rules.md       #   意图匹配规则（关键词→指令路由）
+│   ├── qa/validation-rules.md   #   推理校验规则（各指令输出前自检清单）
 │   ├── prd/prompt.md            #   需求评审（11 维度 + 业务分层）
-│   ├── case/prompt.md           #   用例设计（9 方法 × 6 类型 + 业务分层）
+│   ├── case/prompt.md           #   用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
 │   ├── agent/prompt.md          #   Agent 专项（16 维度含 RAG）
 │   ├── bug/prompt.md            #   缺陷分析（质量评估 + 根因 + 批量）
 │   ├── report/prompt.md         #   报告生成（5 种）
-│   └── team/prompt.md           #   团队管理（11 子能力 + 路由）
+│   ├── team/prompt.md           #   团队管理（11 子能力 + 路由）
+│   └── explore/prompt.md        #   探索性测试（三阶段 + Session 笔记 + Debrief）★ v1.5 新增
 ├── memory/                       # 记忆模块（v1.4.0 新增）
-│   ├── README.md                 #   模块说明
-│   └── schema/                   #   6 个 JSON Schema 数据模型
+│   ├── README.md                 #   模块说明（含合并/清理/去重规则）
+│   ├── schema/                   #   6 个 JSON Schema 数据模型
+│   └── data/products/            #   按产品模块沉淀的用例/缺陷/规范/报告库
 ├── templates/                    # 输出模板
 │   ├── requirement.md            #   通用测试用例模板
 │   ├── agent-test.md             #   Agent 专项模板（含中文 Payload）
 │   └── error-output.md           #   统一错误格式
 ├── examples/
 │   ├── README.md
-│   └── *-demo.md                 # 7 个示例（覆盖全部 7 指令 + /qa 场景）
+│   └── *-demo.md                 # 7 个示例（覆盖全部 8 指令 + /qa 场景）
 ├── team/                         # 行业配置（可选引用）
 │   ├── roles.json                #   角色映射
 │   └── standards.json            #   合规标准参考
-├── ci/
-│   ├── validate.sh               # CI 校验脚本
-│   └── forbidden.txt             #   禁止词列表
+├── ci/                           # ★ 验证脚本金字塔（v1.5 完备）
+│   ├── validate.sh               #   静态结构校验
+│   ├── run-evals.sh              #   触发评测 + 契约断言
+│   ├── test-memory-e2e.sh        #   记忆模块端到端（14 项断言）
+│   ├── test-memory-stress.sh     #   长期积累压测（10 轮迭代 6 项断言）
+│   ├── run_llm_eval.py           #   真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
+│   ├── forbidden.txt             #   禁止词列表
+│   └── commit-msg.txt            #   提交规范
+├── evals/                        # 评测数据集 + 历史归档
+│   ├── functional-eval.json      #   功能评测集（8 条 eval + 契约断言）
+│   ├── trigger-eval.json         #   触发评测集（38 条）
+│   ├── security-eval.json        #   安全对抗评测集（8 条 7 种攻击）★ v1.5 新增
+│   ├── _smoke.json               #   冒烟评测集
+│   ├── human-review/             #   人工双盲评测方案（5 维度评分+双盲流程）
+│   └── history/                  #   每轮评测归档报告（基线对比）
 └── docs/
     ├── user-manual.md            # 完整使用手册
     ├── CHANGELOG.md              # 变更日志
     ├── process-integration.md    # 流程嵌入指南
-    └── version-policy.md         # 版本治理策略
+    ├── version-policy.md         # 版本治理策略
+    ├── ci-testing.md             # CI 与质量验证（6 套脚本金字塔）★ v1.5 新增
+    └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档 ★ v1.5 新增
 ```
 
 ***
@@ -236,7 +256,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.4.0**
+当前版本：**v1.5.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 
