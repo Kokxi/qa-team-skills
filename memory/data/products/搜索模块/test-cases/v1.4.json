@@ -1,0 +1,3 @@
+{"id":"TC017","title":"无网络搜索-离线缓存","type":"异常","layer":"核心层","method":"场景法","priority":"P0","source":"v1.4","new":true}
+{"id":"TC018","title":"搜索结果分页-最后一页","type":"边界","layer":"核心层","method":"边界值分析","priority":"P1","source":"v1.4","new":true}
+{"id":"TC019","title":"搜索+购物车联合-从搜索结果直接加购","type":"功能","layer":"核心层","method":"场景法","priority":"P0","source":"v1.4","new":true}

@@ -1,0 +1,2 @@
+{"id":"TC015","title":"搜索联想-首字母匹配","type":"功能","layer":"体验层","method":"场景法","priority":"P1","source":"v1.3","new":true}
+{"id":"TC016","title":"搜索联想-多音字","type":"功能","layer":"增值层","method":"错误推测","priority":"P3","source":"v1.3","new":true}

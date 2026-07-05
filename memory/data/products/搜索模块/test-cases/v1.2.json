@@ -1,0 +1,3 @@
+{"id":"TC012","title":"语音搜索","type":"功能","layer":"增值层","method":"场景法","priority":"P3","source":"v1.2","new":true}
+{"id":"TC013","title":"图片搜索","type":"功能","layer":"体验层","method":"场景法","priority":"P2","source":"v1.2","new":true}
+{"id":"TC014","title":"筛选条件组合超过5个","type":"边界","layer":"体验层","method":"边界值分析","priority":"P2","source":"v1.2","new":true}

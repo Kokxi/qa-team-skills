@@ -1,0 +1,4 @@
+[
+  {"query": "帮我设计一下登录功能的测试用例，用户名密码都有的那种", "should_trigger": true},
+  {"query": "帮我解释一下什么是微服务架构", "should_trigger": false}
+]

@@ -1,0 +1,2 @@
+{"id":"TC010","title":"模糊搜索-错别字纠正","type":"功能","layer":"体验层","method":"错误推测","priority":"P2","source":"v1.1","new":true}
+{"id":"TC011","title":"搜索历史记录","type":"功能","layer":"增值层","method":"场景法","priority":"P3","source":"v1.1","new":true}

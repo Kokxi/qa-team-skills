@@ -19,6 +19,7 @@ desktop.ini
 # Generated articles
 1.md
 2.md
+1-*.md
 todo.md
 
 # IDE
