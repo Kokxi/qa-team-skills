@@ -73,11 +73,22 @@ def write_test_case_version(module, version, entries, from_bug_history=None):
     write_json(path, obj)
 
 def merge_latest(module):
-    """汇总合并：读取全部版本 → 去重（同标题保留最早）→ 重新编号 → 写 latest.json"""
+    """汇总合并：优先读现有 latest.json 作为基线（避免版本清理后丢早期唯一用例），
+    再并入各版本文件的新增用例，按标题去重 → 重新编号 → 写 latest.json"""
     tc_dir = os.path.join(DATA_DIR, "test-cases")
-    versions = sorted([f for f in os.listdir(tc_dir) if f.startswith("v") and f.endswith(".json")])
+    latest_path = os.path.join(tc_dir, "latest.json")
     seen_titles = {}
     merged = []
+    # 1. 先读现有 latest.json 作为基线（保留被清理版本的唯一用例）
+    if os.path.exists(latest_path):
+        old = read_json(latest_path)
+        for e in old.get("entries", []):
+            title = e["title"]
+            if title not in seen_titles:
+                seen_titles[title] = True
+                merged.append(dict(e))
+    # 2. 再并入磁盘上各版本文件
+    versions = sorted([f for f in os.listdir(tc_dir) if f.startswith("v") and f.endswith(".json")])
     for v in versions:
         data = read_json(os.path.join(tc_dir, v))
         for e in data.get("entries", []):
@@ -96,7 +107,7 @@ def merge_latest(module):
         "module": module,
         "entries": merged
     }
-    write_json(os.path.join(tc_dir, "latest.json"), latest)
+    write_json(latest_path, latest)
     return merged, [v.replace(".json", "") for v in versions]
 
 def cleanup_versions(module, keep=5):

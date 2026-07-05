@@ -1,6 +1,6 @@
 # CI 与质量验证
 
-qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量验证由三套互补的脚本构成，覆盖从静态结构到动态行为的不同层面。
+qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量验证由六套互补的脚本/方案构成，覆盖从静态结构到人工内容判定的不同层面。
 
 ## 验证脚本总览
 
@@ -8,20 +8,24 @@ qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量�
 |------|---------|---------|------|
 | `ci/validate.sh` | 静态结构 | 文件齐全、SKILL.md 字段、prompt 必含章节、无硬编码行业词、版本一致 | < 1s |
 | `ci/run-evals.sh` | 动态契约 | 触发评测（规则路由基线）+ prompt↔eval 契约断言 + 归档报告 | ~ 2s |
-| `ci/test-memory-e2e.sh` | 行为模拟 | 记忆模块全生命周期：写入/合并/清理/转化/规范沉淀/历史加载 | ~ 1s |
+| `ci/test-memory-e2e.sh` | 行为模拟 | 记忆模块全生命周期：写入/合并/清理/转化/规范沉淀/历史加载（14 项断言） | ~ 1s |
+| `ci/test-memory-stress.sh` | 长期压测 | 10 轮迭代：summary.json 体积/延迟不退化、无重复堆积、版本清理生效（6 项断言） | ~ 2s |
 | `ci/run_llm_eval.py` | **真·LLM 端到端** | 接 LLM API 真调 skill，LLM-as-judge 按 assertion 判定产出内容质量 | ~ 4-6 分钟（8 条 eval） |
+| `evals/human-review/README.md` | **人工双盲** | 2 名测试工程师对 AI 产出打 5 维分，验证内容质量（自动化查不出的） | ~ 4 小时/版本 |
 
 ## 使用方式
 
-任何 prompt 或结构改动后，依次跑三套脚本：
+任何 prompt 或结构改动后，依次跑自动化脚本：
 
 ```bash
-bash ci/validate.sh          # 静态结构校验
-bash ci/run-evals.sh         # 触发评测 + 契约断言
-bash ci/test-memory-e2e.sh   # 记忆模块端到端
+bash ci/validate.sh            # 1. 静态结构校验
+bash ci/run-evals.sh           # 2. 触发评测 + 契约断言
+bash ci/test-memory-e2e.sh     # 3. 记忆模块端到端
+bash ci/test-memory-stress.sh  # 4. 记忆模块长期压测
+python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY）
 ```
 
-三套全过 = 当前版本质量基线达标。
+前 5 套全过 = 自动化质量基线达标。发版前再做一次人工双盲评测（第 6 套）。
 
 ## 各脚本说明
 
@@ -74,11 +78,11 @@ bash ci/test-memory-e2e.sh   # 记忆模块端到端
 | 13 | latest.json 符合 schema | 数据模型 |
 | 14 | summary.json 符合 schema | 数据模型 |
 
-这是"规则契约测试"——确保 prompt 指令描述的记忆行为与 README 规范一致。真·AI 执行时的端到端验证（让真模型调 `/qa` 触发文件 I/O）需接模型 API，是后续工作。
+这是"规则契约测试"——确保 prompt 指令描述的记忆行为与 README 规范一致。真·AI 执行时的端到端验证由 `ci/run_llm_eval.py` 覆盖。
 
 ### ci/run_llm_eval.py
 
-**真·LLM 端到端评测**——前三套脚本的最高层补充。结构校验查"文件齐不齐"，契约断言查"prompt 定义对不对"，记忆测试查"规则实现对不对"，但都查不出"AI 真跑一遍产出质量好不好"。本脚本接 LLM API 真调 skill，用 LLM-as-judge 判定产出内容质量。
+**真·LLM 端到端评测**——前四套脚本的最高层补充。结构校验查"文件齐不齐"，契约断言查"prompt 定义对不对"，记忆测试查"规则实现对不对"，但都查不出"AI 真跑一遍产出质量好不好"。本脚本接 LLM API 真调 skill，用 LLM-as-judge 判定产出内容质量。
 
 **工作流程**：
 1. 解析 `functional-eval.json` 每条 eval 的 prompt 开头 `/qa-xxx` → 加载 `prompts/xxx/prompt.md` 作为 system prompt
@@ -105,17 +109,60 @@ python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 
 - API key 仅从 `$KIMI_API_KEY` 环境变量读，**脚本和归档报告均不写入 key**
 - 退出码：准确率 < 70% 或有 error 视为失败
 
+### ci/test-memory-stress.sh
+
+长期积累压测——模拟 10 轮迭代持续写入，验证 `memory/README.md` 定义的清理/去重规则在长期使用下不退化。用临时产品目录 `memory/data/products/stress-test-module/` 跑完自动清理。
+
+**6 项断言覆盖**：
+
+| # | 验证的行为 | 实测结果 |
+|---|----------|---------|
+| 1 | summary.json 体积线性增长（比值 ≤ 5x） | 第 1 轮 520B → 第 10 轮 586B，1.1x ✔ |
+| 2 | 读取延迟不退化（比值 ≤ 3x） | 0.23ms → 0.12ms，0.5x ✔ |
+| 3 | latest.json 去重生效（无重复堆积） | 50 条含 20 重复 → 30 条唯一 ✔ |
+| 4 | 版本清理生效（保留最近 5 个） | 10 轮后保留 v1.5–v1.9 ✔ |
+| 5 | standards.json 标题 hash 去重 | 10 轮含 2 重复 → 8 条 ✔ |
+| 6 | latest.json 清理后保留全部合并数据 | 30 条不因版本删除丢失 ✔ |
+
+**发现并修复的真实缺陷**：原 `merge_latest` 只读磁盘现存版本文件，版本清理删除旧版本后，**早期版本中的唯一用例会丢失**。已修复为"以现有 latest.json 为基线再并入新版本"，回填到 `test-memory-e2e.sh` 保持一致。
+
+**P1 去重硬保护**：`standards.json` 写入时增加 `title_hash`（MD5）字段做硬去重，防止标题大小写/标点差异绕过字符串比较。
+
+### 人工双盲评测（evals/human-review/README.md）
+
+自动化层查不出"维度分析对不对、用例合不合理、根因有没有逻辑"——这些是内容质量，需测试专家人工判定。方案定义：
+
+- **5 维度评分**（完整性/准确性/可执行性/深度/实用性，每维 1-5 分）
+- **双盲流程**（2 名评审员独立评分，分歧 ≥1.5 分当面校准）
+- **版本门槛**（平均分 ≥3.8 准予发布，3.5–3.8 部分重评，<3.5 不予发布）
+- **报告模板**（评分表 CSV + 版本报告 Markdown，归档到 `evals/human-review/`）
+
+详见 `evals/human-review/README.md`。每版本发布前跑一次，约 4 小时（2 人 × 8 条 × 15 分钟）。
+
+## 评测金字塔
+
+六套脚本从底到顶，每层过滤不同问题，最大化人工投入价值：
+
+| 层 | 查什么 | 发现什么 | 自动化 |
+|----|--------|---------|--------|
+| 结构校验 | 文件/字段 | 缺失、不一致 | ✅ |
+| 契约断言 | prompt↔eval 一致性 | 定义与期望不符 | ✅ |
+| 记忆端到端 | 规则实现 | 行为偏离 README | ✅ |
+| 长期压测 | 持续使用 | 性能退化、重复堆积 | ✅ |
+| LLM 端到端 | AI 产出 vs 断言 | 漏维度/字段（结构层） | ✅ |
+| **人工双盲** | **内容质量** | **分析对不对、用例合不合理、根因有逻辑** | ⚠️ 人工 |
+
+人工评测在金字塔顶端——前面所有自动化层过滤掉结构/规则问题后，人工只评"内容是否真有用"。
+
 ## 仍未覆盖的验证方法
 
 | 方法 | 说明 | 优先级 |
 |------|------|--------|
-| 人工双盲评测 | 拉测试工程师对 AI 产出打分，验证"维度分析得对不对"（结构断言查不出） | P1（每版本一次） |
-| 长期积累压测 | 模拟 5-10 轮迭代持续写入，断言 summary.json 无性能退化、无重复堆积 | P1 |
 | 安全对抗评测集 | 针提示词注入、越权、数据外泄的对抗用例 | P2 |
 
 ## 集成到 CI 流水线
 
-在 PR 合并前自动跑三套脚本，任一失败阻断合并：
+在 PR 合并前自动跑五套自动化脚本，任一失败阻断合并：
 
 ```yaml
 # .github/workflows/qa-skill-check.yml 示例
@@ -125,6 +172,12 @@ python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 
   run: bash ci/run-evals.sh
 - name: 记忆模块端到端
   run: bash ci/test-memory-e2e.sh
+- name: 记忆模块长期压测
+  run: bash ci/test-memory-stress.sh
+- name: LLM 端到端评测
+  env:
+    KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+  run: python ci/run_llm_eval.py
 ```
 
-`run-evals.sh` 产生的 `evals/history/report-*.json` 可作为 artifact 归档，用于版本间准确率对比。
+`run-evals.sh` 和 `run_llm_eval.py` 产生的 `evals/history/*.json` 可作为 artifact 归档，用于版本间准确率对比。人工双盲评测在发版前离线执行，报告归档到 `evals/human-review/`。
