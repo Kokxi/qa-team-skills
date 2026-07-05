@@ -1,0 +1,14 @@
+{
+  "version": "1.5.0",
+  "timestamp": "2026-07-05T00:00:37.773525",
+  "summary": {
+    "pass": 37,
+    "fail": 0
+  },
+  "trigger_eval": {
+    "accuracy": "89.5%",
+    "pass": 34,
+    "total": 38
+  },
+  "failures": []
+}
