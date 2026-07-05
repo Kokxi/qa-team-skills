@@ -9,6 +9,7 @@ qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量�
 | `ci/validate.sh` | 静态结构 | 文件齐全、SKILL.md 字段、prompt 必含章节、无硬编码行业词、版本一致 | < 1s |
 | `ci/run-evals.sh` | 动态契约 | 触发评测（规则路由基线）+ prompt↔eval 契约断言 + 归档报告 | ~ 2s |
 | `ci/test-memory-e2e.sh` | 行为模拟 | 记忆模块全生命周期：写入/合并/清理/转化/规范沉淀/历史加载 | ~ 1s |
+| `ci/run_llm_eval.py` | **真·LLM 端到端** | 接 LLM API 真调 skill，LLM-as-judge 按 assertion 判定产出内容质量 | ~ 4-6 分钟（8 条 eval） |
 
 ## 使用方式
 
@@ -75,11 +76,39 @@ bash ci/test-memory-e2e.sh   # 记忆模块端到端
 
 这是"规则契约测试"——确保 prompt 指令描述的记忆行为与 README 规范一致。真·AI 执行时的端到端验证（让真模型调 `/qa` 触发文件 I/O）需接模型 API，是后续工作。
 
+### ci/run_llm_eval.py
+
+**真·LLM 端到端评测**——前三套脚本的最高层补充。结构校验查"文件齐不齐"，契约断言查"prompt 定义对不对"，记忆测试查"规则实现对不对"，但都查不出"AI 真跑一遍产出质量好不好"。本脚本接 LLM API 真调 skill，用 LLM-as-judge 判定产出内容质量。
+
+**工作流程**：
+1. 解析 `functional-eval.json` 每条 eval 的 prompt 开头 `/qa-xxx` → 加载 `prompts/xxx/prompt.md` 作为 system prompt
+2. prompt 剩余部分作为 user message 发给 worker 模型生成产出
+3. 用 judge 模型按每条 assertion 判定 pass/fail（输出结构化 JSON）
+4. 归档报告到 `evals/history/llm-report-<version>-<时间戳>.json`
+
+**使用方式**：
+```bash
+export KIMI_API_KEY="sk-..."           # 必填，从环境变量读，绝不写入文件
+python ci/run_llm_eval.py                    # 跑全量 functional-eval（8 条）
+python ci/run_llm_eval.py --smoke            # 只跑第一条（冒烟，~50s）
+python ci/run_llm_eval.py --concurrency 2    # 并发数（默认 2）
+python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 120s）
+```
+
+**已验证发现的真实问题**（冒烟测试 prd-001）：
+- `kimi-for-coding` 生成 prd 评审报告时**只列了 10 个维度，漏了第 11 个（业务分层）**——这是结构断言查不出、只有真调 LLM 才能发现的内容质量问题，说明 prompt 对"业务分层维度必输出"的约束需加强
+
+**注意事项**：
+- `kimi-for-coding` 是 reasoning 模型，`reasoning_content` 占大量 token，worker 的 `max_tokens` 需 ≥ 16k 才能保证 content 不被截断
+- 模型仅允许 `temperature=1`
+- 单条 eval 约 50s（1 次 worker + N 次 judge），全量 8 条并发 2 约 4-6 分钟
+- API key 仅从 `$KIMI_API_KEY` 环境变量读，**脚本和归档报告均不写入 key**
+- 退出码：准确率 < 70% 或有 error 视为失败
+
 ## 仍未覆盖的验证方法
 
 | 方法 | 说明 | 优先级 |
 |------|------|--------|
-| 真·LLM 端到端评测 | 接模型 API，对每条 eval 真调 skill，用 LLM-as-judge 跑 assertion，验证产出内容质量（不仅是结构） | P0 |
 | 人工双盲评测 | 拉测试工程师对 AI 产出打分，验证"维度分析得对不对"（结构断言查不出） | P1（每版本一次） |
 | 长期积累压测 | 模拟 5-10 轮迭代持续写入，断言 summary.json 无性能退化、无重复堆积 | P1 |
 | 安全对抗评测集 | 针提示词注入、越权、数据外泄的对抗用例 | P2 |

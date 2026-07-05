@@ -1,0 +1,72 @@
+{
+  "version": "1.5.0",
+  "eval_set": "functional-eval.json",
+  "timestamp": "2026-07-05T02:32:21.359493+00:00",
+  "config": {
+    "worker_model": "kimi-for-coding",
+    "judge_model": "kimi-for-coding",
+    "concurrency": 1,
+    "smoke": true
+  },
+  "summary": {
+    "total_evals": 1,
+    "total_assertions": 5,
+    "pass": 3,
+    "fail": 2,
+    "accuracy": "60.0%",
+    "errors": 0,
+    "elapsed_sec": 46.6
+  },
+  "results": [
+    {
+      "id": "prd-001",
+      "name": "需求评审-支付接口",
+      "assertions": [
+        {
+          "name": "覆盖11个评审维度",
+          "expected": true,
+          "pass": false,
+          "reason": "报告中仅列出10个评审维度（完整性、清晰度、可测试性、一致性、隐形需求、边界需求、性能需求、安全需求、兼容性需求、可维护性需求），缺少第11个维度，未覆盖全部11个评审维度。"
+        },
+        {
+          "name": "给出业务分层建议",
+          "expected": true,
+          "pass": true,
+          "reason": "输出中明确包含业务分层建议'核心层'"
+        },
+        {
+          "name": "包含澄清问题清单",
+          "expected": true,
+          "pass": true,
+          "reason": "输出包含标题为“需澄清的问题”的清单，共列出5项需要在评审会上确认的问题。"
+        },
+        {
+          "name": "严重程度分级正确",
+          "expected": true,
+          "pass": true,
+          "reason": "所有问题均标注了高/中严重程度，分级与问题影响匹配，且摘要中统计了高中低数量"
+        },
+        {
+          "name": "不包含评审结论",
+          "expected": false,
+          "pass": false,
+          "reason": "judge content 为空（可能 max_tokens 被 reasoning 耗尽）"
+        }
+      ],
+      "pass_count": 3,
+      "fail_count": 2,
+      "error": null,
+      "output_preview": "## 需求评审报告\n- 需求编号：未提供\n- 产品/模块：支付接口\n- 评审日期：2025-10-14\n- 业务分层建议：核心层（建议评审会确认）\n\n### 简明摘要（30 秒速览）\n- 本次评审发现 17 个问题（高:7 / 中:10 / 低:0）\n- 需重点关注：异常与补偿流程缺失、权限与鉴权缺失、回调协议缺失、幂等性与并发处理缺失、安全与审计缺失\n- 业务分层建议：核心层 — 支付完成是交易闭环的关键能力，直接影响产品交易价值和资金安全\n\n### 问题清单\n\n| # | 维度 | 严重程度 | 问题描述 | 建议 |\n|---|------|----------|----------|------|\n| 1 | 完整性 | 高 | 仅描述了正常扣款流程，缺少超时、网络失败、回调丢失、用户取消、退款、对账、冲正等异常与补偿流程 | 补充异常场景清单及对应的补偿/回滚策略 |\n| 2 | 完整性 | 高 | 未明确支付发起方的权限矩阵，缺少“谁能为谁付款”的定义 | 明确订单所有权、支付人身份校验、商户/管理员权限 |\n| 3 | 完整性 | 高 | 缺少交易完整生命周期（退款、撤销",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1086,
+        "completion_tokens": 4198,
+        "total_tokens": 5284,
+        "cached_tokens": 1086,
+        "prompt_tokens_details": {
+          "cached_tokens": 1086
+        }
+      }
+    }
+  ]
+}
