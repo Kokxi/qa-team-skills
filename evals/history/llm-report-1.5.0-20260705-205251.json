@@ -1,0 +1,530 @@
+{
+  "version": "1.5.0",
+  "eval_set": "functional-eval.json",
+  "timestamp": "2026-07-05T12:52:51.855424+00:00",
+  "config": {
+    "worker_model": "cohere/north-mini-code:free",
+    "judge_model": "cohere/north-mini-code:free",
+    "concurrency": 2,
+    "smoke": false
+  },
+  "summary": {
+    "total_evals": 8,
+    "total_assertions": 39,
+    "pass": 16,
+    "fail": 23,
+    "accuracy": "41.0%",
+    "errors": 0,
+    "elapsed_sec": 328.3
+  },
+  "results": [
+    {
+      "id": "prd-001",
+      "name": "需求评审-支付接口",
+      "assertions": [
+        {
+          "name": "覆盖11个评审维度",
+          "expected": true,
+          "pass": false,
+          "reason": "产出为空，未包含任何评审维度的检查结果，因此未满足对11个评审维度的覆盖要求。"
+        },
+        {
+          "name": "给出业务分层建议",
+          "expected": true,
+          "pass": false,
+          "reason": "输出为空，未包含任何业务分层建议（核心层/体验层/增值层）。"
+        },
+        {
+          "name": "包含澄清问题清单",
+          "expected": true,
+          "pass": false,
+          "reason": "没有提供任何产出，因此无法包含所需的需澄清的问题列表。"
+        },
+        {
+          "name": "严重程度分级正确",
+          "expected": true,
+          "pass": false,
+          "reason": "未提供任何产出，无法评估严重程度分级是否正确。"
+        },
+        {
+          "name": "不包含评审结论",
+          "expected": false,
+          "pass": false,
+          "reason": "产出不包含任何评审结论，但断言期望出现评审结论（expected = False），因此未满足要求。"
+        }
+      ],
+      "pass_count": 0,
+      "fail_count": 5,
+      "error": null,
+      "output_preview": "",
+      "finish_reason": "length",
+      "usage": {
+        "prompt_tokens": 1177,
+        "completion_tokens": 8192,
+        "total_tokens": 9369,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 10360,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "warning": "输出被 max_tokens 截断，可能影响判定"
+    },
+    {
+      "id": "case-001",
+      "name": "用例设计-登录功能",
+      "assertions": [
+        {
+          "name": "覆盖6种测试类型",
+          "expected": true,
+          "pass": true,
+          "reason": "The output includes functional, boundary, exception, security, performance, and compatibility test sections, covering all six test types as required."
+        },
+        {
+          "name": "每条标注业务分层",
+          "expected": true,
+          "pass": true,
+          "reason": "所有八个测试用例均包含业务分层标注（核心层/体验层），符合断言要求。"
+        },
+        {
+          "name": "每条标注设计方法",
+          "expected": true,
+          "pass": true,
+          "reason": "每条测试用例均明确标注了设计方法（如场景法、等价类划分、边界值分析、错误推测等），断言要求得到满足。"
+        },
+        {
+          "name": "核心层用例至少3条",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含 5 个核心层测试用例（TC001、TC002、TC004、TC005、TC006），满足了“核心层用例至少 3 条”的断言要求。"
+        },
+        {
+          "name": "包含账号锁定场景",
+          "expected": true,
+          "pass": true,
+          "reason": "测试套件中包含 TC004，该测试用例明确覆盖了连续 5 次登录失败后账户自动锁定的场景，满足了断言的要求。"
+        },
+        {
+          "name": "步骤以动词开头",
+          "expected": true,
+          "pass": false,
+          "reason": "Some steps do not start with a verb. For example, step 5 in TC004 reads \"On the 5th failure, immediately try logging in again with any password.\" which begins with \"On\" rather than a verb, violating t"
+        },
+        {
+          "name": "包含用户名格式校验",
+          "expected": true,
+          "pass": false,
+          "reason": "测试套件中缺少针对用户名特殊字符和格式校验的测试用例，仅包含长度边界测试，无法满足用户名格式校验的要求。"
+        },
+        {
+          "name": "包含长度边界测试",
+          "expected": true,
+          "pass": true,
+          "reason": "测试套件包含一个专门的边界测试（2-TC002），涵盖了空用户名、1 字符用户名、恰好最大长度（100 个字符）和超过最大长度（101 个字符）的情况，满足了断言的要求。"
+        },
+        {
+          "name": "包含信息泄露防护",
+          "expected": true,
+          "pass": true,
+          "reason": "测试套件中包含 TC006，该测试用例明确验证了错误信息是否通用化（不区分用户是否存在），从而满足了信息泄露防护的要求。"
+        }
+      ],
+      "pass_count": 7,
+      "fail_count": 2,
+      "error": null,
+      "output_preview": "## 需求分析\n- **需求编号**：LOG‑2024‑01\n- **功能点拆解**：\n  1. 用户输入用户名和密码。\n  2. 系统验证凭证（存在性、正确性）。\n  3. 验证成功 → 创建会话 → 重定向到首页。\n  4. 验证失败 → 显示通用错误提示。\n  5. 记录连续失败次数；达到 5 次后自动锁定账户 30 分钟。\n- **业务价值**：\n  - **核心层** – 无法登录意味着用户无法访问核心服务 → 直接影响产品可用性。\n  - **体验层** – 登录流程的流畅度、错误信息的清晰度影响用户满意度。\n  - **增值层** – 登录时的安全提示、单点登录便捷性等可提升用户忠诚度。\n- **验收标准**：\n  - 有效凭证登录后跳转首页并保持登录状态。\n  - 无效凭证返回“用户名或密码错误”（不区分具体哪项错误）。\n  - 连续 5 次失败后账户自动锁定，30 分钟内无法登录，提示“账户已被锁定，请 30 分钟后重试”。\n  - 登录接口无 SQL 注入、XSS 等安全漏洞。\n  - 并发登录和跨浏览器登录正常工作。\n\n### 简明摘要（30 秒速览）\n- 生成 ",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2358,
+        "completion_tokens": 3973,
+        "total_tokens": 6331,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1387,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "bug-001",
+      "name": "缺陷分析-单条",
+      "assertions": [
+        {
+          "name": "先输出质量评估",
+          "expected": true,
+          "pass": false,
+          "reason": "产出仅包含质量评估，但未提供所需的根因分析，因此未满足断言要求。"
+        },
+        {
+          "name": "有根因分析",
+          "expected": true,
+          "pass": false,
+          "reason": "产出仅提供了缺陷描述的质量评估，指出信息不足，但未包含任何根因分类、可能根因或置信度等根因分析内容，因此不满足“有根因分析”的断言。"
+        },
+        {
+          "name": "有修复建议",
+          "expected": true,
+          "pass": false,
+          "reason": "该产出仅提供了缺陷描述的质量评估和信息补全请求，并未包含任何修复方向或位置的建议，因此不符合“包含修复建议”的断言要求。"
+        },
+        {
+          "name": "有回归测试要点",
+          "expected": true,
+          "pass": false,
+          "reason": "该产出仅包含缺陷描述质量评估表及摘要，未提及任何回归测试要点或建议，因此未满足断言要求。"
+        },
+        {
+          "name": "置信度标注",
+          "expected": true,
+          "pass": false,
+          "reason": "缺陷描述中未包含置信度标注（高/中/低），因此未满足置信度标注的要求。"
+        }
+      ],
+      "pass_count": 0,
+      "fail_count": 5,
+      "error": null,
+      "output_preview": "## 缺陷描述质量评估\n\n| 维度 | 评分 | 说明 |\n|------|------|------|\n| 标题清晰度 | ✅ 达标 | 直接描述了现象“支付成功但订单状态未更新”，具体且易理解。 |\n| 复现步骤 | ❌ 不达标 | 仅列出高层步骤，缺少页面路径、账号信息、具体操作细节及复现频率。 |\n| 期望 vs 实际 | ✅ 达标 | 预期和实际结果均明确（“支付成功” vs “待支付”），可量化验证。 |\n| 环境信息 | ❌ 不达标 | 未提及浏览器/操作系统/版本/测试环境等上下文信息。 |\n| 日志/截图 | ❌ 不达标 | 无控制台日志、网络抓包或截图等辅助证据。 |\n\n### 简明摘要\n- 质量评估：2/5 项达标\n- 结论：信息**不足**，**请补全信息后重新提交**，以便进行根因分析。\n\n**结论：信息不足，无法进行根因分析。请补全以下信息后重新提交。**\n\n### 帮助补全——请回答以下问题\n1. **“支付成功但订单状态未更新”**的具体表现是什么？\n   - A. 支付后页面跳转到订单详情页，但状态仍显示“待支付”\n   - B. 支付后返回订单列表，",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2276,
+        "completion_tokens": 1759,
+        "total_tokens": 4035,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1668,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "report-001",
+      "name": "报告生成-日报",
+      "assertions": [
+        {
+          "name": "报告类型正确",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含标题、简明摘要和结构化的表格，列出了今日执行情况、缺陷、进行中事项、阻塞问题和明日计划，符合预期的日报格式。"
+        },
+        {
+          "name": "包含简明摘要",
+          "expected": true,
+          "pass": true,
+          "reason": "报告开头包含一个简明摘要部分，列出了测试情况、缺陷和当前状态，符合断言要求。"
+        },
+        {
+          "name": "数据完整",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含所有必要信息：执行用例数（25）、发现缺陷数（3）、进行中模块（支付接口）和明日计划（完成支付接口剩余用例执行）。"
+        },
+        {
+          "name": "来源标注",
+          "expected": true,
+          "pass": false,
+          "reason": "产出中未提及任何数据来源标注，也未标记为'直接输入'，因此未满足来源标注断言。"
+        }
+      ],
+      "pass_count": 3,
+      "fail_count": 1,
+      "error": null,
+      "output_preview": "**简明摘要（30 秒速览）**\n- 共执行 25 条测试用例，发现 3 个缺陷（严重 1 个，一般 2 个）。\n- 当前正在进行 **支付接口** 模块的测试，暂无阻塞。\n- 明日计划完成支付接口剩余用例的执行。\n\n## 测试日报 — 2026-06-30 — 张三\n\n| 项目 | 内容 |\n|------|------|\n| 今日执行用例 | 25 条（P0:5, P1:10, P2:8, P3:2） |\n| 今日发现缺陷 | 3 个（致命:0, 严重:1, 一般:2, 建议:0） |\n| 进行中 | 1 个模块测试中 |\n| 阻塞问题 | 无 |\n| 明日计划 | 完成支付接口剩余用例执行 |",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2561,
+        "completion_tokens": 610,
+        "total_tokens": 3171,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 423,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "team-001",
+      "name": "团队管理-进度看板",
+      "assertions": [
+        {
+          "name": "子能力匹配正确",
+          "expected": true,
+          "pass": true,
+          "reason": "产出直接提到了“测试进度看板”子能力，符合断言要求。"
+        },
+        {
+          "name": "输出进度表格",
+          "expected": true,
+          "pass": false,
+          "reason": "产出中没有包含任何表格；它只是确认将生成包含进度和风险分析的报告，但没有包含所需的模块/负责人/计划用例/已执行/进度等表格列。"
+        },
+        {
+          "name": "标红延期风险",
+          "expected": true,
+          "pass": false,
+          "reason": "产出仅确认执行看板并承诺生成报告，但并未实际显示任何进度信息，也未标红支付模块的33%进度为延期风险，因此未满足断言要求。"
+        },
+        {
+          "name": "有简明摘要",
+          "expected": true,
+          "pass": false,
+          "reason": "产出中没有包含面向管理者的简明摘要；它只是确认了请求并说明了将要生成的内容，而不是提供任何总结或关键信息。"
+        }
+      ],
+      "pass_count": 1,
+      "fail_count": 3,
+      "error": null,
+      "output_preview": "我理解你要执行「二、测试进度看板」，确认开始？\n\n我将根据你提供的 v2.5迭代数据，生成测试进度看板报告，包括各模块的进度情况和延期风险分析。",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 5344,
+        "completion_tokens": 272,
+        "total_tokens": 5616,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 277,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "qa-001",
+      "name": "统一入口-多步任务",
+      "assertions": [
+        {
+          "name": "解析为多步任务",
+          "expected": true,
+          "pass": true,
+          "reason": "意图解析 JSON 显示 intent 为 \"multi\"，包含 prd 和 case 两个步骤，符合预期。"
+        },
+        {
+          "name": "生成执行计划",
+          "expected": true,
+          "pass": true,
+          "reason": "输出包含一个包含步骤1和步骤2的执行计划，满足了断言的要求。"
+        },
+        {
+          "name": "步骤间数据传递",
+          "expected": true,
+          "pass": true,
+          "reason": "第二步（用例）列出了对第一步（PRD）的依赖，表明其引用了第一步的输出作为输入。"
+        }
+      ],
+      "pass_count": 3,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "## 记忆简报 — 支付接口\n- 历史迭代：共 0 轮（首次使用）\n- 用例库：0 条\n- 历史缺陷：0 个\n- 高频根因：无\n- 复发模式：无\n- 已沉淀规范：0 条\n- 上轮概况：无\n\n---\n\n## 意图解析\n\n```json\n{\n  \"intent\": \"multi\",\n  \"steps\": [\n    {\n      \"action\": \"prd\",\n      \"description\": \"评审支付接口需求的PRD文档\",\n      \"scope\": \"支付接口\",\n      \"dependencies\": []\n    },\n    {\n      \"action\": \"case\",\n      \"description\": \"基于PRD评审结果设计支付接口测试用例\",\n      \"scope\": \"支付接口\",\n      \"dependencies\": [\"prd\"]\n    }\n  ],\n  \"output_goal\": \"生成PRD评审报告和基于评审结果的测试用例集\"\n}\n```\n\n---\n\n## 任务执行计划\n\n**原始任务：** 先评审这个支付需求的P",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 4985,
+        "completion_tokens": 1219,
+        "total_tokens": 6204,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1054,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "agent-001",
+      "name": "Agent测试-智能客服",
+      "assertions": [
+        {
+          "name": "覆盖16个维度",
+          "expected": true,
+          "pass": false,
+          "reason": "提供的测试用例仅列出了 14 个测试项（TC001–TC014），且第 14 项内容不完整，缺少第 15 和第 16 项测试用例，因此未能覆盖全部 16 个维度。"
+        },
+        {
+          "name": "RAG维度适用",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中的简明摘要明确指出\"RAG 相关维度（14-16）：适用\"，这符合断言中对这些维度为适用而非不适用的要求。"
+        },
+        {
+          "name": "每种维度至少1条",
+          "expected": true,
+          "pass": false,
+          "reason": "产出宣称生成了16条用例覆盖16个维度，但实际仅显示了14个测试用例（TC001‑‑14），其中TC014内容不完整，缺少TC015和TC016的测试用例。因此，未能满足\"每种维度至少1条\"的断言要求。"
+        },
+        {
+          "name": "设计方法必填",
+          "expected": true,
+          "pass": false,
+          "reason": "测试用例 14-TC014 缺少设计方法标注，导致并非每条用例都包含该字段。"
+        },
+        {
+          "name": "有简明摘要",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含一个 \"简明摘要\" 部分，列出了用例数量、覆盖维度、优先级分布 (P0‑ P3) 以及 RAG 相关维度，符合断言要求。"
+        }
+      ],
+      "pass_count": 2,
+      "fail_count": 3,
+      "error": null,
+      "output_preview": "## Agent 信息\n- **Agent 名称**：智能客服 Agent（HelpBot）\n- **能力描述**：基于 RAG 架构，集成产品知识库（帮助文档、FAQ、政策条款），支持多轮对话记忆上下文，工具包括**查询订单状态**、**查询物流信息**、**提交退款申请**。\n- **合规框架**：无指定合规框架。\n\n### 简明摘要（30 秒速览）\n- 生成 **16 条用例**，覆盖 **16 个维度**（全部适用）。\n- **P0**：5 / **P1**：4 / **P2**：7 / **P3**：0\n- **RAG 相关维度（14-16）**：适用\n\n## 测试用例\n\n### 一、Agent 基础功能\n#### 1-TC001：创建并启用 HelpBot 智能客服 Agent\n- **维度**：Agent 基础功能\n- **设计方法**：场景法、状态迁移\n- **优先级**：P0\n- **前置条件**：\n  1. 拥有管理员权限的用户登录平台。\n  2. 目标 Agent（HelpBot）尚未创建。\n- **测试数据**：无特殊输入；Agent 配置参数如下：\n  ```",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1495,
+        "completion_tokens": 5941,
+        "total_tokens": 7436,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1936,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "std-case-001",
+      "name": "规范库→用例全链路",
+      "assertions": [
+        {
+          "name": "加载规范库数据",
+          "expected": true,
+          "pass": false,
+          "reason": "没有提供 AI 产出，因此无法验证是否已加载规范库数据（standards.json）。"
+        },
+        {
+          "name": "规范转化为用例",
+          "expected": true,
+          "pass": false,
+          "reason": "AI 产出为空；没有显示任何规范或用例，因此无法满足每条规范至少转化 1 条用例的要求。"
+        },
+        {
+          "name": "用例标注来源",
+          "expected": true,
+          "pass": false,
+          "reason": "Test output is empty, so there is no annotation of the source normative library."
+        },
+        {
+          "name": "输出规范引用统计",
+          "expected": true,
+          "pass": false,
+          "reason": "没有提供 AI 生成的输出；无法验证规范引用或转化用例的计数。"
+        }
+      ],
+      "pass_count": 0,
+      "fail_count": 4,
+      "error": null,
+      "output_preview": "",
+      "finish_reason": "length",
+      "usage": {
+        "prompt_tokens": 2344,
+        "completion_tokens": 8191,
+        "total_tokens": 10535,
+        "cost": 0,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0,
+          "upstream_inference_prompt_cost": 0,
+          "upstream_inference_completions_cost": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 9552,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "warning": "输出被 max_tokens 截断，可能影响判定"
+    }
+  ]
+}

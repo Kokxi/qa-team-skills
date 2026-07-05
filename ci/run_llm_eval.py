@@ -10,11 +10,11 @@ qa-team-skills 真·LLM 端到端评测器（P0）
   4. 归档报告到 evals/history/llm-report-<version>-<时间戳>.json
 
 使用方式：
-  export KIMI_API_KEY="sk-..."           # 必填，绝不写入文件
+  export OR_KEY="sk-or-..."            # 必填，绝不写入文件（OpenRouter）
   python ci/run_llm_eval.py                    # 跑全量 functional-eval
   python ci/run_llm_eval.py --smoke            # 只跑第一条（冒烟）
   python ci/run_llm_eval.py --eval evals/_smoke.json --concurrency 1
-  python ci/run_llm_eval.py --judge-model kimi-for-coding --worker-model kimi-for-coding
+  python ci/run_llm_eval.py --worker-model cohere/north-mini-code:free --judge-model cohere/north-mini-code:free
 
 注意：本脚本不写入 API key 到任何文件，仅从环境变量读取。
 """
@@ -30,10 +30,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 # ── 配置 ─────────────────────────────────────────────
-DEFAULT_BASE_URL = "https://api.kimi.com/coding/v1"
-DEFAULT_MODEL = "kimi-for-coding"
-DEFAULT_TIMEOUT = 120
+DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
+DEFAULT_MODEL = "cohere/north-mini-code:free"
+DEFAULT_TIMEOUT = 150
 DEFAULT_CONCURRENCY = 2
+# API key 环境变量名（OpenRouter 用 OR_KEY 或 OPENROUTER_API_KEY）
+API_KEY_ENV = ["OR_KEY", "OPENROUTER_API_KEY"]
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
@@ -45,16 +47,16 @@ def now_iso():
 
 
 # ── LLM 调用 ─────────────────────────────────────────
-def llm_chat(base_url, api_key, model, messages, timeout, max_tokens=16384, temperature=1):
-    """调用 chat completions，返回 (content, finish, usage)。
-    注：kimi-for-coding 是 reasoning 模型，reasoning_content 占大量 token，
-    max_tokens 需 ≥ 16k 才能保证 reasoning 后仍有 content 输出。"""
+def llm_chat(base_url, api_key, model, messages, timeout, max_tokens=8192, temperature=0.3):
+    """调用 chat completions，返回 (content, finish, usage, reasoning)。
+    注：max_tokens 默认 8192（cohere/north-mini-code:free 实测可完整产出结构化报告）；
+    若用 reasoning 模型（如 glm-5.2/kimi-for-coding）需调到 16384+ 并改 temperature=1。"""
     url = f"{base_url}/chat/completions"
     body = {
         "model": model,
         "messages": messages,
         "max_tokens": max_tokens,
-        "temperature": temperature,  # kimi-for-coding 限定为 1
+        "temperature": temperature,  # 0.3 评测稳定；reasoning 模型（kimi/glm）需改为 1
     }
     req = urllib.request.Request(
         url,
@@ -80,7 +82,7 @@ def llm_chat(base_url, api_key, model, messages, timeout, max_tokens=16384, temp
         raise RuntimeError(f"请求失败: {e}")
 
 
-def llm_chat_retry(base_url, api_key, model, messages, timeout, retries=2, max_tokens=16384):
+def llm_chat_retry(base_url, api_key, model, messages, timeout, retries=2, max_tokens=8192):
     """带重试的调用（应对限流/网络抖动）"""
     last_err = None
     for i in range(retries + 1):
@@ -274,10 +276,10 @@ def main():
     parser.add_argument("--no-archive", action="store_true", help="不写归档报告")
     args = parser.parse_args()
 
-    api_key = os.environ.get("KIMI_API_KEY")
+    api_key = os.environ.get("OR_KEY") or os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        print("❌ 未设置 KIMI_API_KEY 环境变量", file=sys.stderr)
-        print("   请先运行: export KIMI_API_KEY=\"sk-...\"", file=sys.stderr)
+        print("❌ 未设置 OR_KEY 或 OPENROUTER_API_KEY 环境变量", file=sys.stderr)
+        print("   请先运行: export OR_KEY=\"sk-or-...\"", file=sys.stderr)
         sys.exit(2)
 
     # 读评测集
