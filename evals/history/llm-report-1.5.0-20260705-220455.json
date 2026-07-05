@@ -1,0 +1,379 @@
+{
+  "version": "1.5.0",
+  "eval_set": "functional-eval.json",
+  "timestamp": "2026-07-05T14:04:55.623772+00:00",
+  "config": {
+    "worker_model": "deepseek-chat",
+    "judge_model": "deepseek-chat",
+    "concurrency": 2,
+    "smoke": false
+  },
+  "summary": {
+    "total_evals": 7,
+    "total_assertions": 35,
+    "pass": 33,
+    "fail": 2,
+    "accuracy": "94.3%",
+    "errors": 0,
+    "elapsed_sec": 88.3
+  },
+  "results": [
+    {
+      "id": "prd-001",
+      "name": "需求评审-支付接口",
+      "assertions": [
+        {
+          "name": "覆盖11个评审维度",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中明确列出了11个评审维度（完整性、清晰度、可测试性、一致性、隐形需求、边界需求、性能需求、安全需求、兼容性需求、可维护性需求、业务分层），并在维度覆盖统计中确认覆盖了全部11个维度，且未使用ISO 25010等替代维度。"
+        },
+        {
+          "name": "给出业务分层建议",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中明确给出了业务分层建议，例如在摘要部分提到'业务分层建议：核心层'，并在问题清单第28条中详细区分了核心层、体验层和增值层的功能。"
+        },
+        {
+          "name": "包含澄清问题清单",
+          "expected": true,
+          "pass": true,
+          "reason": "评审报告中明确包含‘需澄清的问题’部分，列出了6个需要产品经理确认的问题，满足断言要求。"
+        },
+        {
+          "name": "严重程度分级正确",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中每个问题都明确标注了高、中、低三种严重程度，符合断言要求。"
+        },
+        {
+          "name": "不包含评审结论",
+          "expected": false,
+          "pass": true,
+          "reason": "该产出为需求评审报告，未包含'通过/不通过'等评审结论，仅列出了问题清单和建议，符合断言要求。"
+        }
+      ],
+      "pass_count": 5,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "好的，作为一名资深测试专家，我将对您提供的支付接口需求文档进行系统性评审。\n\n## 需求评审报告\n- 需求编号：REQ-PAY-001\n- 产品/模块：支付接口\n- 评审日期：2024-05-21\n- 业务分层建议：核心层\n\n### 简明摘要（30 秒速览）\n- 本次评审发现 **18** 个问题（高:6 / 中:9 / 低:3）\n- 需重点关注：**支付流程完整性、回调幂等性、并发处理、安全风险、异常边界**\n- 业务分层建议：**核心层** — 支付是产品的核心交易闭环，支付失败或数据不一致将直接导致产品不可用。\n\n### 问题清单\n\n| # | 维度 | 严重程度 | 问题描述 | 建议 |\n|---|------|----------|----------|------|\n| 1 | 完整性 | 高 | **支付流程不完整**：需求仅描述了发起支付和网关回调，缺少用户主动取消支付、支付超时、支付网关无响应等场景的处理逻辑。 | 补充用户取消支付（前端取消）、支付超时（订单自动关闭）、网关无响应（定时任务对账）等完整状态流转。 |\n| 2 | 完整性 | 高 | **回调处理逻辑",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1269,
+        "completion_tokens": 2480,
+        "total_tokens": 3749,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1269
+      }
+    },
+    {
+      "id": "case-001",
+      "name": "用例设计-登录功能",
+      "assertions": [
+        {
+          "name": "覆盖6种测试类型",
+          "expected": true,
+          "pass": false,
+          "reason": "产出中仅包含功能、边界、异常、安全4种测试类型，缺少性能和兼容性测试用例，未覆盖全部6种。"
+        },
+        {
+          "name": "每条标注业务分层",
+          "expected": true,
+          "pass": true,
+          "reason": "所有测试用例均标注了业务分层（核心层/体验层/增值层），满足断言要求。"
+        },
+        {
+          "name": "每条标注设计方法",
+          "expected": true,
+          "pass": true,
+          "reason": "所有18条测试用例均标注了设计方法，如场景法、状态迁移、边界值分析、错误推测等，满足断言要求。"
+        },
+        {
+          "name": "核心层用例至少3条",
+          "expected": true,
+          "pass": true,
+          "reason": "核心层用例有8条（LOGIN-TC01至TC05、TC13至TC16），满足至少3条的要求。"
+        },
+        {
+          "name": "包含账号锁定场景",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中包含LOGIN-TC04和LOGIN-TC05两个用例，分别覆盖了连续5次失败后账号锁定30分钟以及锁定后自动解锁的场景，满足断言要求。"
+        },
+        {
+          "name": "步骤以动词开头",
+          "expected": true,
+          "pass": true,
+          "reason": "所有测试用例的步骤均以动词（如打开、输入、点击、等待、使用、通过、修改、记录等）开头，符合断言要求。"
+        },
+        {
+          "name": "包含用户名格式校验",
+          "expected": true,
+          "pass": false,
+          "reason": "AI产出未包含任何针对用户名特殊字符（如@、#、$等）或格式（如邮箱格式、手机号格式等）的校验测试用例，仅覆盖了边界长度和空值，不符合断言要求。"
+        },
+        {
+          "name": "包含长度边界测试",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含LOGIN-TC06（空字符串）、LOGIN-TC08（1字符）、LOGIN-TC09（准确上限20字符）、LOGIN-TC10（超上限21字符），覆盖了断言要求的所有长度边界。"
+        },
+        {
+          "name": "包含信息泄露防护",
+          "expected": true,
+          "pass": true,
+          "reason": "测试用例 LOGIN-TC03 和 LOGIN-TC16 明确要求错误提示统一为“用户名或密码错误”，不区分用户是否存在，满足信息泄露防护的断言。"
+        }
+      ],
+      "pass_count": 7,
+      "fail_count": 2,
+      "error": null,
+      "output_preview": "好的，作为一名资深测试专家，我将根据您提供的需求，生成结构化的测试用例。\n\n## 需求分析\n- **需求编号**：LOGIN-2024-001\n- **功能点拆解**：\n    1.  用户名和密码输入\n    2.  登录验证（成功/失败）\n    3.  登录成功跳转至首页\n    4.  登录失败显示错误提示\n    5.  连续5次失败后账号锁定30分钟\n- **业务价值**：用户身份认证是系统的第一道防线，是保障用户数据安全和系统可用性的核心功能。\n- **验收标准**：\n    1.  输入正确的用户名和密码，能成功登录并跳转到首页。\n    2.  输入错误的用户名或密码，页面显示明确的错误提示。\n    3.  连续5次输入错误的密码，账号被锁定，并在30分钟内无法再次登录。\n    4.  锁定期间，即使输入正确密码也无法登录。\n    5.  30分钟后，账号自动解锁，可以正常登录。\n\n### 简明摘要（30 秒速览）\n- 生成 18 条用例，覆盖 6 种测试类型\n- 核心层:8 / 体验层:6 / 增值层:4\n- P0:5 / P1:6 / P2:5 / P3:2",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2723,
+        "completion_tokens": 4210,
+        "total_tokens": 6933,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2723
+      }
+    },
+    {
+      "id": "report-001",
+      "name": "报告生成-日报",
+      "assertions": [
+        {
+          "name": "报告类型正确",
+          "expected": true,
+          "pass": true,
+          "reason": "产出包含明确的日期（2026-06-30）、测试人员（张三）以及今日执行、缺陷发现、明日计划等日报典型要素，符合日报格式。"
+        },
+        {
+          "name": "包含简明摘要",
+          "expected": true,
+          "pass": true,
+          "reason": "报告开头包含名为“简明摘要（30秒速览）”的部分，符合断言要求。"
+        },
+        {
+          "name": "数据完整",
+          "expected": true,
+          "pass": true,
+          "reason": "测试日报明确包含了执行用例数（25条）、发现缺陷数（3个）、进行中模块（支付接口）和明日计划（完成支付接口剩余用例执行），满足数据完整断言。"
+        },
+        {
+          "name": "来源标注",
+          "expected": true,
+          "pass": true,
+          "reason": "测试日报中明确标注了数据来源为'直接输入'，符合断言要求。"
+        }
+      ],
+      "pass_count": 4,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "好的，这是为您生成的测试日报。\n\n## 简明摘要（30秒速览）\n\n- **今日执行**：共执行25条用例，覆盖支付接口模块。\n- **缺陷发现**：发现3个缺陷，其中1个严重级别，2个一般级别，无致命缺陷。\n- **当前状态**：支付接口模块测试进行中，无阻塞项。\n- **明日计划**：继续执行支付接口的剩余用例。\n\n---\n\n## 测试日报 — 2026-06-30 — 张三\n\n| 项目 | 内容 |\n|------|------|\n| 今日执行用例 | 25 条（P0: 5, P1: 10, P2: 8, P3: 2） |\n| 今日发现缺陷 | 3 个（致命: 0, 严重: 1, 一般: 2, 建议: 0） |\n| 进行中 | 1 个模块测试中（支付接口） |\n| 阻塞问题 | 无 |\n| 明日计划 | 完成支付接口剩余用例执行 |",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2620,
+        "completion_tokens": 230,
+        "total_tokens": 2850,
+        "prompt_tokens_details": {
+          "cached_tokens": 2560
+        },
+        "prompt_cache_hit_tokens": 2560,
+        "prompt_cache_miss_tokens": 60
+      }
+    },
+    {
+      "id": "bug-001",
+      "name": "缺陷分析-单条",
+      "assertions": [
+        {
+          "name": "先输出质量评估",
+          "expected": true,
+          "pass": true,
+          "reason": "产出明确分为两个阶段：第一阶段进行缺陷描述质量评估，第二阶段进行根因分析，符合断言要求。"
+        },
+        {
+          "name": "有根因分析",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中明确包含根因分类（代码缺陷）、可能根因（列出了4种具体原因）和置信度（高），满足断言要求。"
+        },
+        {
+          "name": "有修复建议",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中明确包含‘建议修复方向’和‘建议修复位置（如有日志支撑）’等内容，满足断言要求。"
+        },
+        {
+          "name": "有回归测试要点",
+          "expected": true,
+          "pass": true,
+          "reason": "AI产出中明确包含‘回归测试要点’部分，列出了核心场景和异常场景的测试点，满足断言要求。"
+        },
+        {
+          "name": "置信度标注",
+          "expected": true,
+          "pass": true,
+          "reason": "根因分析中明确标注了置信度（如‘置信度：高’），符合断言要求。"
+        }
+      ],
+      "pass_count": 5,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "好的，收到您的缺陷信息。我将按照标准流程，先进行缺陷描述质量评估，确认信息充分后，再进行根因分析。\n\n---\n\n## 第一阶段：缺陷描述质量评估\n\n| 维度 | 评分 | 说明 |\n|------|------|------|\n| 标题清晰度 | ✅ 达标 | “支付成功但订单状态未更新” 清晰描述了现象，即支付流程成功但状态同步失败。 |\n| 复现步骤完整性 | ✅ 达标 | 步骤清晰，包含操作路径（余额支付100元）和关键节点（支付网关返回成功）。 |\n| 期望 vs 实际 | ✅ 达标 | 期望结果（‘支付成功’）与实际结果（‘待支付’）对比明确，可量化验证。 |\n| 环境信息 | ❌ 不达标 | 未提供浏览器/系统/版本/测试环境等信息。 |\n| 日志/截图 | ❌ 不达标 | 未提供任何日志或截图。 |\n\n### 简明摘要\n- **质量评估**：3/5 项达标\n- **结论**：信息**充分**，**可进行根因分析**。环境信息和日志为可选辅助，不影响根因分析流程。\n\n---\n\n## 第二阶段：根因分析\n\n## 缺陷分析报告\n- **缺陷编号**：BUG-20231027-0",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 2402,
+        "completion_tokens": 1142,
+        "total_tokens": 3544,
+        "prompt_tokens_details": {
+          "cached_tokens": 2304
+        },
+        "prompt_cache_hit_tokens": 2304,
+        "prompt_cache_miss_tokens": 98
+      }
+    },
+    {
+      "id": "team-001",
+      "name": "团队管理-进度看板",
+      "assertions": [
+        {
+          "name": "子能力匹配正确",
+          "expected": true,
+          "pass": true,
+          "reason": "产出明确包含'测试进度看板'标题和详细内容，匹配该子能力"
+        },
+        {
+          "name": "输出进度表格",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中包含明确的表格，表头包含模块、负责人、计划用例、已执行、进度等字段，满足断言要求。"
+        },
+        {
+          "name": "标红延期风险",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中支付模块的进度列明确标注为“延期”，状态列显示“⚠️ 预计延 2 天”，并在风险模块中详细说明了延期风险，符合断言要求。"
+        },
+        {
+          "name": "有简明摘要",
+          "expected": true,
+          "pass": true,
+          "reason": "产出开头包含「简明摘要（30 秒速览）」部分，以要点形式总结了总体完成率、延期风险模块、正常模块和建议，面向管理者提供了快速概览。"
+        }
+      ],
+      "pass_count": 4,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "我理解你要执行「二、测试进度看板」，确认开始？\n\n---\n\n## 简明摘要（30 秒速览）\n\n- **总体完成率**：180 条计划用例中已执行 123 条，完成率 **68%**\n- **延期风险模块**：**支付模块**（李四）进度仅 33%，预计延期 2 天\n- **正常模块**：用户模块（王五）进度 95%，接近完成；订单模块（张三）进度 81%，正常推进\n- **建议**：支付模块需尽快协调资源或裁剪测试范围，避免影响版本发布\n\n---\n\n## 测试进度看板 — v2.5 迭代 — 本周\n\n| 模块 | 负责人 | 计划用例 | 已执行 | 进度 | 状态 | 延期风险 |\n|------|--------|----------|--------|------|------|----------|\n| 订单模块 | 张三 | 80 | 65 | 81% | 正常 | 无 |\n| 支付模块 | 李四 | 60 | 20 | 33% | **延期** | ⚠️ 预计延 2 天 |\n| 用户模块 | 王五 | 40 | 38 | 95% | 正常 | 无 |\n| **合计** | ",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 5450,
+        "completion_tokens": 531,
+        "total_tokens": 5981,
+        "prompt_tokens_details": {
+          "cached_tokens": 5376
+        },
+        "prompt_cache_hit_tokens": 5376,
+        "prompt_cache_miss_tokens": 74
+      }
+    },
+    {
+      "id": "qa-001",
+      "name": "统一入口-多步任务",
+      "assertions": [
+        {
+          "name": "解析为多步任务",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中意图解析结果为'multi'，且steps数组明确包含prd和case两个步骤，完全满足断言要求。"
+        },
+        {
+          "name": "生成执行计划",
+          "expected": true,
+          "pass": true,
+          "reason": "产出中明确包含步骤1（评审支付接口PRD）和步骤2（基于评审结果设计测试用例）的执行计划，符合断言要求。"
+        },
+        {
+          "name": "步骤间数据传递",
+          "expected": true,
+          "pass": true,
+          "reason": "任务编排中明确说明第一步的评审报告将作为第二步的输入上下文，且第二步的依赖项包含第一步，满足步骤间数据传递的断言。"
+        }
+      ],
+      "pass_count": 3,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "# 第零步：历史加载\n\n## 记忆简报 — 支付接口\n- **历史迭代**：共 2 轮（v1.0 → v1.1）\n- **用例库**：28 条（核心层 15 / 体验层 8 / 增值层 5）\n- **历史缺陷**：12 个（最近一轮 6 个）\n- **高频根因**：代码缺陷(50%)、第三方回调(25%)、配置错误(17%)\n- **复发模式**：并发扣款(3次) → ⚠️ **本次必须覆盖**\n- **已沉淀规范**：2 条\n  - checklist: 涉及金额的功能必须包含并发测试\n  - lession_learned: 第三方回调签名验证缺失导致线上事故\n- **上轮概况**：20 条用例 → 发现 6 个缺陷 → 修复率 83%\n\n---\n\n# 第一步：意图解析\n\n```json\n{\n  \"intent\": \"multi\",\n  \"steps\": [\n    {\n      \"action\": \"prd\",\n      \"description\": \"评审支付接口的PRD，包括用户发起支付、余额/银行卡两种方式、第三方网关扣款、异步回调\",\n      \"scope\": \"",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 5075,
+        "completion_tokens": 537,
+        "total_tokens": 5612,
+        "prompt_tokens_details": {
+          "cached_tokens": 4992
+        },
+        "prompt_cache_hit_tokens": 4992,
+        "prompt_cache_miss_tokens": 83
+      }
+    },
+    {
+      "id": "agent-001",
+      "name": "Agent测试-智能客服",
+      "assertions": [
+        {
+          "name": "覆盖16个维度",
+          "expected": true,
+          "pass": true,
+          "reason": "AI产出明确列出了16个测试维度（从基础功能到上下文窗口），每个维度下都有对应的测试用例，覆盖完整。"
+        },
+        {
+          "name": "RAG维度适用",
+          "expected": true,
+          "pass": true,
+          "reason": "测试用例中维度14-16（检索准确性、来源归因、上下文窗口）均明确标注为‘适用’，并生成了对应的测试用例（TC16-TC18），符合断言要求。"
+        },
+        {
+          "name": "每种维度至少1条",
+          "expected": true,
+          "pass": true,
+          "reason": "AI产出覆盖了全部16个维度（Agent基础功能、提示词安全、工具调用权限、知识库隔离、多Agent协作、输出安全、信息安全、AI幻觉、AI偷懒、AI稳定性、可控性、资源消耗、合规与伦理、检索准确性、来源归因、上下文窗口），每个维度至少包含1条测试用例。"
+        },
+        {
+          "name": "设计方法必填",
+          "expected": true,
+          "pass": true,
+          "reason": "所有20条测试用例均标注了设计方法，如状态迁移、错误推测法、判定表、场景法、边界值分析等，满足断言要求。"
+        },
+        {
+          "name": "有简明摘要",
+          "expected": true,
+          "pass": true,
+          "reason": "产出开头包含简明摘要，明确列出了生成的用例数量（20条）、覆盖维度（16个）、优先级分布（P0:6 / P1:8 / P2:4 / P3:2）以及RAG维度适用性，符合断言要求。"
+        }
+      ],
+      "pass_count": 5,
+      "fail_count": 0,
+      "error": null,
+      "output_preview": "好的，作为资深测试专家，我将根据您提供的 Agent 信息，生成覆盖全部 16 个维度的专项测试用例。\n\n## Agent 信息\n- **Agent 名称**：智能客服 Agent（HelpBot）\n- **能力描述**：基于 RAG 架构，接入产品知识库（帮助文档、FAQ、政策条款），支持多轮对话记忆上下文，调用工具：查询订单状态、查询物流信息、提交退款申请。\n- **合规框架**：生成式人工智能服务管理暂行办法、个人信息保护法（PIPL）\n\n### 简明摘要（30 秒速览）\n- 生成 **20** 条用例，覆盖 **16** 个维度（不适用维度已标注）\n- P0:6 / P1:8 / P2:4 / P3:2\n- RAG 相关维度（14-16）：**适用**\n\n## 测试用例\n\n### 一、Agent 基础功能\n#### 1-TC01：Agent 创建与启停\n- **维度**：Agent 基础功能\n- **设计方法**：状态迁移\n- **优先级**：P0\n- **前置条件**：拥有管理员权限，访问 Agent 管理后台。\n- **测试数据**：Agent 名称 “HelpBot-Pr",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1672,
+        "completion_tokens": 3870,
+        "total_tokens": 5542,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1672
+      }
+    }
+  ]
+}
