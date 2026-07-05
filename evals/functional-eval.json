@@ -99,6 +99,8 @@
       "name": "规范库→用例全链路",
       "prompt": "/qa-case\n产品/模块：支付接口\n需求描述：用户通过余额/银行卡两种方式完成支付，第三方网关异步回调。",
       "expected_output": "生成的用例中引用规范库中的checklist和lession_learned，并标注来源",
+      "requires_e2e": true,
+      "e2e_note": "本 eval 的断言依赖记忆模块文件 I/O（真读 standards.json），纯 LLM 评测器无法验证（模型在评测环境看不到文件内容）。需用 ci/test-memory-e2e.sh 的端到端模拟器验证规范库→用例全链路。从 LLM 评测基线中排除。",
       "assertions": [
         {"name": "加载规范库数据", "expected": true, "description": "读取到支付接口的standards.json"},
         {"name": "规范转化为用例", "expected": true, "description": "每条规范至少转化1条用例"},

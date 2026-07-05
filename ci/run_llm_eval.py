@@ -303,6 +303,13 @@ def main():
     if args.smoke:
         evals = evals[:1]
 
+    # 排除 requires_e2e=true 的 eval（其断言依赖记忆模块文件 I/O，纯 LLM 评测器无法验证）
+    excluded_e2e = [ev for ev in evals if ev.get("requires_e2e")]
+    if excluded_e2e and not args.smoke:
+        evals = [ev for ev in evals if not ev.get("requires_e2e")]
+        print(f"   ⚠️  排除 {len(excluded_e2e)} 条 requires_e2e eval（需端到端模拟器验证，非纯 LLM 评测范围）：{[ev['id'] for ev in excluded_e2e]}")
+        sys.stdout.flush()
+
     total = len(evals)
     print(f"🤖 qa-team-skills v{VERSION} 真·LLM 端到端评测")
     print(f"   评测集: {os.path.basename(eval_path)} ({eval_version}, {total} 条)")
