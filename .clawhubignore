@@ -1,0 +1,6 @@
+# clawhubignore — 上架 ClawHub 时排除开发/内部工具
+# 这些目录是 qa-team-skills 开发团队的质量保障工具，
+# 不参与技能运行时，排除以减少安全审计噪音。
+
+ci/
+evals/
