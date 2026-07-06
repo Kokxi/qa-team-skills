@@ -10,6 +10,7 @@
   - 自动从 `data/products/{module}/reviews/` 检索同一模块的最近评审记录，将问题清单注入"评审问题清单"输入
   - 自动从 `data/products/{module}/bugs/` 检索历史缺陷，将高频根因转化为补充用例
   - 自动从 `data/products/{module}/standards.json` 读取 checklist，补充到用例中
+  - ⚠️ 所有写入记忆库的操作（合并 latest.json、版本清理、规范沉淀）均需先询问用户确认
 - **直接调用时**：
   - 手动粘贴 `/qa-prd` 输出的问题表格（如有评审问题清单）
   - **主动读取** `data/products/{module}/standards.json`（若存在），将 checklist 条目转化为补充用例并标注引用来源——此步骤不依赖 `/qa` 入口，直接调用时必须自行执行

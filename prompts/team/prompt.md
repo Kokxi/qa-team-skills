@@ -460,10 +460,12 @@
 
 ## 记忆模块集成
 
-当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
+当通过 `/qa` 入口调用时，AI 会执行以下操作：
 
-- **写入规范**：漏测复盘子能力输出的「预防措施」和「纳入 Checklist」条目，自动向 `data/products/{module}/standards.json` 追加 `checklist` 或 `lession_learned` 条目
+- **写入规范**：漏测复盘子能力输出的「预防措施」和「纳入 Checklist」条目，**先询问用户确认后**，再向 `data/products/{module}/standards.json` 追加 `checklist` 或 `lession_learned` 条目
 - **读取**：自动检索 `data/products/{module}/reports/` 和 `data/products/{module}/bugs/` 中同时间段的数据，辅助趋势分析、漏测复盘和效能统计
+
+> 写入规范前必须询问用户确认，用户拒绝则跳过。
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
