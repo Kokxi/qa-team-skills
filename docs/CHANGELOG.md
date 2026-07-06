@@ -2,6 +2,29 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.5.1
+
+### ClawHub 安全审计修复（2026-07-06）
+
+修复 ClawHub（NVIDIA SkillSpector）38 项安全审计发现：
+
+#### 信任边界透明化
+- `SKILL.md` 新增 **MCP 能力声明表**，明确文件读/写/删除、可选网络调用范围
+- 收紧 trigger 列表，移除易误触发的模糊词（"日报""自由探索"等）
+
+#### 持久化操作需用户确认
+- 所有自动写入记忆库的操作改为**先询问用户确认**：/qa-case、/qa-bug、/qa-team、/qa-report
+- 版本清理（删除旧 v*.json）改为先询问用户，不再静默删除
+- 规范库沉淀（standards.json）改为先询问用户确认
+
+#### 文档诚信修复
+- README/user-manual 修正"无外部依赖"的不实声明，区分核心 Prompt vs 可选 CI 评测
+- 新增**安全与隐私声明**章节到 README、SKILL、user-manual、memory/README
+- memory/README.md 新增数据隐私须知，说明本地存储、保留策略、清理方法
+
+#### 上架配置
+- 新增 `.clawhubignore`，上架 ClawHub 时排除 `ci/` 和 `evals/` 开发工具
+
 ## v1.5.0
 
 ### 轻量任务规划：自动编排模式（2026-06-30）
