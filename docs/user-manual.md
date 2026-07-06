@@ -4,7 +4,7 @@
 
 ## 1. 技能简介
 
-`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供统一入口 `/qa` + 6 个专用指令：
+`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供统一入口 `/qa` + 8 个标准化指令：
 
 | 指令 | 定位 | 适合谁 |
 |------|------|--------|
@@ -15,6 +15,7 @@
 | `/qa-bug` | 缺陷分析 | 测试工程师、开发 |
 | `/qa-report` | 报告生成 | 测试工程师 |
 | `/qa-team` | 团队管理 | 测试经理 |
+| `/qa-explore` | **探索性测试（v1.5 新增）** | **测试工程师** |
 
 ## 2. 安装
 
@@ -174,34 +175,55 @@ clawhub install qa-team-skills
 
 ```
 qa-team-skills/
-├── SKILL.md                     # 技能入口 + 指令总览
-├── VERSION / README.md / LICENSE
-├── prompts/
-│   ├── prd/prompt.md            # 需求评审
-│   ├── case/prompt.md           # 用例设计
-│   ├── agent/prompt.md          # Agent 专项
-│   ├── bug/prompt.md            # 缺陷分析
-│   ├── report/prompt.md         # 报告生成
-│   └── team/prompt.md           # 团队管理
-├── templates/
+├── SKILL.md                     # 技能入口 + 8 指令总览 + MCP 能力声明
+├── VERSION / README.md / LICENSE / .clawhubignore
+├── prompts/                      # 8 个指令的 Prompt 定义
+│   ├── qa/prompt.md             # 统一入口：意图解析 → 任务编排 → 记忆管理 → 自动规划
+│   ├── qa/intent-rules.md       # 意图匹配规则（关键词→指令路由）
+│   ├── qa/validation-rules.md   # 推理校验规则（各指令输出前自检清单）
+│   ├── prd/prompt.md            # 需求评审（11 维度 + 业务分层）
+│   ├── case/prompt.md           # 用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
+│   ├── agent/prompt.md          # Agent 专项（16 维度含 RAG）
+│   ├── bug/prompt.md            # 缺陷分析（质量评估 + 根因 + 批量）
+│   ├── report/prompt.md         # 报告生成（5 种）
+│   ├── team/prompt.md           # 团队管理（11 子能力 + 路由）
+│   └── explore/prompt.md        # 探索性测试（三阶段 + Session 笔记 + Debrief）
+├── memory/                       # 记忆模块
+│   ├── README.md                # 模块说明（含隐私须知 + 合并/清理/去重规则）
+│   ├── schema/                  # 6 个 JSON Schema 数据模型
+│   └── data/products/           # 按产品模块沉淀的用例/缺陷/规范/报告库
+├── templates/                    # 输出模板
+│   ├── requirement.md           # 通用测试用例模板
+│   ├── agent-test.md            # Agent 专项模板（含中文 Payload）
+│   └── error-output.md          # 统一错误格式
 ├── examples/
 │   ├── README.md                # 示例目录索引
-│   ├── prd-demo.md              # /qa-prd 需求评审
-│   ├── login-demo.md            # /qa-case 登录功能 35 条用例
-│   ├── case-demo.md             # /qa-case 订单改价
-│   ├── agent-demo.md            # /qa-agent 智能客服
-│   ├── bug-demo.md              # /qa-bug 缺陷分析
-│   ├── report-demo.md           # /qa-report 报告生成
-│   └── team-demo.md             # /qa-team 团队管理
-├── team/
-│   ├── roles.json               # 行业角色映射
-│   └── standards.json           # 行业标准参考
-├── ci/validate.sh               # CI 校验脚本
+│   └── *-demo.md                # 7 个示例（覆盖全部 8 指令）
+├── team/                         # 行业配置（可选引用）
+│   ├── roles.json               # 角色映射
+│   └── standards.json           # 合规标准参考
+├── ci/                           # 验证脚本金字塔（开发工具，上架 ClawHub 时排除）
+│   ├── validate.sh              # 静态结构校验
+│   ├── run-evals.sh             # 触发评测 + 契约断言
+│   ├── test-memory-e2e.sh       # 记忆模块端到端（14 项断言）
+│   ├── test-memory-stress.sh    # 长期积累压测（10 轮迭代 6 项断言）
+│   ├── run_llm_eval.py          # 真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
+│   ├── forbidden.txt            # 禁止词列表
+│   └── commit-msg.txt           # 提交规范
+├── evals/                        # 评测数据集 + 历史归档（开发工具，上架时排除）
+│   ├── functional-eval.json     # 功能评测集（8 条 eval + 契约断言）
+│   ├── trigger-eval.json        # 触发评测集（38 条）
+│   ├── security-eval.json       # 安全对抗评测集（8 条 7 种攻击）
+│   ├── _smoke.json              # 冒烟评测集
+│   ├── human-review/            # 人工双盲评测方案（5 维度评分+双盲流程）
+│   └── history/                 # 每轮评测归档报告（基线对比）
 └── docs/
     ├── user-manual.md           # 本手册
     ├── CHANGELOG.md             # 变更日志
     ├── process-integration.md   # 流程嵌入指南
-    └── version-policy.md        # 版本治理策略
+    ├── version-policy.md        # 版本治理策略
+    ├── ci-testing.md            # CI 与质量验证（6 套脚本金字塔）
+    └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档
 ```
 
 ## 5. CI 校验
@@ -210,7 +232,7 @@ qa-team-skills/
 bash ci/validate.sh
 ```
 
-检查：6 个指令 Prompt 完整（含注入防护+自检）/ 模板文件完整 / SKILL.md 字段完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
+检查：8 个指令 Prompt 完整（含注入防护+自检）/ 模板文件完整 / SKILL.md 字段完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
 
 ## 6. 版本历史
 
@@ -298,6 +320,5 @@ memory/data/products/
 | 发现缺陷 | 2 | 0 | ↓ 清零 |
 | 规范条目 | 0 | 2 | ↑ 积累 |
 ```
-| v1.2.0 | 注入防护+自检清单+业务分层+16维度Agent+完整示例+流程嵌入指南+版本治理 |
-| v1.3.1 | 多 Agent 安装方式（README/user-manual 同步）、skills.sh 提交、示例描述修正、line ending 修复 |
-| v1.3.0 | ClawHub 安全审计修复：security 声明修正、子能力路由确认机制、API 凭证安全警告、文件敏感数据提示、示例来源标注；description 触发优化、指令路由边界定义、eval 测试集 |
+
+## 10. 版本历史回溯
