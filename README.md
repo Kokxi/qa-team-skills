@@ -2,7 +2,7 @@
 
 > 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.5.1-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.5.2-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -284,7 +284,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.5.1**
+当前版本：**v1.5.2**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 
