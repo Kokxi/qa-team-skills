@@ -27,6 +27,8 @@
 
 **这是每次 `/qa` 任务的第一步，也是让技能越用越好的关键。**
 
+⚠️ **注意**：/qa 会读取 `memory/data/products/` 下的历史数据（用例/缺陷/报告/规范）以辅助本次任务，所有数据仅本地读取，不会外传。如不希望使用历史数据，可输入"不使用历史记忆"。
+
 在意图解析之前，先扫描产品历史记忆库，看看这个产品/模块有没有被测试过、出过什么问题、积累了什么规范。
 
 ### 执行流程
@@ -178,7 +180,7 @@
 
 1. 输出任务确认："我理解你要执行「{{指令名}}」——{{工作范围}}，确认开始？"
 2. 用户确认后，转入对应的指令 Prompt 执行
-3. 执行完成后，自动写入记忆模块（见「记忆写入」）
+3. 执行完成后，询问用户是否将结果写入记忆模块，确认后执行写入（见「记忆写入」）
 
 ### 多步任务
 
@@ -254,8 +256,8 @@
 | `/qa-prd` | `data/products/{module}/reviews/` | 产品/模块、评审日期、问题清单（维度/严重程度/描述/建议）、业务分层建议 |
 | `/qa-case` | `data/products/{module}/test-cases/` | 产品/模块、测试类型、每条用例（标题/类型/业务分层/设计方法/优先级/步骤/预期） |
 | `/qa-bug` | `data/products/{module}/bugs/` | 产品/模块、根因分类、置信度、影响范围、修复建议、回归要点 |
-| `/qa-bug`（共性根因） | `data/products/{module}/standards.json` | 当批量分析中发现共性根因时，自动追加 lession_learned 或 checklist 条目 |
-| `/qa-team`（漏测复盘） | `data/products/{module}/standards.json` | 当输出预防措施时，自动追加 checklist 条目 |
+| `/qa-bug`（共性根因） | `data/products/{module}/standards.json` | 当批量分析中发现共性根因时，先询问用户确认后，再追加 lession_learned 或 checklist 条目 |
+| `/qa-team`（漏测复盘） | `data/products/{module}/standards.json` | 当输出预防措施时，先询问用户确认后，再追加 checklist 条目 |
 | `/qa-report` | `data/products/{module}/reports/` | 报告类型、时间段、关键指标（执行用例数/缺陷数/修复率等） |
 
 ### 增量追加规则
