@@ -2,6 +2,12 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.5.4
+
+### 版本号更新（2026-07-17）
+
+- 版本号从 v1.5.3 升级至 v1.5.4
+
 ## v1.5.3
 
 ### 版本号更新（2026-07-16）
