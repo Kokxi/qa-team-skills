@@ -101,11 +101,13 @@
 
 ## 记忆模块集成
 
-当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
+> ⚠️ 本指令会读写 `memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-- **写入缺陷**：输出中的根因分类、置信度、修复建议等，自动按 `memory/schema/bug.json` 结构化存入 `data/products/{module}/bugs/`
-- **写入规范**：批量模式中发现**共性根因**时，自动向 `data/products/{module}/standards.json` 追加一条 `lession_learned` 或 `checklist` 条目。写入前检查是否已有同类条目，避免重复
-- **读取**：自动检索 `data/products/{module}/bugs/` 中同一模块的历史缺陷记录，辅助根因归类、复发检测和趋势判断
+当通过 `/qa` 入口调用时，AI 会执行以下操作：
+
+- **写入缺陷**：输出中的根因分类、置信度、修复建议等，按 `memory/schema/bug.json` 结构化存入 `data/products/{module}/bugs/`（**写入前询问用户确认**）
+- **写入规范**：批量模式中发现**共性根因**时，向 `data/products/{module}/standards.json` 追加一条 `lession_learned` 或 `checklist` 条目（**先询问用户确认**）。写入前检查是否已有同类条目，避免重复
+- **读取**：检索 `data/products/{module}/bugs/` 中同一模块的历史缺陷记录，辅助根因归类、复发检测和趋势判断（仅本地读取）
 
 ## 批量模式（V1.0.1 新增）
 

@@ -246,10 +246,12 @@
 
 ## 记忆模块集成
 
+> ⚠️ 本指令会读写 `memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
+
 当通过 `/qa` 入口调用时，AI 会执行以下操作：
 
 - **写入**（先询问用户确认后）：输出中的报告类型、时间段、关键指标等，按 `memory/schema/report.json` 结构化存入 `data/products/{module}/reports/`
-- **读取**：自动检索 `data/products/{module}/reports/` 中同类型的历史报告，辅助同比/环比趋势分析；自动检索 `data/products/{module}/test-cases/` 和 `data/products/{module}/bugs/`，汇总数据生成报告
+- **读取**：检索 `data/products/{module}/reports/` 中同类型的历史报告，辅助同比/环比趋势分析；检索 `data/products/{module}/test-cases/` 和 `data/products/{module}/bugs/`，汇总数据生成报告（仅本地读取）
 
 > 写入记忆前必须询问用户确认，用户拒绝则跳过。
 

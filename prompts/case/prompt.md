@@ -191,9 +191,11 @@
 
 ## 记忆模块集成
 
-当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
+> ⚠️ 本指令会读写 `memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-- **写入**：输出中的测试用例、类型分布、优先级分布等，自动按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`
-- **读取规范**：自动检索 `data/products/{module}/standards.json` 中的 checklist，补充到用例中
+当通过 `/qa` 入口调用时，AI 会执行以下操作：
+
+- **写入**：输出中的测试用例、类型分布、优先级分布等，按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（**写入前询问用户确认**）
+- **读取规范**：检索 `data/products/{module}/standards.json` 中的 checklist，补充到用例中（仅本地读取）
   > ⚠️ **规范库联动硬约束**：若 `standards.json` 存在，**必须**读取并在输出中标注引用来源——每条由规范转化的用例标注"来源：standards.json/{规范标题}"，输出末尾的"规范引用统计"必须列出引用了几条规范、转化了多少条用例。不得跳过此步骤或只字不提规范库。
-- **读取历史**：自动检索 `data/products/{module}/test-cases/latest.json` 中同一模块的历史用例，避免重复设计缺陷覆盖场景
+- **读取历史**：检索 `data/products/{module}/test-cases/latest.json` 中同一模块的历史用例，避免重复设计缺陷覆盖场景（仅本地读取）

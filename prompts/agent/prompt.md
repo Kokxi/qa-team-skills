@@ -99,10 +99,12 @@
 
 ## 记忆模块集成
 
-当通过 `/qa` 入口调用时，AI 会自动执行以下操作：
+> ⚠️ 本指令会读写 `memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-- **写入**：输出中的测试用例，自动按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（与 `/qa-case` 共用同一个用例库，便于统一检索）
-- **读取**：自动检索 `data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断
+当通过 `/qa` 入口调用时，AI 会执行以下操作：
+
+- **写入**：输出中的测试用例，按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（与 `/qa-case` 共用同一个用例库，便于统一检索）（**写入前询问用户确认**）
+- **读取**：检索 `data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断（仅本地读取）
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
