@@ -1,3 +1,0 @@
-[
-  {"category": "checklist", "title": "并发场景必须覆盖", "content": "涉及金额的功能必须包含并发测试用例", "source": "session-20260615-001"}
-]

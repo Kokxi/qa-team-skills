@@ -1,4 +1,0 @@
-[
-  {"bug_id":"BUG-S001","title":"搜索关键词含HTML标签时页面布局错乱","severity":"一般","root_cause_type":"代码缺陷","root_cause":"搜索结果高亮逻辑未对HTML标签做转义处理","confidence":"高","fix_suggestion":"对搜索结果中的关键词高亮使用textContent而非innerHTML"},
-  {"bug_id":"BUG-S002","title":"分类筛选+搜索联合时，切换分类不保留关键词","severity":"一般","root_cause_type":"代码缺陷","root_cause":"筛选切换时重置了搜索参数，未保留关键词状态","confidence":"高","fix_suggestion":"筛选切换时保持关键词参数不变"}
-]

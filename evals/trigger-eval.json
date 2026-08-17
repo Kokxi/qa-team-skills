@@ -1,6 +1,10 @@
-[
-  {
-    "query": "帮我 review 下这份需求文档，看看有没有遗漏的点",
+{
+  "skill_name": "qa-team-skills",
+  "version": "v1.6.0",
+  "description": "触发评测集 — 验证自然语言意图能否正确路由到对应指令（含正/反例）",
+  "evals": [
+    {
+      "query": "帮我 review 下这份需求文档，看看有没有遗漏的点",
     "expected_command": "/qa-prd",
     "should_trigger": true,
     "reason": "明确的需求评审请求"
@@ -227,5 +231,24 @@
     "expected_command": "/qa-report",
     "should_trigger": true,
     "reason": "缺陷数据统计 -> 报告生成（偏向统计展示而非根因分析）"
+  },
+  {
+    "query": "这个功能没文档，帮我做一次探索性测试，看看能不能发现隐藏问题",
+    "expected_command": "/qa-explore",
+    "should_trigger": true,
+    "reason": "明确的探索性测试请求"
+  },
+  {
+    "query": "支付模块加了个新功能，随便测测，帮我发现未知问题",
+    "expected_command": "/qa-explore",
+    "should_trigger": true,
+    "reason": "自由探索口语化表述，应触发探索性测试"
+  },
+  {
+    "query": "帮我解释一下什么是探索性测试，和脚本测试有什么区别",
+    "expected_command": null,
+    "should_trigger": false,
+    "reason": "询问概念而非执行探索，不应触发（反例关键词拦截）"
   }
-]
+  ]
+}
