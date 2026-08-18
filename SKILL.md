@@ -34,7 +34,7 @@ tags: ["testing", "qa", "test-case", "bug-analysis", "test-report", "memory"]
 
 # 数据隐私须知
 
-- 本技能会自动将你的测试数据（用例、缺陷、报告、规范）保存到本地 `memory/data/products/` 目录下
+- 本技能会在**你确认后**将测试数据（用例、缺陷、报告、规范）保存到本地 `memory/data/products/` 目录下
 - 数据仅存储在本地文件系统，不会自动上传或同步到云端
 - ✅ 删除对应 `memory/data/products/` 下的目录即可清除持久化数据
 - ❗ **请勿在输入中粘贴真实的生产环境凭证、支付标识、客户个人信息或敏感截图**
