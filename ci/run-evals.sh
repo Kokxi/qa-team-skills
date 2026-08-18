@@ -41,27 +41,27 @@ route_by_rule() {
     echo "none"; return
   fi
   # 探索性测试：含探索类关键词优先于其他分支（"自由探索""发现未知问题"口语化表述也覆盖）
-  if echo "$q" | grep -qE '探索性测试|探索测试|自由探索|发现未知问题|随便测测'; then echo "/qa-explore"; return; fi
+  if echo "$q" | grep -qE '探索性测试|探索测试|自由探索|发现未知问题|随便测测'; then echo "qa-explore"; return; fi
   # 准出/发版评估优先匹配到 team（"能不能发""能不能按期发布""发版评估"）
-  if echo "$q" | grep -qE '能不能发|能不能.*发|能不能.*发布|能不能按期|发版.*评估|检查下能不能|准出'; then echo "/qa-team"; return; fi
+  if echo "$q" | grep -qE '能不能发|能不能.*发|能不能.*发布|能不能按期|发版.*评估|检查下能不能|准出'; then echo "qa-team"; return; fi
   # 正例路由（按 intent-rules.md 顺序，多匹配时取最具体）
-  if echo "$q" | grep -qE '评审|分析.*(需求|PRD)|review.*需求|需求.*遗漏|需求.*看下|需求.*理解|看下这个需求|看下.*需求|PRD.*看|需求.*完整不完整'; then echo "/qa-prd"; return; fi
-  if echo "$q" | grep -qE '设计.*用例|出.*用例|测.*幻觉|测.*Agent|测.*智能|测.*AI.*(客服|助手)|Agent.*安全|智能客服'; then
-    if echo "$q" | grep -qE '幻觉|Agent|智能客服|AI 客服|AI 助手'; then echo "/qa-agent"; return; fi
-    echo "/qa-case"; return
+  if echo "$q" | grep -qE '评审|分析.*(需求|PRD)|review.*需求|需求.*遗漏|需求.*看下|需求.*理解|看下这个需求|看下.*需求|看看.*需求|PRD.*问题|PRD.*看|需求.*完整不完整'; then echo "qa-prd"; return; fi
+  if echo "$q" | grep -qE '设计.*用例|出.*用例|测一下|怎么测|测.*幻觉|测.*Agent|测.*智能|测.*AI.*(客服|助手)|Agent.*安全|智能客服'; then
+    if echo "$q" | grep -qE '幻觉|Agent|智能客服|AI 客服|AI 助手'; then echo "qa-agent"; return; fi
+    echo "qa-case"; return
   fi
   # report 的"数据整理/统计展示"优先于 bug（"整理缺陷数据/哪个模块问题最多"偏统计非根因）
   if echo "$q" | grep -qE '整理.*数据|哪个模块.*最多|统计|日报|周报|阶段报告|季度|写成.*报|出份.*报|报告'; then
-    if echo "$q" | grep -qE '整理.*数据|哪个模块.*最多|统计'; then echo "/qa-report"; return; fi
-    if echo "$q" | grep -qE '能不能发|发版|能不能.*发布|准出|能不能按期'; then echo "/qa-team"; return; fi
-    echo "/qa-report"; return
+    if echo "$q" | grep -qE '整理.*数据|哪个模块.*最多|统计'; then echo "qa-report"; return; fi
+    if echo "$q" | grep -qE '能不能发|发版|能不能.*发布|准出|能不能按期'; then echo "qa-team"; return; fi
+    echo "qa-report"; return
   fi
   if echo "$q" | grep -qE 'Bug|缺陷|报.*问题|漏测|没反应|对不上|没发现|复盘.*为什么|出了个事故|不知道怎么描述'; then
     # "复盘" 在团队管理语境
-    if echo "$q" | grep -qE '复盘|漏测|防以后|线上.*事故|为什么测试.*没发现'; then echo "/qa-team"; return; fi
-    echo "/qa-bug"; return
+    if echo "$q" | grep -qE '复盘|漏测|防以后|线上.*事故|为什么测试.*没发现'; then echo "qa-team"; return; fi
+    echo "qa-bug"; return
   fi
-  if echo "$q" | grep -qE '团队|进度|效能|培训|新人|质量.*评估|质量.*几分|质量.*行不行|看板|加班|产出|能不能发|质量怎么样'; then echo "/qa-team"; return; fi
+  if echo "$q" | grep -qE '团队|进度|效能|培训|新人|质量.*评估|质量.*几分|质量.*行不行|看板|加班|产出|能不能发|质量怎么样'; then echo "qa-team"; return; fi
   echo "none"
 }
 
