@@ -40,6 +40,8 @@ route_by_rule() {
   if echo "$q" | grep -qE '什么是|什么叫|解释一下|区别|可以吗|帮我写(一个|个) (python|脚本|代码)|搭一套|连接失败|转成|转成 CSV|CAP theorem'; then
     echo "none"; return
   fi
+  # 探索性测试：含探索类关键词优先于其他分支（"自由探索""发现未知问题"口语化表述也覆盖）
+  if echo "$q" | grep -qE '探索性测试|探索测试|自由探索|发现未知问题|随便测测'; then echo "/qa-explore"; return; fi
   # 准出/发版评估优先匹配到 team（"能不能发""能不能按期发布""发版评估"）
   if echo "$q" | grep -qE '能不能发|能不能.*发|能不能.*发布|能不能按期|发版.*评估|检查下能不能|准出'; then echo "/qa-team"; return; fi
   # 正例路由（按 intent-rules.md 顺序，多匹配时取最具体）
@@ -77,7 +79,9 @@ else
 import json, sys
 with open(sys.argv[1], encoding='utf-8') as f:
     data = json.load(f)
-for item in data:
+# 兼容两种结构：老版裸数组 vs 新版 {skill_name, version, evals:[...]}
+evals = data.get("evals", data) if isinstance(data, dict) else data
+for item in evals:
     q = item.get('query','')
     expected = item.get('expected_command')
     should = item.get('should_trigger', True)
@@ -171,6 +175,17 @@ AGENT="$PROMPT_DIR/agent/prompt.md"
 check_contains "$AGENT" '16 个维度|16维度' "agent 定义 16 个维度"
 check_contains "$AGENT" '设计方法.*必填|必填.*设计方法' "agent 设计方法必填"
 check_contains "$AGENT" 'RAG' "agent 含 RAG 维度"
+# 维度名一致性：维度表（10-13）与覆盖确认清单必须同名，禁止残留旧维度名
+if grep -qE '长文本|多语言|正则合规|防御性|13维度' "$AGENT" 2>/dev/null; then
+  fail "agent 残留旧维度名（长文本/多语言/正则合规/防御性/13维度），与维度表不一致"
+else
+  note "agent 维度名一致（无旧名残留） ✔"
+fi
+if grep -qE '10-AI稳定性.*11-可控性.*12-资源消耗.*13-合规与伦理' "$AGENT" 2>/dev/null; then
+  note "agent 覆盖确认清单维度名与维度表一致 ✔"
+else
+  fail "agent 覆盖确认清单缺少新维度名（10-AI稳定性/11-可控性/12-资源消耗/13-合规与伦理）"
+fi
 
 # /qa-explore 契约：探索任务卡 + 时间盒 + 起点不超过3
 EXPLORE="$PROMPT_DIR/explore/prompt.md"

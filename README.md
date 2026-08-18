@@ -2,7 +2,7 @@
 
 > 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.5.4-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.6.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -115,6 +115,8 @@ cp -r qa-team-skills ~/.claude/skills/
 # 项目内安装到 GitHub Copilot
 cp -r qa-team-skills ./.github/skills/
 ```
+
+> ⚠️ **关于 `/qa` 指令的说明**：本技能的 `/qa`、`/qa-prd` 等 8 个指令是**逻辑指令**（由 AI 根据 `prompts/qa/intent-rules.md` 的意图路由规则自动解析执行），**不是各 Agent 注册的斜杠命令**——命令面板的自动补全里看不到它们，安装后也不需要注册。日常使用直接用自然语言下达任务（如"帮我设计登录功能的测试用例"）即可触发，或显式输入 `/qa-case` 让 AI 按对应指令执行。如需在 Claude Code / OpenCode 中拥有真正的斜杠命令补全，可自行在 `.claude/commands/`（或对应 Agent 的 commands 目录）为 8 个指令各建一个命令文件。
 
 #### 方式二：一键安装（npx skills）
 
@@ -284,7 +286,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.5.4**
+当前版本：**v1.6.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 

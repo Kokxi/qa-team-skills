@@ -2,6 +2,18 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.6.0
+
+### 版本号更新（2026-08-17）
+
+- 版本号从 v1.5.4 升级至 v1.6.0
+- 修复 /qa-agent 16 维度定义不一致（维度表 vs 覆盖确认清单 vs 用例格式模板）
+- run-evals.sh 新增 agent 维度名一致性断言，防回归
+- memory/data/ 加入 .gitignore 并从 git 移除跟踪（防止真实测试数据入库泄漏）
+- README 补充 /qa 逻辑指令说明（非注册斜杠命令，可自行注册）
+- 评测集版本号统一为 v1.6.0（functional/security/trigger）
+- trigger-eval.json 补 explore 正/反例，run-evals.sh 新增 explore 路由分支
+
 ## v1.5.4
 
 ### 版本号更新（2026-07-17）
