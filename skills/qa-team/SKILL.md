@@ -489,4 +489,4 @@ trigger: ["团队进度", "团队产出", "团队效能", "准出", "漏测复�
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-team` 规则表（T001-T005）。
+见 `docs/validation-rules.md` 中 `/qa-team` 规则表（T001-T005）。

@@ -193,8 +193,8 @@ check_contains "$EXPLORE" '探索任务|任务卡' "explore 含探索任务卡"
 check_contains "$EXPLORE" '时间盒' "explore 含时间盒"
 check_contains "$EXPLORE" '3 个|不超过 3|不超过3' "explore 限制起点不超过3"
 
-# validation-rules.md 完整性：7 个 skill 的规则表都存在（文件路径在 Task 10 迁移时更新）
-VAL="$PROMPT_DIR/qa/validation-rules.md"
+# validation-rules.md 完整性：7 个 skill 的规则表都存在
+VAL="$SKILL_DIR/docs/validation-rules.md"
 for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001' 'E001'; do
   check_contains "$VAL" "$rule" "validation-rules 含规则 $rule"
 done

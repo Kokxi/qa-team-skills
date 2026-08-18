@@ -221,4 +221,4 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-case` 规则表（C001-C011）。
+见 `docs/validation-rules.md` 中 `/qa-case` 规则表（C001-C011）。

@@ -102,4 +102,4 @@ trigger: ["需求评审", "评审需求", "PRD", "review 需求", "需求分析"
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-prd` 规则表（P001-P005）。
+见 `docs/validation-rules.md` 中 `/qa-prd` 规则表（P001-P005）。

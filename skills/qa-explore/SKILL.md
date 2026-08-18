@@ -179,4 +179,4 @@ AI 根据用户输入生成**探索任务卡**，探索起点从用户描述中�
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-explore` 规则表（E001-E004）。
+见 `docs/validation-rules.md` 中 `/qa-explore` 规则表（E001-E004）。

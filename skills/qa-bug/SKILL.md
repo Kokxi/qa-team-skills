@@ -116,7 +116,7 @@ trigger: ["Bug", "缺陷", "根因", "报错", "没反应", "对不上"]
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-bug` 规则表（B001-B006）。
+见 `docs/validation-rules.md` 中 `/qa-bug` 规则表（B001-B006）。
 
 ## 记忆模块集成
 

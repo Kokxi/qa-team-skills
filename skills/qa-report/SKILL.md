@@ -275,4 +275,4 @@ trigger: ["日报", "周报", "阶段报告", "测试报告", "出份报告"]
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-report` 规则表（R001-R004）。
+见 `docs/validation-rules.md` 中 `/qa-report` 规则表（R001-R004）。

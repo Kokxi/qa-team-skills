@@ -119,4 +119,4 @@ trigger: ["测 Agent", "测 AI", "AI 幻觉", "提示词注入", "Agent 测试",
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `prompts/qa/validation-rules.md` 中 `/qa-agent` 规则表（A001-A004）。
+见 `docs/validation-rules.md` 中 `/qa-agent` 规则表（A001-A004）。
