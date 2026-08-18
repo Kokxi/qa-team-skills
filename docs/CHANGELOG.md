@@ -2,6 +2,13 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.6.1
+
+### 版本号更新（2026-08-18）
+
+- 版本号从 v1.6.0 升级至 v1.6.1
+- ClawHub 安全审计 B 类 6 项修复：持久化措辞统一（确认后写入）+ 记忆加载前确认 + /qa-team 控制流一致 + 关键词路由表补齐 + 示例脱敏提醒升级
+
 ## v1.6.0
 
 ### 版本号更新（2026-08-17）
