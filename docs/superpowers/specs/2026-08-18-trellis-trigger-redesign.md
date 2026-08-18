@@ -21,7 +21,7 @@ ClawHub 安全审计（SkillSpector）反复点名同类问题：**Vague Trigger
 ### 目标
 
 1. **AI 自动挑选**：用户输入自然语言（如"测一下支付接口""帮我出周报"），AI 按语义自动加载对应 skill，无需用户记命令名
-2. **触发精准可量化**：trigger-eval 基线 38 条保持 100%，新增 ≥10 条"免指令名"用例，期望命中正确 skill
+2. **触发精准可量化**：trigger-eval 基线 41 条（38 原始 + 3 条 explore）保持 100%，新增 ≥10 条"免指令名"用例，期望命中正确 skill
 3. **跨平台**：基于 agentskills.io 标准 SKILL.md，适配 Claude Code / Cursor / OpenCode / Codex 等 40+ 平台
 4. **保留资产**：指令能力内容（11 维度评审、9 方法用例、16 维度 Agent 测试等）、记忆模块、评测 CI、文档体系全部保留并适配
 
@@ -156,7 +156,7 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例"]
 
 | 评测集 | 现状 | 适配后 |
 |---|---|---|
-| trigger-eval.json | 38 条，期望路由到 /qa-prd 等逻辑指令 | 保留 38 条 + 新增 ≥10 条免指令名用例，期望改为路由到对应 skill（qa-prd / qa-case…）|
+| trigger-eval.json | 41 条，期望路由到 /qa-prd 等逻辑指令 | 保留 41 条 + 新增 ≥10 条免指令名用例，期望改为路由到对应 skill（qa-prd / qa-case…）|
 | functional-eval.json | 8 条，prompt↔eval 契约断言 | 断言目标从 prompts/*/prompt.md 改为 skills/*/SKILL.md，检查每份必含触发描述/负向排除/防注入/自检 |
 | security-eval.json | 8 条 7 种攻击 | 攻击提示词里 /qa-prd 改为自然语言触发 |
 | ci/validate.sh | 检查 prompts/ 结构 | 改查 skills/ 目录、各 SKILL.md frontmatter 必填字段（name/description/trigger/负向段）、版本一致性 |
