@@ -115,9 +115,9 @@ PYEOF
   fi
 fi
 
-# ── 2. 契约断言：functional-eval.json ↔ prompt 文件 ──────────────────────
+# ── 2. 契约断言：functional-eval.json ↔ skill 文件 ──────────────────────
 echo ""
-echo "▶ 2. 功能评测（prompt↔eval 契约断言）"
+echo "▶ 2. 功能评测（skill↔eval 契约断言）"
 PROMPT_DIR="$SKILL_DIR/prompts"
 check_contains() { # file pattern  desc
   if grep -qE "$2" "$1" 2>/dev/null; then note "$3 ✔"; else fail "$3 ✗ ($1 未匹配 $2)"; fi
@@ -129,7 +129,7 @@ check_count() { # file pattern expected_count desc
 }
 
 # /qa-prd 契约：11 维度 + 业务分层 + 澄清 + 严重程度 + 无评审结论
-PRD="$PROMPT_DIR/prd/prompt.md"
+PRD="$SKILL_DIR/skills/qa-prd/SKILL.md"
 check_count "$PRD" '^\| [0-9]+ \|' 11 "prd 定义了 11 个评审维度行"
 check_contains "$PRD" '业务分层' "prd 含业务分层建议"
 check_contains "$PRD" '澄清|需澄清' "prd 含澄清问题清单"
@@ -143,7 +143,7 @@ else
 fi
 
 # /qa-case 契约：6 类型 + 业务分层 + 设计方法 + 动词开头
-CASE="$PROMPT_DIR/case/prompt.md"
+CASE="$SKILL_DIR/skills/qa-case/SKILL.md"
 check_contains "$CASE" '功能/边界/异常/安全/性能/兼容性' "case 列出 6 种测试类型"
 check_contains "$CASE" '核心层.*体验层.*增值层|业务分层' "case 含业务分层"
 check_contains "$CASE" '设计方法.*必填|必填.*设计方法' "case 标注设计方法必填"
@@ -151,7 +151,7 @@ check_contains "$CASE" '动词|可执行的动词' "case 要求步骤动词开�
 check_contains "$CASE" '信息泄露|错误提示.*通用化' "case 含信息泄露防护检查"
 
 # /qa-bug 契约：质量评估 + 根因 + 置信度 + 修复建议 + 回归要点
-BUG="$PROMPT_DIR/bug/prompt.md"
+BUG="$SKILL_DIR/skills/qa-bug/SKILL.md"
 check_contains "$BUG" '质量评估|达标' "bug 含质量评估"
 check_contains "$BUG" '根因分析|根因分类' "bug 含根因分析"
 check_contains "$BUG" '置信度' "bug 标注置信度"
@@ -159,19 +159,19 @@ check_contains "$BUG" '修复建议|修复方向' "bug 含修复建议"
 check_contains "$BUG" '回归' "bug 含回归测试要点"
 
 # /qa-report 契约：报告类型 + 简明摘要 + 来源标注
-REPORT="$PROMPT_DIR/report/prompt.md"
+REPORT="$SKILL_DIR/skills/qa-report/SKILL.md"
 check_contains "$REPORT" '日报|周报|阶段|季度|专项' "report 列出报告类型"
 check_contains "$REPORT" '简明摘要|30 秒速览|30秒速览' "report 含简明摘要"
 check_contains "$REPORT" '来源标注|数据来源' "report 要求来源标注"
 
 # /qa-team 契约：子能力 + 进度表格 + 风险标注 + 简明摘要
-TEAM="$PROMPT_DIR/team/prompt.md"
+TEAM="$SKILL_DIR/skills/qa-team/SKILL.md"
 check_contains "$TEAM" '进度看板|进度.*表格|子能力' "team 含子能力路由"
 check_contains "$TEAM" '风险|延期|延期风险' "team 含风险标注"
 check_contains "$TEAM" '简明摘要|简明' "team 含简明摘要"
 
 # /qa-agent 契约：16 维度 + 设计方法必填 + RAG 维度
-AGENT="$PROMPT_DIR/agent/prompt.md"
+AGENT="$SKILL_DIR/skills/qa-agent/SKILL.md"
 check_contains "$AGENT" '16 个维度|16维度' "agent 定义 16 个维度"
 check_contains "$AGENT" '设计方法.*必填|必填.*设计方法' "agent 设计方法必填"
 check_contains "$AGENT" 'RAG' "agent 含 RAG 维度"
@@ -188,21 +188,20 @@ else
 fi
 
 # /qa-explore 契约：探索任务卡 + 时间盒 + 起点不超过3
-EXPLORE="$PROMPT_DIR/explore/prompt.md"
+EXPLORE="$SKILL_DIR/skills/qa-explore/SKILL.md"
 check_contains "$EXPLORE" '探索任务|任务卡' "explore 含探索任务卡"
 check_contains "$EXPLORE" '时间盒' "explore 含时间盒"
 check_contains "$EXPLORE" '3 个|不超过 3|不超过3' "explore 限制起点不超过3"
 
-# /qa 入口契约：意图解析（single/multi/auto）+ 任务编排 + 记忆
-QA="$PROMPT_DIR/qa/prompt.md"
-check_contains "$QA" '意图解析|single|multi' "qa 含意图解析"
-check_contains "$QA" '任务编排|执行计划' "qa 含任务编排"
-check_contains "$QA" 'auto|自动规划' "qa 含自动规划（v1.5）"
-
-# validation-rules.md 完整性：5 个指令的规则表都存在
+# validation-rules.md 完整性：7 个 skill 的规则表都存在（文件路径在 Task 10 迁移时更新）
 VAL="$PROMPT_DIR/qa/validation-rules.md"
-for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001'; do
+for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001' 'E001'; do
   check_contains "$VAL" "$rule" "validation-rules 含规则 $rule"
+done
+
+# 双段式 description：7 个 skill 必须含"不用于"负向段（何时不用）
+for skill in prd case agent bug report team explore; do
+  check_contains "$SKILL_DIR/skills/qa-$skill/SKILL.md" '不用于' "qa-$skill 含负向排除（何时不用）"
 done
 
 # ── 3. 输出结果 + 归档报告 ──────────────────────
