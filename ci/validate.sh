@@ -48,7 +48,7 @@ check_file "examples/team-demo.md"
 # ── 2. SKILL.md 必填字段检查 ──────────────────────────
 SKILL_MD="$SKILL_DIR/SKILL.md"
 if [[ -f "$SKILL_MD" ]]; then
-  for field in "name:" "description:" "指令总览" "通用约束" "版本管理" "能力矩阵"; do
+  for field in "name:" "description:" "Skill 总览" "通用约束" "版本管理" "能力矩阵"; do
     if ! grep -q "$field" "$SKILL_MD"; then
       ERRORS+=("SKILL.md 缺少必填字段: $field")
     fi

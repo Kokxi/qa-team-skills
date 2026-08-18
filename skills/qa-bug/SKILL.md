@@ -2,7 +2,7 @@
 name: qa-bug
 slug: qa-bug
 displayName: 缺陷分析
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要分析/定位 Bug 或缺陷的根因时使用，如"这个 Bug 偶尔出现，帮我分析

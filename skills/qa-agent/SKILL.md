@@ -2,7 +2,7 @@
 name: qa-agent
 slug: qa-agent
 displayName: AI Agent 专项测试
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要对 AI Agent / 智能体产品做专项测试时使用，如"帮我测测这个智能客服

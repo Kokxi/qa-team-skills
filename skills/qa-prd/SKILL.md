@@ -2,7 +2,7 @@
 name: qa-prd
 slug: qa-prd
 displayName: 需求评审
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要对需求文档（PRD/需求说明）做评审、找问题、分析需求缺陷时使用，

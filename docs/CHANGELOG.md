@@ -2,6 +2,18 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.7.0
+
+### Trellis 式触发重构（2026-08-18）
+
+- **架构**：从"单技能包 + /qa 逻辑指令 + intent-rules 路由表"重构为 **7 个独立 Skill**（skills/ 目录，各带 SKILL.md）
+- **触发**：每个 skill 采用双段式 description（何时用 + 何时不用），AI 按自然语言语义自动挑选加载，用户无需记命令名
+- **记忆**：跨会话历史加载下沉到各 skill（先询问用户确认后才扫描），读写映射按 skill 收敛，写入确认规则保留
+- **删除**：prompts/ 目录（/qa 入口 + intent-rules + 8 个 prompt 文件），validation-rules.md 迁移至 docs/
+- **评测**：trigger-eval 期望改为 skill 路由（41 → 51 条，新增 10 条免指令名用例）；functional/security-eval 提示词改为自然语言触发；契约断言迁移到 skills/
+- **CI**：validate.sh / run-evals.sh 改查 skills/ 结构 + 双段式 description + 历史加载断言
+- **文档**：README / user-manual / process-integration / 仓库级 SKILL.md 全面适配 7 skill 结构
+
 ## v1.6.0
 
 ### 版本号更新（2026-08-17）

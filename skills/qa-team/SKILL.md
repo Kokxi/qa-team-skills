@@ -2,7 +2,7 @@
 name: qa-team
 slug: qa-team
 displayName: 团队管理
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要团队维度的管理信息时使用，如"看看我们团队这周的测试进度""这个版本周五要发

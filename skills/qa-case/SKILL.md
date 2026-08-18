@@ -2,7 +2,7 @@
 name: qa-case
 slug: qa-case
 displayName: 测试用例设计
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要设计/生成软件测试用例时使用，如"帮我设计登录功能的测试用例"、

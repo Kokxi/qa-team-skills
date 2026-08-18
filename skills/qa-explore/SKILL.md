@@ -2,7 +2,7 @@
 name: qa-explore
 slug: qa-explore
 displayName: 探索性测试
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要做探索性测试时使用，如"这个功能没文档帮我做一次探索性测试""支付模块加了个

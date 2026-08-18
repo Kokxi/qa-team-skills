@@ -34,12 +34,11 @@ python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY
 检查项目结构完整性，由 `ci/forbidden.txt` 定义禁止硬编码的行业词清单。
 
 **检查项**：
-- 必需文件齐全（SKILL.md、7 个 prompt、模板、docs、examples）
-- 每个 prompt 含「防注入声明」「输出前自检」章节
-- case/agent prompt 含「设计方法」字段
-- prompts/SKILL.md 中无硬编码行业词（等保/三权分立/堡垒机等）
+- 必需文件齐全（SKILL.md、7 个 skill 的 SKILL.md、模板、docs、examples）
+- 每个 skill 含「防注入声明」「输出前自检」章节 + 双段式 description（何时用/何时不用）
+- skills/ 与 SKILL.md 中无硬编码行业词（等保/三权分立/堡垒机等）
 - VERSION 文件与 SKILL.md frontmatter 版本一致
-- 无旧 prompt 目录残留（prompts/req-analyze、prompts/case-gen）
+- 无旧目录残留（prompts/ 应已删除）
 
 ### ci/run-evals.sh
 
@@ -47,9 +46,9 @@ python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY
 
 **两类检查**：
 
-1. **触发评测（规则路由基线）** — 读 `evals/trigger-eval.json`，用 `prompts/qa/intent-rules.md` 的关键词规则跑路由，对照期望算准确率。这是 LLM 路由的对照下限——**LLM 路由准确率应 ≥ 此规则基线才算合格**。当前基线 38/38 = 100%。
+1. **触发评测（规则路由基线）** — 读 `evals/trigger-eval.json`，用 `ci/run-evals.sh` 内置的关键词规则跑路由，对照期望算准确率。这是 LLM 路由的对照下限——**LLM 路由准确率应 ≥ 此规则基线才算合格**。当前基线 51/51 = 100%。
 
-2. **契约断言（prompt↔eval）** — 把 `evals/functional-eval.json` 的 assertion 翻译成对 prompt 文件的 37 条静态检查，捕获"prompt 定义与 eval 期望"不一致（如标题写 10 个维度但 eval 要求 11 个）。当前 37/37 全过。
+2. **契约断言（skill↔eval）** — 把 `evals/functional-eval.json` 的 assertion 翻译成对 skill 文件的静态检查，捕获"skill 定义与 eval 期望"不一致（如标题写 10 个维度但 eval 要求 11 个）。当前 44/44 全过。
 
 **归档报告**：每次运行输出 `evals/history/report-<version>-<时间戳>.json`，供跨版本对比，发现退化。
 
@@ -85,7 +84,7 @@ python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY
 **真·LLM 端到端评测**——前四套脚本的最高层补充。结构校验查"文件齐不齐"，契约断言查"prompt 定义对不对"，记忆测试查"规则实现对不对"，但都查不出"AI 真跑一遍产出质量好不好"。本脚本接 LLM API 真调 skill，用 LLM-as-judge 判定产出内容质量。
 
 **工作流程**：
-1. 解析 `functional-eval.json` 每条 eval 的 prompt 开头 `/qa-xxx` → 加载 `prompts/xxx/prompt.md` 作为 system prompt
+1. 解析 `functional-eval.json` 每条 eval 的 prompt（自然语言触发）→ 按 skill 名匹配 `skills/xxx/SKILL.md` 作为 system prompt
 2. prompt 剩余部分作为 user message 发给 worker 模型生成产出
 3. 用 judge 模型按每条 assertion 判定 pass/fail（输出结构化 JSON）
 4. 归档报告到 `evals/history/llm-report-<version>-<时间戳>.json`

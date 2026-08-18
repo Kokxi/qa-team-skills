@@ -2,7 +2,7 @@
 name: qa-report
 slug: qa-report
 displayName: 测试报告生成
-version: v1.6.0
+version: v1.7.0
 license: MIT
 description: >-
   当用户需要生成测试报告时使用，如"帮我把这周的工作写成日报""v2.5 测完了出份阶段报告
