@@ -21,12 +21,13 @@ check_file() {
 
 check_file "SKILL.md"
 check_file "VERSION"
-check_file "prompts/prd/prompt.md"
-check_file "prompts/case/prompt.md"
-check_file "prompts/agent/prompt.md"
-check_file "prompts/bug/prompt.md"
-check_file "prompts/report/prompt.md"
-check_file "prompts/team/prompt.md"
+check_file "skills/qa-prd/SKILL.md"
+check_file "skills/qa-case/SKILL.md"
+check_file "skills/qa-agent/SKILL.md"
+check_file "skills/qa-bug/SKILL.md"
+check_file "skills/qa-report/SKILL.md"
+check_file "skills/qa-team/SKILL.md"
+check_file "skills/qa-explore/SKILL.md"
 check_file "docs/user-manual.md"
 check_file "templates/requirement.md"
 check_file "templates/agent-test.md"
@@ -54,22 +55,25 @@ if [[ -f "$SKILL_MD" ]]; then
   done
 fi
 
-# ── 2.5 各 Prompt 关键章节检查 ──────────────────────────
-for prompt_file in "$SKILL_DIR"/prompts/*/prompt.md; do
-  name=$(basename "$(dirname "$prompt_file")")
-  # 检查注入防护
-  if ! grep -q "防注入声明" "$prompt_file"; then
-    ERRORS+=("$name/prompt.md 缺少「防注入声明」章节")
+# ── 2.5 各 Skill 关键章节检查 ──────────────────────────
+for skill_dir in "$SKILL_DIR"/skills/*/; do
+  name=$(basename "$skill_dir")
+  skill_md="$skill_dir/SKILL.md"
+  # 检查防注入声明
+  if ! grep -q "防注入声明" "$skill_md"; then
+    ERRORS+=("$name/SKILL.md 缺少「防注入声明」章节")
+  fi
+  # 检查双段式 description（负向排除）
+  if ! grep -q "不用于" "$skill_md"; then
+    ERRORS+=("$name/SKILL.md 缺少负向排除（何时不用）")
+  fi
+  # 检查第零步记忆加载
+  if ! grep -q "历史加载" "$skill_md"; then
+    ERRORS+=("$name/SKILL.md 缺少历史加载流程")
   fi
   # 检查输出前自检
-  if ! grep -q "输出前自检" "$prompt_file"; then
-    ERRORS+=("$name/prompt.md 缺少「输出前自检」章节")
-  fi
-  # 检查约束（agent 和 case 必须包含黑盒方法/设计方法）
-  if [[ "$name" == "case" || "$name" == "agent" ]]; then
-    if ! grep -q "设计方法" "$prompt_file"; then
-      ERRORS+=("$name/prompt.md 缺少「设计方法」字段（必填）")
-    fi
+  if ! grep -q "输出前自检" "$skill_md"; then
+    ERRORS+=("$name/SKILL.md 缺少「输出前自检」章节")
   fi
 done
 
@@ -99,7 +103,11 @@ else
   ERRORS+=("VERSION 文件不存在")
 fi
 
-# ── 5. 禁止残留旧 Prompt 目录 ─────────────────────────
+# ── 5. 禁止残留旧目录 ─────────────────────────
+# 旧 Prompt 目录（prompts/）在 skills/ 迁移完成后删除；删除前提示
+if [[ -d "$SKILL_DIR/prompts" ]]; then
+  WARNINGS+=("prompts/ 目录仍存在——能力已迁移至 skills/，请确认迁移完整后删除")
+fi
 OLD_DIRS=("prompts/req-analyze" "prompts/case-gen")
 for d in "${OLD_DIRS[@]}"; do
   if [[ -d "$SKILL_DIR/$d" ]]; then
