@@ -213,9 +213,9 @@ check_contains "$QA" '意图解析|single|multi' "qa 含意图解析"
 check_contains "$QA" '任务编排|执行计划' "qa 含任务编排"
 check_contains "$QA" 'auto|自动规划' "qa 含自动规划（v1.5）"
 
-# validation-rules.md 完整性：5 个指令的规则表都存在
+# validation-rules.md 完整性：全部指令的规则表都存在（含 E001 explore）
 VAL="$PROMPT_DIR/qa/validation-rules.md"
-for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001'; do
+for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001' 'E001'; do
   check_contains "$VAL" "$rule" "validation-rules 含规则 $rule"
 done
 

@@ -6,7 +6,7 @@
 
 - **用例库**：每轮迭代的用例不断累积，按产品模块组织，支持继承和进化
 - **缺陷库**：历史缺陷分析结果持久化，支持根因归类、复发检测、趋势分析
-- **评审库**：历史需求评审结果，问题清单可跨迭代转化为用例
+- **评审库**：历史需求评审结果，问题清单可跨迭代转化为用例。评审产物双形态并存：结构化 JSON 存 `data/products/{module}/reviews/`（记忆数据，需确认写入）；完整 Markdown 报告由 `/qa-prd` 自动导出到当前项目 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物，无需确认）
 - **报告库**：历史测试报告，支持同比/环比趋势
 - **规范库**：团队测试规范、Checklist、经验教训——从缺陷中自动沉淀
 
@@ -33,7 +33,7 @@ memory/
         │   ├── bugs/
         │   │   ├── v1.0.json
         │   │   └── v1.1.json
-        │   ├── reviews/
+        │   ├── reviews/        ← 评审记录（JSON 记忆数据 + 项目 docs/reviews/ 下另有 Markdown 报告文档）
         │   ├── reports/
         │   ├── standards.json   ← 本模块沉淀的规范/checklist
         │   └── summary.json     ← **索引文件**（自动维护，用于快速加载+趋势分析）
@@ -79,7 +79,7 @@ memory/
 ```
 Step 0: 历史加载
 ├─ 解析 scope = "支付接口"
-├─ 扫描 data/products/payment/ 是否存在
+├─ 扫描 data/products/{scope}/ 是否存在
 │   ├─ 存在 → 读取 summary.json → 生成记忆简报
 │   └─ 不存在 → 首次使用，跳过后面的历史步骤
 │

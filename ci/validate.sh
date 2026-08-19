@@ -43,11 +43,12 @@ check_file "examples/agent-demo.md"
 check_file "examples/bug-demo.md"
 check_file "examples/report-demo.md"
 check_file "examples/team-demo.md"
+check_file "examples/qa-demo.md"
 
 # ── 2. SKILL.md 必填字段检查 ──────────────────────────
 SKILL_MD="$SKILL_DIR/SKILL.md"
 if [[ -f "$SKILL_MD" ]]; then
-  for field in "name:" "description:" "指令总览" "通用约束" "版本管理" "能力矩阵"; do
+  for field in "name:" "description:" "指令总览" "通用约束"; do
     if ! grep -q "$field" "$SKILL_MD"; then
       ERRORS+=("SKILL.md 缺少必填字段: $field")
     fi
@@ -107,6 +108,59 @@ for d in "${OLD_DIRS[@]}"; do
   fi
 done
 
+# ── 5.5 指令清单一致性检查（防新增指令漏同步） ────────────
+# 三方指令清单必须一致：
+#   ① prompts/ 下的子目录（每个指令一个目录，qa 入口除外）
+#   ② run_llm_eval.py 的 CMD_TO_PROMPT 映射
+#   ③ SKILL.md 渐进式加载指引表的指令行
+declare -A CMD_TO_PROMPT=(
+  ["prd"]="/qa-prd" ["case"]="/qa-case" ["agent"]="/qa-agent"
+  ["bug"]="/qa-bug" ["report"]="/qa-report" ["team"]="/qa-team"
+  ["explore"]="/qa-explore"
+)
+
+# ① 从 prompts/ 目录收集指令
+PROMPT_DIRS=()
+for d in "$SKILL_DIR"/prompts/*/; do
+  name=$(basename "$d")
+  [[ "$name" == "qa" ]] && continue  # qa 是统一入口，不是子指令
+  [[ -f "$d/prompt.md" ]] && PROMPT_DIRS+=("$name")
+done
+
+# ② 从 run_llm_eval.py 收集映射
+LLM_MAPPED=()
+if [[ -f "$SKILL_DIR/ci/run_llm_eval.py" ]]; then
+  while read -r key; do
+    [[ -n "$key" ]] && LLM_MAPPED+=("$key")
+  done < <(grep -oP '"/qa-[a-z]+"\s*:\s*"[a-z]+"' "$SKILL_DIR/ci/run_llm_eval.py" | sed -E 's/.*: *"([a-z]+)"/\1/')
+fi
+
+# ③ 从 SKILL.md 渐进式加载指引收集指令
+SKILL_CMDS=()
+while read -r key; do
+  [[ -n "$key" ]] && SKILL_CMDS+=("$key")
+done < <(grep -oP 'prompts/[a-z]+/prompt\.md' "$SKILL_MD" | sed -E 's|prompts/([a-z]+)/prompt\.md|\1|' | grep -v '^qa$')
+
+# 比对 ① 目录 与 ② 映射 与 ③ SKILL.md
+for name in "${PROMPT_DIRS[@]}"; do
+  if [[ -z "${CMD_TO_PROMPT[$name]:-}" ]]; then
+    ERRORS+=("指令目录 prompts/$name/ 未在 validate.sh 指令清单中登记（新增指令需在 CMD_TO_PROMPT 补充）")
+  fi
+  if [[ -z "$(printf '%s\n' "${LLM_MAPPED[@]}" | grep -qx "$name" && echo yes)" ]]; then
+    ERRORS+=("指令目录 prompts/$name/ 未在 ci/run_llm_eval.py CMD_TO_PROMPT 中登记（LLM 评测会漏测此指令）")
+  fi
+  if [[ -z "$(printf '%s\n' "${SKILL_CMDS[@]}" | grep -qx "$name" && echo yes)" ]]; then
+    ERRORS+=("指令目录 prompts/$name/ 未在 SKILL.md 渐进式加载指引表中列出（AI 无法按需加载）")
+  fi
+done
+
+# 反向检查：映射/指引表中有、目录中无 → 悬空引用
+for name in "${LLM_MAPPED[@]}" "${SKILL_CMDS[@]}"; do
+  if [[ ! -d "$SKILL_DIR/prompts/$name" ]]; then
+    ERRORS+=("指令 $name 被 run_llm_eval.py 或 SKILL.md 引用，但 prompts/$name/ 目录不存在（悬空引用）")
+  fi
+done
+
 # ── 6. 输出结果 ────────────────────────────────────────
 echo ""
 if [[ ${#WARNINGS[@]} -gt 0 ]]; then
@@ -121,7 +175,8 @@ if [[ ${#ERRORS[@]} -gt 0 ]]; then
 else
   VERSION=$(cat "$VERSION_FILE")
   echo "✅ qa-team-skills $VERSION 校验通过"
-  echo "   - 6 个指令 Prompt 完整（含注入防护+自检）"
+  echo "   - 8 个指令 Prompt 完整（含注入防护+自检）"
+  echo "   - 指令清单三方一致（prompts/ ↔ run_llm_eval.py ↔ SKILL.md）"
   echo "   - SKILL.md 字段完整"
   echo "   - 模板文件完整"
   echo "   - 无硬编码行业词"

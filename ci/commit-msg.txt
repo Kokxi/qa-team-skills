@@ -1,0 +1,8 @@
+chore: 清理机制 — 保留最近5个版本，删除更早的
+
+- /qa prompt 合并规则增加「版本清理」步骤（写入后自动执行）
+- memory/README.md 新增版本清理规则章节（含操作示例）
+- /qa 自检清单新增清理检查项
+- todo.md 标记清理机制 + 推理校验为 ✅ 已完成
+
+Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>

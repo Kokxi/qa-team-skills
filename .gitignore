@@ -15,6 +15,9 @@ desktop.ini
 *.tmp
 *.bak
 *.txt
+# 例外：ci 工具链依赖的配置文本必须入库（validate.sh 运行时读取）
+!ci/forbidden.txt
+!ci/commit-msg.txt
 
 # Generated articles
 1.md

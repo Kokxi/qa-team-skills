@@ -10,7 +10,7 @@
 
 | 时机 | 范围 | 耗时 |
 |------|------|------|
-| 每版本发布前 | 全量 8 条 functional-eval | 约 4 小时（2 评审员 × 8 条 × 15 分钟） |
+| 每版本发布前 | 全量 9 条 functional-eval | 约 4.5 小时（2 评审员 × 9 条 × 15 分钟） |
 | Prompt 重大改动后 | 改动涉及的指令子集 | 按需 |
 
 ## 评测员资质
@@ -31,17 +31,17 @@
 
 **总分门槛**：
 - 单条 eval：平均分 ≥ 3.5 视为合格，< 3.5 需改 prompt
-- 版本级：8 条平均分 ≥ 3.8 视为版本达标
+- 版本级：9 条平均分 ≥ 3.8 视为版本达标
 
 ## 评测流程
 
 ### Step 1：准备（10 分钟）
-1. 从 `evals/functional-eval.json` 取 8 条 eval 的 prompt
+1. 从 `evals/functional-eval.json` 取 9 条 eval 的 prompt
 2. 用 `ci/run_llm_eval.py` 跑一遍，把 AI 产出归档到 `evals/human-review/ai-output-<version>-<日期>.json`（每条 eval 含 id、prompt、ai_output）
 3. 打印评分表（模板见下）
 
 ### Step 2：独立评分（双盲，每人 2 小时）
-1. 两位评审员各自独立阅读 8 条 AI 产出
+1. 两位评审员各自独立阅读 9 条 AI 产出
 2. 每条按 5 维度打分（1-5）+ 写评语（≤50 字）
 3. **关键**：评审员不得看对方评分，不得看 prompt 源文件，只评 AI 产出本身
 

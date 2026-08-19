@@ -7,7 +7,7 @@
 1. **历史加载**：扫描产品历史记忆，生成记忆简报
 2. **意图解析**：将自然语言拆解为可执行的测试工作项
 3. **任务编排**：判断单步还是多步，生成执行计划
-4. **指令路由**：分派到 `/qa-prd`、`/qa-case`、`/qa-bug`、`/qa-report`、`/qa-team`、`/qa-agent`
+4. **指令路由**：分派到 `/qa-prd`、`/qa-case`、`/qa-bug`、`/qa-report`、`/qa-team`、`/qa-agent`、`/qa-explore`
 5. **记忆管理**：在步骤间自动传递数据，持续沉淀用例库、缺陷库、测试规范
 
 ## 防注入声明
@@ -77,6 +77,7 @@
 | `/qa-bug`（缺陷分析） | 对比历史缺陷，标记"复发"（同根因再次出现）；参考历史修复建议 |
 | `/qa-report`（报告生成） | 同比/环比上轮数据，生成趋势对比 |
 | `/qa-team`（团队管理） | 读取历史缺陷趋势，辅助质量评估和漏测复盘 |
+| `/qa-explore`（探索性测试） | 读取历史缺陷和规范，生成更有针对性的探索起点 |
 
 ### 记忆简报示例
 
@@ -102,7 +103,7 @@
   "intent": "single" | "multi" | "auto",
   "steps": [
     {
-      "action": "prd" | "case" | "bug" | "report" | "team" | "agent",
+      "action": "prd" | "case" | "bug" | "report" | "team" | "agent" | "explore",
       "description": "用户期望的具体工作内容",
       "scope": "功能模块/范围描述",
       "dependencies": []
@@ -181,7 +182,8 @@
 
 1. 输出任务确认："我理解你要执行「{{指令名}}」——{{工作范围}}，确认开始？"
 2. 用户确认后，转入对应的指令 Prompt 执行
-3. 执行完成后，询问用户是否将结果写入记忆模块，确认后执行写入（见「记忆写入」）
+3. 执行完成后，若指令是 `/qa-prd`，**自动将完整报告导出为文档**到 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物，无需确认，见 `prompts/prd/prompt.md`）
+4. 询问用户是否将结果写入记忆模块，确认后执行写入（见「记忆写入」）
 
 ### 多步任务
 
@@ -203,7 +205,7 @@
 用户确认后，逐步骤执行：
 
 1. 每步执行前，检索记忆模块获取上一步的输出作为输入
-2. 每步执行后，**询问用户是否将该步输出写入记忆模块**，用户确认后才写入（与「第四步：记忆写入」规则一致）
+2. 每步执行后，**询问用户是否将该步输出写入记忆模块**，用户确认后才写入（与「第四步：记忆写入」规则一致）；若该步为 `/qa-prd`，另需**自动将报告导出为文档**到 `docs/reviews/review-{module}-{YYYYMMDD}.md`（无需确认）
 3. 最后一步完成后，汇总输出最终结果
 
 ### 多步数据传递规则
@@ -256,12 +258,13 @@
 
 | 指令 | 写入路径 | 提取的关键字段 |
 |------|---------|-------------|
-| `/qa-prd` | `data/products/{module}/reviews/` | 产品/模块、评审日期、问题清单（维度/严重程度/描述/建议）、业务分层建议 |
+| `/qa-prd` | `data/products/{module}/reviews/` | 产品/模块、评审日期、问题清单（维度/严重程度/描述/建议）、业务分层建议（报告文档自动导出 `docs/reviews/`，本行仅指记忆库 JSON 写入，仍需确认） |
 | `/qa-case` | `data/products/{module}/test-cases/` | 产品/模块、测试类型、每条用例（标题/类型/业务分层/设计方法/优先级/步骤/预期） |
 | `/qa-bug` | `data/products/{module}/bugs/` | 产品/模块、根因分类、置信度、影响范围、修复建议、回归要点 |
 | `/qa-bug`（共性根因） | `data/products/{module}/standards.json` | 当批量分析中发现共性根因时，先询问用户确认后，再追加 lession_learned 或 checklist 条目 |
 | `/qa-team`（漏测复盘） | `data/products/{module}/standards.json` | 当输出预防措施时，先询问用户确认后，再追加 checklist 条目 |
 | `/qa-report` | `data/products/{module}/reports/` | 报告类型、时间段、关键指标（执行用例数/缺陷数/修复率等） |
+| `/qa-explore`（经验沉淀） | `data/products/{module}/standards.json` | 探索中发现的通用经验/教训，先询问用户确认后追加 lession_learned 或 checklist 条目 |
 
 ### 增量追加规则
 
@@ -412,7 +415,7 @@
 
 ```
 ① 解析 scope = "支付接口"
-② 读取 data/products/payment/summary.json
+② 读取 data/products/{scope}/summary.json
 ③ 从 summary.iterations 中提取每轮数据
 ④ 从 bugs.by_root_cause 中提取根因分布变化
 ⑤ 输出趋势报告
@@ -460,6 +463,7 @@
 - [ ] 多步任务的执行计划是否已在步骤间标注清楚？
 - [ ] 每步执行前是否检索了记忆模块中的相关数据？
 - [ ] 每步执行后是否将输出写入到了对应的产品记忆路径？写入前是否询问了用户确认？
+- [ ] 路由到 `/qa-prd` 时，是否自动将完整报告导出为文档到 `docs/reviews/`（用户明确拒绝导出时豁免）？
 - [ ] 如果是 /qa-case 或 /qa-agent，是否执行了 latest.json 合并？
 - [ ] 如果是 /qa-case 或 /qa-agent，合并后是否询问用户是否进行版本清理？
 - [ ] 如果是 /qa-case，是否将历史缺陷转化为了补充用例？

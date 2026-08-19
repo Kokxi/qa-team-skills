@@ -2,7 +2,7 @@
 
 > 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.6.2-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.6.3-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -69,7 +69,7 @@ SKILL.md 中专门有一章「人工校验规则」，不是给 AI 看的——�
 | 指令           | 做什么        | 适合谁        | 核心亮点                             |
 | ------------ | ---------- | ---------- | -------------------------------- |
 | `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理→自动规划（v1.5）          |
-| `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单      |
+| `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单 + **报告文档自动导出（v1.6.3）** |
 | `/qa-case`   | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
 | `/qa-agent`  | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
 | `/qa-bug`    | 缺陷分析       | 测试工程师、开发   | 先评估描述质量 → 再分析根因，标注置信度，支持批量       |
@@ -116,7 +116,7 @@ cp -r qa-team-skills ~/.claude/skills/
 cp -r qa-team-skills ./.github/skills/
 ```
 
-> ⚠️ **关于 `/qa` 指令的说明**：本技能的 `/qa`、`/qa-prd` 等 8 个指令是**逻辑指令**（由 AI 根据 `prompts/qa/intent-rules.md` 的意图路由规则自动解析执行），**不是各 Agent 注册的斜杠命令**——命令面板的自动补全里看不到它们，安装后也不需要注册。日常使用直接用自然语言下达任务（如"帮我设计登录功能的测试用例"）即可触发，或显式输入 `/qa-case` 让 AI 按对应指令执行。如需在 Claude Code / OpenCode 中拥有真正的斜杠命令补全，可自行在 `.claude/commands/`（或对应 Agent 的 commands 目录）为 8 个指令各建一个命令文件。
+> ⚠️ **关于 `/qa` 指令的说明**：本技能的 `/qa`、`/qa-prd` 等 8 个指令是**逻辑指令**（由 AI 根据 `prompts/qa/intent-rules.md` 的意图路由规则自动解析执行），**不是各 Agent 注册的斜杠命令**——在 CLI 中输入 `/` 会打开命令面板，但里面不会有 `/qa`、`/qa-prd`，因为它们是给 AI 的路由标签，不是可执行命令。日常使用直接用自然语言下达任务即可触发，无需也不应输入 `/qa` 开头的内容（详见下方「使用」）。如需在 Claude Code / OpenCode 中拥有真正的斜杠命令补全，可自行在 `.claude/commands/`（或对应 Agent 的 commands 目录）为 8 个指令各建一个命令文件。
 
 #### 方式二：一键安装（npx skills）
 
@@ -137,20 +137,24 @@ clawhub install qa-team-skills  # 安装技能
 
 ### 使用
 
-```bash
-/qa          # 自然语言下达测试任务 → 自动解析 → 路由 → 记忆管理 → 自动规划
-/qa-prd      # 粘贴 PRD → 11 维度评审报告 + 业务分层建议
-/qa-case     # 输入需求 → 6 类型 × 9 方法结构化用例
-/qa-agent    # 描述 Agent → 16 维度专项测试用例（含 RAG）
-/qa-bug      # 粘贴缺陷 → 质量评估 → 根因分析（支持批量）
-/qa-report   # 填入数据 → 日报/周报/阶段报告
-/qa-team     # 汇总团队数据 → 管理看板/趋势/产出
-/qa-explore  # 探索性测试 → Session 笔记 → 疑似 Bug/学习经验分流 → Debrief 沉淀
+本技能的 8 个指令（`/qa`、`/qa-prd` 等）是**逻辑指令**，不是 CLI 斜杠命令。**不要输入 `/qa`、`/qa-prd` 等斜杠开头的内容**——输入 `/` 会打开命令面板，但这些逻辑指令不在里面。
+
+**正确用法：直接用自然语言下达任务**，AI 根据技能触发规则自动路由到对应指令：
+
 ```
+"帮我评审这个需求的 PRD"          → 触发 /qa-prd（需求评审）
+"帮我设计登录功能的测试用例"        → 触发 /qa-case（用例设计）
+"对支付接口做全量回归并输出缺陷报告" → 触发 /qa（统一入口，自动编排）
+"分析这个 Bug 的原因"             → 触发 /qa-bug（缺陷分析）
+"帮我生成这周的测试周报"           → 触发 /qa-report（报告生成）
+"汇总一下团队的测试产出"           → 触发 /qa-team（团队管理）
+```
+
+> 如果想指定走某个指令，直接在自然语言中说明即可，例如："按需求评审流程分析这份 PRD" 或 "用 /qa-prd 的方法评审"。技能名本身若被 Agent 注册为命令（如 `/qa-team-skills`），也可直接调用。
 
 ### 示例
 
-**[examples/](./examples/)** 目录包含全部 6 个指令的完整输入输出示例（均来自真实测试场景）：
+**[examples/](./examples/)** 目录包含全部 8 个指令的完整输入输出示例（均来自真实测试场景）：
 
 | 示例                                          | 指令           | 场景                  |
 | ------------------------------------------- | ------------ | ------------------- |
@@ -161,6 +165,7 @@ clawhub install qa-team-skills  # 安装技能
 | [bug-demo.md](./examples/bug-demo.md)       | `/qa-bug`    | 从被驳回 → 根因定位 + 批量    |
 | [report-demo.md](./examples/report-demo.md) | `/qa-report` | 三段话 → 日报/周报/阶段报告    |
 | [team-demo.md](./examples/team-demo.md)     | `/qa-team`   | 迭代末看板/产出/准出         |
+| [qa-demo.md](./examples/qa-demo.md)         | `/qa`        | 支付接口全量回归，多步编排     |
 
 ***
 
@@ -193,7 +198,7 @@ qa-team-skills/
 │   └── error-output.md           #   统一错误格式
 ├── examples/
 │   ├── README.md
-│   └── *-demo.md                 # 7 个示例（覆盖全部 8 指令 + /qa 场景）
+│   └── *-demo.md                 # 8 个示例（覆盖 8 指令 + /qa 场景）
 ├── team/                         # 行业配置（可选引用）
 │   ├── roles.json                #   角色映射
 │   └── standards.json            #   合规标准参考
@@ -206,9 +211,9 @@ qa-team-skills/
 │   ├── forbidden.txt             #   禁止词列表
 │   └── commit-msg.txt            #   提交规范
 ├── evals/                        # 评测数据集 + 历史归档
-│   ├── functional-eval.json      #   功能评测集（8 条 eval + 契约断言）
+│   ├── functional-eval.json      #   功能评测集（9 条 eval + 契约断言）
 │   ├── trigger-eval.json         #   触发评测集（41 条，含 train/validation 划分）
-│   ├── security-eval.json        #   安全对抗评测集（8 条 7 种攻击）★ v1.5 新增
+│   ├── security-eval.json        #   安全对抗评测集（9 条 7 种攻击）★ v1.5 新增
 │   ├── _smoke.json               #   冒烟评测集
 │   ├── human-review/             #   人工双盲评测方案（5 维度评分+双盲流程）
 │   └── history/                  #   每轮评测归档报告（基线对比）
@@ -251,6 +256,21 @@ qa-team-skills/
 
 使用本技能前，请了解以下关键信息：
 
+### MCP 能力声明
+
+本技能实际执行以下能力，特此声明以对齐信任边界：
+
+| 能力 | 范围 | 说明 |
+|------|------|------|
+| **本地文件读取** | `memory/data/products/*` | 读取历史用例/缺陷/规范/报告 |
+| **本地文件写入** | `memory/data/products/*` | 持久化测试数据到本地 JSON 文件（需用户确认） |
+| **报告文档导出** | `docs/reviews/*`（当前项目） | `/qa-prd` 评审完成后自动导出完整报告为 Markdown 文档（交付物，无需确认） |
+| **本地文件删除** | `memory/data/products/*/v*.json` | 版本清理（保留最近 5 个版本），需用户确认 |
+| **网络调用（可选）** | 外部 LLM API | 仅 `ci/run_llm_eval.py` 评测脚本使用，需用户自行配 Key |
+| **环境变量读取** | `DS_KEY`, `OR_KEY` 等 | 仅评测脚本使用，不写入任何文件 |
+
+> 用户安装后，日常使用 `/qa` 等指令时仅涉及本地文件读写。评测脚本需显式运行才触发外部调用。
+
 ### 数据持久化
 - 本技能的**记忆模块**（`memory/`）会将以下测试数据**持久化到本地文件系统**（`memory/data/products/` 目录下）：测试用例、缺陷分析、评审记录、测试报告、团队数据、探索笔记
 - **持久化的前提**：每次写入前 AI **都会先询问你确认**，只有在你确认后才写入本地文件；你拒绝则跳过，本次输出不落盘
@@ -289,7 +309,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.6.2**
+当前版本：**v1.6.3**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 

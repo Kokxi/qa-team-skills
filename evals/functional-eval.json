@@ -1,6 +1,6 @@
 {
   "skill_name": "qa-team-skills",
-  "version": "v1.6.2",
+  "version": "v1.6.3",
   "description": "功能性测试评估集 — 验证每个子指令的产出质量",
   "evals": [
     {
@@ -106,6 +106,19 @@
         {"name": "规范转化为用例", "expected": true, "description": "每条规范至少转化1条用例"},
         {"name": "用例标注来源", "expected": true, "description": "用例输出中标注了来源规范库"},
         {"name": "输出规范引用统计", "expected": true, "description": "总结引用了多少条规范、转化了多少条用例"}
+      ]
+    },
+    {
+      "id": "explore-001",
+      "name": "探索性测试-支付接口",
+      "prompt": "/qa-explore\n探索目标：支付接口的异常场景，无 PRD\n时间限制：60 分钟\n关注点：边界、异常处理",
+      "expected_output": "生成探索任务卡（含任务名称/目标/时间盒/不超过3个探索起点），结束后输出区分'疑似Bug'与'学到的经验'的 Debrief 报告",
+      "assertions": [
+        {"name": "生成探索任务卡", "expected": true, "description": "输出包含探索任务卡，含任务名称/目标/时间盒"},
+        {"name": "起点不超过3个", "expected": true, "description": "探索起点数量不超过3个"},
+        {"name": "区分疑似Bug与经验", "expected": true, "description": "Debrief 报告区分了'疑似Bug'和'学到的经验'，不混淆"},
+        {"name": "鼓励异常路径", "expected": true, "description": "探索起点或指引鼓励走异常路径（而非按预设用例执行）"},
+        {"name": "疑似Bug标注初判", "expected": true, "description": "疑似Bug标注'初判'，不做深度根因分析（那是 /qa-bug 的事）"}
       ]
     }
   ]

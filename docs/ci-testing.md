@@ -10,7 +10,7 @@ qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量�
 | `ci/run-evals.sh` | 动态契约 | 触发评测（规则路由基线）+ prompt↔eval 契约断言 + 归档报告 | ~ 2s |
 | `ci/test-memory-e2e.sh` | 行为模拟 | 记忆模块全生命周期：写入/合并/清理/转化/规范沉淀/历史加载（14 项断言） | ~ 1s |
 | `ci/test-memory-stress.sh` | 长期压测 | 10 轮迭代：summary.json 体积/延迟不退化、无重复堆积、版本清理生效（6 项断言） | ~ 2s |
-| `ci/run_llm_eval.py` | **真·LLM 端到端** | 接 LLM API 真调 skill，LLM-as-judge 按 assertion 判定产出内容质量 | ~ 4-6 分钟（8 条 eval） |
+| `ci/run_llm_eval.py` | **真·LLM 端到端** | 接 LLM API 真调 skill，LLM-as-judge 按 assertion 判定产出内容质量 | ~ 4-7 分钟（9 条 eval） |
 | `evals/human-review/README.md` | **人工双盲** | 2 名测试工程师对 AI 产出打 5 维分，验证内容质量（自动化查不出的） | ~ 4 小时/版本 |
 
 ## 使用方式
@@ -47,9 +47,9 @@ python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY
 
 **两类检查**：
 
-1. **触发评测（规则路由基线）** — 读 `evals/trigger-eval.json`，用 `prompts/qa/intent-rules.md` 的关键词规则跑路由，对照期望算准确率。这是 LLM 路由的对照下限——**LLM 路由准确率应 ≥ 此规则基线才算合格**。当前基线 38/38 = 100%。
+1. **触发评测（规则路由基线）** — 读 `evals/trigger-eval.json`（41 条，含 train 24 / validation 17 划分），用 `prompts/qa/intent-rules.md` 的关键词规则跑路由，对照期望算准确率。这是 LLM 路由的对照下限——**LLM 路由准确率应 ≥ 此规则基线才算合格**。当前基线 41/41 = 100%。
 
-2. **契约断言（prompt↔eval）** — 把 `evals/functional-eval.json` 的 assertion 翻译成对 prompt 文件的 37 条静态检查，捕获"prompt 定义与 eval 期望"不一致（如标题写 10 个维度但 eval 要求 11 个）。当前 37/37 全过。
+2. **契约断言（prompt↔eval）** — 把 `evals/functional-eval.json` 的 assertion 翻译成对 prompt 文件的 40 条静态检查，捕获"prompt 定义与 eval 期望"不一致（如标题写 10 个维度但 eval 要求 11 个）。当前 40/40 全过。
 
 **归档报告**：每次运行输出 `evals/history/report-<version>-<时间戳>.json`，供跨版本对比，发现退化。
 
@@ -93,7 +93,7 @@ python ci/run_llm_eval.py      # 5. 真·LLM 端到端（需 export KIMI_API_KEY
 **使用方式**：
 ```bash
 export KIMI_API_KEY="sk-..."           # 必填，从环境变量读，绝不写入文件
-python ci/run_llm_eval.py                    # 跑全量 functional-eval（8 条）
+python ci/run_llm_eval.py                    # 跑全量 functional-eval（9 条，含 explore-001）
 python ci/run_llm_eval.py --smoke            # 只跑第一条（冒烟，~50s）
 python ci/run_llm_eval.py --concurrency 2    # 并发数（默认 2）
 python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 120s）
@@ -105,7 +105,7 @@ python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 
 **注意事项**：
 - `kimi-for-coding` 是 reasoning 模型，`reasoning_content` 占大量 token，worker 的 `max_tokens` 需 ≥ 16k 才能保证 content 不被截断
 - 模型仅允许 `temperature=1`
-- 单条 eval 约 50s（1 次 worker + N 次 judge），全量 8 条并发 2 约 4-6 分钟
+- 单条 eval 约 50s（1 次 worker + N 次 judge），全量 9 条并发 2 约 4-7 分钟
 - API key 仅从 `$KIMI_API_KEY` 环境变量读，**脚本和归档报告均不写入 key**
 - 退出码：准确率 < 70% 或有 error 视为失败
 
@@ -137,7 +137,7 @@ python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 
 - **版本门槛**（平均分 ≥3.8 准予发布，3.5–3.8 部分重评，<3.5 不予发布）
 - **报告模板**（评分表 CSV + 版本报告 Markdown，归档到 `evals/human-review/`）
 
-详见 `evals/human-review/README.md`。每版本发布前跑一次，约 4 小时（2 人 × 8 条 × 15 分钟）。
+详见 `evals/human-review/README.md`。每版本发布前跑一次，约 4.5 小时（2 人 × 9 条 × 15 分钟）。
 
 ## 评测金字塔
 
