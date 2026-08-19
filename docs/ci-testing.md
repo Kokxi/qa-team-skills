@@ -11,6 +11,7 @@ qa-team-skills 是纯 Prompt 形态的 AI 技能，无 HTTP API 可调。质量�
 | `ci/test-memory-e2e.sh` | 行为模拟 | 记忆模块全生命周期：写入/合并/清理/转化/规范沉淀/历史加载（14 项断言） | ~ 1s |
 | `ci/test-memory-stress.sh` | 长期压测 | 10 轮迭代：summary.json 体积/延迟不退化、无重复堆积、版本清理生效（6 项断言） | ~ 2s |
 | `ci/run_llm_eval.py` | **真·LLM 端到端** | 接 LLM API 真调 skill，LLM-as-judge 按 assertion 判定产出内容质量 | ~ 4-7 分钟（9 条 eval） |
+| `ci/publish.sh` | 发布 | 一键发布 GitHub + ClawHub + skillhub.cn（前置校验通过后才发布） | ~ 1 分钟 |
 | `evals/human-review/README.md` | **人工双盲** | 2 名测试工程师对 AI 产出打 5 维分，验证内容质量（自动化查不出的） | ~ 4 小时/版本 |
 
 ## 使用方式
@@ -138,6 +139,27 @@ python ci/run_llm_eval.py --timeout 150      # 单次 LLM 调用超时（默认 
 - **报告模板**（评分表 CSV + 版本报告 Markdown，归档到 `evals/human-review/`）
 
 详见 `evals/human-review/README.md`。每版本发布前跑一次，约 4.5 小时（2 人 × 9 条 × 15 分钟）。
+
+### 发布脚本（ci/publish.sh）
+
+版本发布统一入口，前置校验通过后才允许发布，避免带病发版：
+
+```bash
+bash ci/publish.sh             # 完整发布：GitHub + ClawHub + skillhub.cn
+bash ci/publish.sh --dry-run   # 演练：跑校验 + 生成 skillhub 临时目录，不实际发布
+bash ci/publish.sh --github-only   # 只推 GitHub，跳过两个 skill 平台
+bash ci/publish.sh --skip-checks   # 跳过前置校验（紧急修复时用，不推荐）
+```
+
+**发布链路**：
+1. **前置校验** — 自动跑 `validate.sh` + `run-evals.sh`，任一失败即中止
+2. **GitHub** — 要求当前分支为 `main`，推送 `origin main`
+3. **ClawHub** — `clawhub publish`（需已登录：`clawhub whoami`）
+4. **skillhub.cn** — 用官方 Python CLI（`~/.skillhub/skills_store_cli.py`，需已登录）
+
+**skillhub.cn 白名单陷阱**（2026-08-19 实测发现）：服务端有文件类型白名单，会拒绝 `.clawhubignore`、`.gitignore`、`LICENSE`、`VERSION`。脚本自动复制到临时目录并剔除这 4 个文件再发布，无需手动处理。ClawHub 则通过 `.clawhubignore` 排除 `ci/`、`evals/`（开发工具不进技能包）。
+
+**版本号来源**：统一从 `VERSION` 文件读取，与 `validate.sh` 的版本一致性检查联动——发版前必须先升 `VERSION` 和 CHANGELOG。
 
 ## 评测金字塔
 

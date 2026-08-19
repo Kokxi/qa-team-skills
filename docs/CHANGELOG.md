@@ -4,6 +4,13 @@ All notable changes to qa-team-skills will be documented in this file.
 
 ## v1.6.4
 
+### 发布流程固化（2026-08-20）
+
+- 新增 `ci/publish.sh` 一键发布脚本：前置校验（validate.sh + run-evals.sh）→ GitHub 推送 → ClawHub → skillhub.cn，支持 `--dry-run`/`--github-only`/`--skip-checks`
+- skillhub.cn 文件白名单陷阱固化：自动复制临时目录并剔除 `.clawhubignore`/`.gitignore`/`LICENSE`/`VERSION`（服务端拒绝这 4 类文件，2026-08-19 实测发现）
+- 版本号统一从 `VERSION` 文件读取，与 validate.sh 版本一致性检查联动
+- validate.sh 新增 `ci/publish.sh` 存在性检查；README/user-manual/ci-testing 结构图与文档同步
+
 ### 报告文档导出（2026-08-19）
 
 - `/qa-prd` 评审完成后**自动导出完整报告为 Markdown 文档**到当前项目 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物，无需确认；用户明确拒绝时可跳过）

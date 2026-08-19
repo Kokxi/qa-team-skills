@@ -208,6 +208,7 @@ qa-team-skills/
 │   ├── test-memory-e2e.sh        #   记忆模块端到端（14 项断言）
 │   ├── test-memory-stress.sh     #   长期积累压测（10 轮迭代 6 项断言）
 │   ├── run_llm_eval.py           #   真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
+│   ├── publish.sh                #   发布脚本（GitHub + ClawHub + skillhub.cn）
 │   ├── forbidden.txt             #   禁止词列表
 │   └── commit-msg.txt            #   提交规范
 ├── evals/                        # 评测数据集 + 历史归档

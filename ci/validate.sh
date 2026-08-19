@@ -32,6 +32,7 @@ check_file "templates/requirement.md"
 check_file "templates/agent-test.md"
 check_file "templates/error-output.md"
 check_file "ci/forbidden.txt"
+check_file "ci/publish.sh"
 check_file ".gitignore"
 check_file "docs/process-integration.md"
 check_file "docs/version-policy.md"
@@ -182,4 +183,5 @@ else
   echo "   - 无硬编码行业词"
   echo "   - 无旧目录残留"
   echo "   - 版本号一致"
+  echo "   - 发布脚本完整（ci/publish.sh）"
 fi
