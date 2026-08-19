@@ -227,7 +227,7 @@ qa-team-skills/
 │   └── commit-msg.txt           # 提交规范
 ├── evals/                        # 评测数据集 + 历史归档（开发工具，上架时排除）
 │   ├── functional-eval.json     # 功能评测集（8 条 eval + 契约断言）
-│   ├── trigger-eval.json        # 触发评测集（38 条）
+│   ├── trigger-eval.json        # 触发评测集（41 条，含 train/validation 划分）
 │   ├── security-eval.json       # 安全对抗评测集（8 条 7 种攻击）
 │   ├── _smoke.json              # 冒烟评测集
 │   ├── human-review/            # 人工双盲评测方案（5 维度评分+双盲流程）

@@ -4,6 +4,22 @@ All notable changes to qa-team-skills will be documented in this file.
 
 ## v1.6.1
 
+### agentskills.io 最佳实践评估修复（2026-08-19）
+
+按 [agentskills.io skill-creation/best-practices](https://agentskills.io/skill-creation/best-practices) 评估修复 6 个质量问题：
+
+- SKILL.md「指令详情」改为**渐进式加载指引表**——明确"何时加载哪个 prompt 文件"，强化按需加载设计
+- SKILL.md trigger 注释修复"写报告"矛盾：有测试数据/任务上下文时"写报告/出份报告"路由到 `/qa-report`，与 trigger-eval 期望一致
+- SKILL.md 新增**常见陷阱（Gotchas）**章节：集中防注入 / 防幻觉 / 防过度自信 / 写入持久化 / 输出前必查规则
+- SKILL.md description 改祈使句开头（"当用户需要……时使用此技能"），补充 RAG 测试/探索性测试触发词（239 字符 < 1024 限制）
+- trigger-eval.json 补 `split` 字段（train 24 / validation 17，正反例两集均衡覆盖）防描述过拟合；run-evals.sh 按 split 分组统计并写入归档报告
+- run_llm_eval.py 增加执行轨迹采集（`trace_preview`/`trace_len`），供人工分析指令清晰度
+
+### Windows 编码 bug 修复（2026-08-19）
+
+- 修复预存编码 bug：Windows + Git Bash 下 Python 默认 GBK 输出，导致触发评测中文 query 全部乱码（准确率从 29.3% 修正为 100%）、emoji/✔ 打印抛 `UnicodeEncodeError`
+- `ci/run-evals.sh`、`ci/test-memory-e2e.sh`、`ci/test-memory-stress.sh` 统一加 `PYTHONIOENCODING=utf-8`
+
 ### 版本号更新（2026-08-18）
 
 - 版本号从 v1.6.0 升级至 v1.6.1
