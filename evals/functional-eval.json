@@ -1,6 +1,6 @@
 {
   "skill_name": "qa-team-skills",
-  "version": "v1.6.1",
+  "version": "v1.6.2",
   "description": "功能性测试评估集 — 验证每个子指令的产出质量",
   "evals": [
     {

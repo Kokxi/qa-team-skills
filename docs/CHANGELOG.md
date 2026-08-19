@@ -2,7 +2,7 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
-## v1.6.1
+## v1.6.2
 
 ### agentskills.io 最佳实践评估修复（2026-08-19）
 
@@ -19,6 +19,16 @@ All notable changes to qa-team-skills will be documented in this file.
 
 - 修复预存编码 bug：Windows + Git Bash 下 Python 默认 GBK 输出，导致触发评测中文 query 全部乱码（准确率从 29.3% 修正为 100%）、emoji/✔ 打印抛 `UnicodeEncodeError`
 - `ci/run-evals.sh`、`ci/test-memory-e2e.sh`、`ci/test-memory-stress.sh` 统一加 `PYTHONIOENCODING=utf-8`
+
+### 文档一致性（2026-08-19）
+
+- README/user-manual 触发评测集条数 38 → 41（含 train/validation 划分）
+
+### 版本号更新（2026-08-19）
+
+- 版本号从 v1.6.1 升级至 v1.6.2
+
+## v1.6.1
 
 ### 版本号更新（2026-08-18）
 
