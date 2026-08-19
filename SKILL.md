@@ -144,7 +144,7 @@ AI 辅助不等于 AI 决策。以下规则用于防止过度依赖、保障测�
 - 技能名称：`qa-team-skills`
 - 当前版本：`v1.6.1`
 - 版本文件：根目录 `VERSION` 文件
-- 团队统一维护在 `git` 分支 `release/v1`
+- 团队统一维护在 `git` 分支 `main`
 - 变更日志：`docs/CHANGELOG.md`
 
 # 能力矩阵
