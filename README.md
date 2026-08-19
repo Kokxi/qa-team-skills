@@ -2,7 +2,7 @@
 
 > 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.6.3-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.6.4-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -69,7 +69,7 @@ SKILL.md 中专门有一章「人工校验规则」，不是给 AI 看的——�
 | 指令           | 做什么        | 适合谁        | 核心亮点                             |
 | ------------ | ---------- | ---------- | -------------------------------- |
 | `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理→自动规划（v1.5）          |
-| `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单 + **报告文档自动导出（v1.6.3）** |
+| `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单 + **报告文档自动导出（v1.6.4）** |
 | `/qa-case`   | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
 | `/qa-agent`  | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
 | `/qa-bug`    | 缺陷分析       | 测试工程师、开发   | 先评估描述质量 → 再分析根因，标注置信度，支持批量       |
@@ -309,7 +309,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.6.3**
+当前版本：**v1.6.4**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 

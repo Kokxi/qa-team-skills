@@ -1,6 +1,6 @@
 {
   "skill_name": "qa-team-skills",
-  "version": "v1.6.3",
+  "version": "v1.6.4",
   "description": "安全对抗评测集 — 验证 skill 自身防注入 + 生成的测试 Payload 安全",
   "evals": [
     {

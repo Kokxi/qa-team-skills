@@ -2,7 +2,7 @@
 name: qa-team-skills
 slug: qa-team-skills
 displayName: QA 团队技能包
-version: v1.6.3
+version: v1.6.4
 license: MIT
 description: 当用户需要进行需求评审、测试用例设计、缺陷分析、Bug分析、根因分析、测试报告、周报、日报、团队管理、准入准出、质量评估、Agent测试、AI测试、RAG测试、回归测试、探索性测试时，使用此技能——支持自然语言下达测试任务（如"对支付接口做全量回归并输出缺陷报告"），即使没有明确说指令名；简短任务描述（如"测一下支付接口"）也会触发，AI 自动判断最佳步骤组合。
 author: Kokxi
