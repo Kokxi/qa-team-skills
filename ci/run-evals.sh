@@ -10,6 +10,11 @@
 #   真正调 LLM 的端到端评测留 --llm 接口位，接 API 后启用
 set -uo pipefail
 
+# Windows + Git Bash：强制 Python 以 UTF-8 输出，否则默认 GBK 编码会导致
+# 触发评测文件里的中文 query 乱码、emoji 打印抛 UnicodeEncodeError（预存 bug）
+export PYTHONIOENCODING=utf-8
+export LC_ALL=C.UTF-8
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 SKILL_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 VERSION=$(cat "$SKILL_DIR/VERSION" | tr -d '\n\r ')
@@ -74,7 +79,7 @@ else
   # 选可用的 python（Windows 上 python3 常是 Store 占位符，优先用 python）
   PY=python
   if ! command -v $PY >/dev/null 2>&1; then PY=python3; fi
-  # 用 python 解析 JSON：直接输出"query<TAB>期望路由"（反例期望统一输出 none），bash 只做字符串比较
+  # 用 python 解析 JSON：直接输出"query<TAB>期望路由<TAB>split"（反例期望统一输出 none），bash 只做字符串比较
   $PY - "$TRIGGER_FILE" <<'PYEOF' > /tmp/qa_trigger_result.txt
 import json, sys
 with open(sys.argv[1], encoding='utf-8') as f:
@@ -85,27 +90,36 @@ for item in evals:
     q = item.get('query','')
     expected = item.get('expected_command')
     should = item.get('should_trigger', True)
+    split = item.get('split', 'train')  # train / validation；缺省按 train
     # 反例（不应触发）期望统一为 none；正例期望取 expected_command
     want = 'none' if not should else (expected if expected else 'none')
-    print(f"{q}\t{want}")
+    print(f"{q}\t{want}\t{split}")
 PYEOF
   TRIG_TOTAL=0; TRIG_PASS=0; TRIG_FAIL_LIST=""
-  while IFS=$'\t' read -r q want; do
+  TRAIN_TOTAL=0; TRAIN_PASS=0; VAL_TOTAL=0; VAL_PASS=0
+  while IFS=$'\t' read -r q want split; do
     [[ -z "$q" ]] && continue
     # 去 CRLF，避免 Windows 换行导致字符串比较失败
     q=$(printf '%s' "$q" | tr -d '\r\n')
     want=$(printf '%s' "$want" | tr -d '\r\n')
+    split=$(printf '%s' "$split" | tr -d '\r\n')
     TRIG_TOTAL=$((TRIG_TOTAL+1))
     got=$(route_by_rule "$q")
     got=$(printf '%s' "$got" | tr -d '\r\n')
     if [[ "$got" == "$want" ]]; then
       TRIG_PASS=$((TRIG_PASS+1))
+      if [[ "$split" == "validation" ]]; then VAL_PASS=$((VAL_PASS+1)); else TRAIN_PASS=$((TRAIN_PASS+1)); fi
     else
       TRIG_FAIL_LIST="${TRIG_FAIL_LIST}\n    ✗ [$q] 期望=$want 实际=$got"
     fi
+    if [[ "$split" == "validation" ]]; then VAL_TOTAL=$((VAL_TOTAL+1)); else TRAIN_TOTAL=$((TRAIN_TOTAL+1)); fi
   done < /tmp/qa_trigger_result.txt
   TRIG_ACC=$(python -c "print(f'{$TRIG_PASS/$TRIG_TOTAL*100:.1f}' if $TRIG_TOTAL else '0')" 2>/dev/null || python3 -c "print(f'{$TRIG_PASS/$TRIG_TOTAL*100:.1f}' if $TRIG_TOTAL else '0')" 2>/dev/null || echo "0")
+  TRAIN_ACC=$(python -c "print(f'{$TRAIN_PASS/$TRAIN_TOTAL*100:.1f}' if $TRAIN_TOTAL else '0')" 2>/dev/null || python3 -c "print(f'{$TRAIN_PASS/$TRAIN_TOTAL*100:.1f}' if $TRAIN_TOTAL else '0')" 2>/dev/null || echo "0")
+  VAL_ACC=$(python -c "print(f'{$VAL_PASS/$VAL_TOTAL*100:.1f}' if $VAL_TOTAL else '0')" 2>/dev/null || python3 -c "print(f'{$VAL_PASS/$VAL_TOTAL*100:.1f}' if $VAL_TOTAL else '0')" 2>/dev/null || echo "0")
   echo "  触发准确率: $TRIG_PASS/$TRIG_TOTAL = ${TRIG_ACC}%"
+  echo "     ├─ train 集: $TRAIN_PASS/$TRAIN_TOTAL = ${TRAIN_ACC}%（描述优化用）"
+  echo "     └─ validation 集: $VAL_PASS/$VAL_TOTAL = ${VAL_ACC}%（防过拟合检验）"
   if [[ -n "$TRIG_FAIL_LIST" ]]; then echo -e "  失败明细:$TRIG_FAIL_LIST"; fi
   # 准确率 < 80% 记为失败（规则基线过低说明 intent-rules 关键词表有缺口）
   if (( $(echo "$TRIG_ACC < 80" | bc -l 2>/dev/null || echo 0) )); then
@@ -217,15 +231,19 @@ fi
 
 # 写归档报告（JSON）
 PY=python; command -v $PY >/dev/null 2>&1 || PY=python3
-$PY - "$REPORT_FILE" "$VERSION" "$PASS" "$FAIL" "$TRIG_ACC" "$TRIG_PASS" "$TRIG_TOTAL" <<'PYEOF' "${FAILS[@]}"
+$PY - "$REPORT_FILE" "$VERSION" "$PASS" "$FAIL" "$TRIG_ACC" "$TRIG_PASS" "$TRIG_TOTAL" "$TRAIN_ACC" "$TRAIN_PASS" "$TRAIN_TOTAL" "$VAL_ACC" "$VAL_PASS" "$VAL_TOTAL" <<'PYEOF' "${FAILS[@]}"
 import json, sys
-path, ver, p, f, acc, tp, tt = sys.argv[1:8]
-fails = sys.argv[8:] if len(sys.argv) > 8 else []
+path, ver, p, f, acc, tp, tt, tr_acc, tr_p, tr_t, va_acc, va_p, va_t = sys.argv[1:14]
+fails = sys.argv[14:] if len(sys.argv) > 14 else []
 report = {
   "version": ver,
   "timestamp": __import__('datetime').datetime.now().isoformat(),
   "summary": {"pass": int(p), "fail": int(f)},
-  "trigger_eval": {"accuracy": acc + "%", "pass": int(tp), "total": int(tt)},
+  "trigger_eval": {
+    "accuracy": acc + "%", "pass": int(tp), "total": int(tt),
+    "train": {"accuracy": tr_acc + "%", "pass": int(tr_p), "total": int(tr_t)},
+    "validation": {"accuracy": va_acc + "%", "pass": int(va_p), "total": int(va_t)},
+  },
   "failures": list(fails)
 }
 with open(path, 'w', encoding='utf-8') as fh:

@@ -7,6 +7,11 @@
 #       用断言验证规则实现正确——这是"规则契约测试"，确保 prompt 指令与 README 规范一致。
 set -uo pipefail
 
+# Windows + Git Bash：强制 Python 以 UTF-8 输出，否则默认 GBK 编码会导致
+# ✔ 等符号打印抛 UnicodeEncodeError，污染退出码（预存 bug，与 run-evals.sh 同源）
+export PYTHONIOENCODING=utf-8
+export LC_ALL=C.UTF-8
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 SKILL_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 

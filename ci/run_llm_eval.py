@@ -238,6 +238,11 @@ def run_one_eval(base_url, api_key, worker_model, judge_model, eval_item, timeou
         result["output_preview"] = output[:500]
         result["finish_reason"] = finish
         result["usage"] = usage
+        # 执行轨迹采集（P2）：保存 reasoning 尾部供人工分析"指令是否清晰/是否走弯路"
+        # 目的：agentskills best-practices 建议读执行轨迹而非仅看最终输出——
+        # 若 AI 在无成效步骤上浪费时间，说明指令过于模糊或给了过多并列选项
+        result["trace_preview"] = (reasoning or "")[-800:]
+        result["trace_len"] = len(reasoning or "")
         if finish == "length":
             w = result.get("warning", "")
             result["warning"] = (w + "; " if w else "") + "输出被 max_tokens 截断，可能影响判定"
