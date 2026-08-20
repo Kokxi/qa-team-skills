@@ -4,6 +4,13 @@ All notable changes to qa-team-skills will be documented in this file.
 
 ## v1.6.4
 
+### 人工校验章节恢复（2026-08-20）
+
+- **修复**：SKILL.md 恢复「人工校验规则（不可跳过）」章节——v1.6.3 架构审计精简时误删，导致 README 两处引用悬空（README L63「专门有一章」、L176 结构图）
+- 恢复 7 个指令的人工校验规则（prd/case/agent/bug/report/team + explore 新增：疑似 Bug 需人工复测、规范沉淀需人工确认真实复现）
+- validate.sh 新增**文档章节引用一致性检查**（5.6 节）：README/user-manual 中指向 SKILL.md 的「」章节引用与结构图章节名，必须在 SKILL.md 存在对应 `# 章节` 标题——防止同类悬空引用再发生
+- README L176 结构图注释「架构概览」修正为「指令路由边界」（与实际章节一致）
+
 ### 发布流程固化（2026-08-20）
 
 - 新增 `ci/publish.sh` 一键发布脚本：前置校验（validate.sh + run-evals.sh）→ GitHub 推送 → ClawHub → skillhub.cn，支持 `--dry-run`/`--github-only`/`--skip-checks`

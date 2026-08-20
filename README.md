@@ -173,7 +173,7 @@ clawhub install qa-team-skills  # 安装技能
 
 ```
 qa-team-skills/
-├── SKILL.md                      # 技能入口：8 指令总览 + 架构概览 + 人工校验规则
+├── SKILL.md                      # 技能入口：8 指令总览 + 指令路由边界 + 人工校验规则
 ├── VERSION                       # 当前版本
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT

@@ -162,6 +162,33 @@ for name in "${LLM_MAPPED[@]}" "${SKILL_CMDS[@]}"; do
   fi
 done
 
+# ── 5.6 文档交叉引用一致性检查（防 SKILL.md 章节被误删后悬空引用） ──
+# README / user-manual 中引用的 SKILL.md 章节（「xxx」或结构图注释 + xxx）
+# 必须在 SKILL.md 中存在对应 "# xxx" 标题，否则报错。
+# 背景：v1.6.3 精简 SKILL.md 时误删「人工校验规则」章节，
+#       README 两处引用变为悬空引用，且无检查拦截——本节防止同类问题。
+# ① 章节引用检查：只检查"明确指向 SKILL.md 的上下文"中的「xxx」词
+#    方法：先筛出含 "SKILL.md" 的行，再从中提取「」内的词
+#    避免把普通概念名词（如「业务分层」「使用」）误当章节引用
+DOC_REFS=$(grep -E 'SKILL\.md' "$SKILL_DIR/README.md" "$SKILL_DIR/docs/user-manual.md" 2>/dev/null \
+  | grep -oP '「[^」]+」' | sed 's/「\(.*\)」/\1/' | sort -u)
+for sec in $DOC_REFS; do
+  if ! grep -qE "^# $sec" "$SKILL_MD" 2>/dev/null; then
+    ERRORS+=("文档引用了 SKILL.md 不存在的章节: 「$sec」（README/user-manual 悬空引用）")
+  fi
+done
+# ② 结构图注释引用：README/user-manual 的项目结构图里 SKILL.md 行
+#    提到的章节名（如"技能入口：8 指令总览 + 人工校验规则"）必须存在于 SKILL.md
+KNOWN_SECTIONS=("指令总览" "指令路由边界" "角色限定" "通用约束" "常见陷阱" "指令详情" "人工校验规则" "记忆模块")
+for sec in "${KNOWN_SECTIONS[@]}"; do
+  # 结构图行提到该章节名（格式：SKILL.md # ... + 章节名 或 SKILL.md # ... + 章节名）
+  if grep -E 'SKILL\.md' "$SKILL_DIR/README.md" "$SKILL_DIR/docs/user-manual.md" 2>/dev/null | grep -q "$sec"; then
+    if ! grep -qE "^# $sec" "$SKILL_MD" 2>/dev/null; then
+      ERRORS+=("结构图注释引用了 SKILL.md 不存在的章节: $sec（README/user-manual 悬空引用）")
+    fi
+  fi
+done
+
 # ── 6. 输出结果 ────────────────────────────────────────
 echo ""
 if [[ ${#WARNINGS[@]} -gt 0 ]]; then
@@ -184,4 +211,5 @@ else
   echo "   - 无旧目录残留"
   echo "   - 版本号一致"
   echo "   - 发布脚本完整（ci/publish.sh）"
+  echo "   - 文档章节引用一致（README/user-manual ↔ SKILL.md）"
 fi
