@@ -1,6 +1,6 @@
 {
   "skill_name": "qa-team-skills",
-  "version": "v1.6.4",
+  "version": "v1.6.5",
   "description": "触发评测集 — 验证自然语言意图能否正确路由到对应指令（含正/反例）",
   "evals": [
     {

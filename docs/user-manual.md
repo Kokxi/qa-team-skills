@@ -1,6 +1,6 @@
 # qa-team-skills 使用手册
 
-> 版本：v1.6.4 | 统一入口 /qa + 8 个标准化指令 + 记忆模块 + 自动规划
+> 版本：v1.6.5 | 统一入口 /qa + 8 个标准化指令 + 记忆模块 + 自动规划
 
 ## 1. 技能简介
 
@@ -256,6 +256,7 @@ bash ci/validate.sh
 
 | 版本 | 说明 |
 |------|------|
+| v1.6.5 | 版本号升级至 v1.6.5（含 v1.6.4 全部修复） |
 | v1.6.4 | `/qa-prd` 报告文档导出：评审完成后自动导出完整报告到 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物自动落盘，记忆库 JSON 仍需确认） |
 | v1.6.2 | agentskills 评估修复：渐进式加载指引 + Gotchas 章节 + description 祈使句 + train/validation 划分 + 执行轨迹采集 + Windows 编码 bug 修复 |
 | v1.6.1 | ClawHub 审计 B 类修复：持久化措辞统一 + 加载前确认 + 控制流一致 + 路由表补齐 |
