@@ -1,27 +1,36 @@
 # qa-team-skills 使用手册
 
-> 版本：v1.6.5 | 统一入口 /qa + 8 个标准化指令 + 记忆模块 + 自动规划
+> 版本：v1.8.0 | 单 Skill + 7 个能力模块（references/）+ 记忆模块 + 意图路由
 
 ## 1. 技能简介
 
-`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供统一入口 `/qa` + 8 个标准化指令：
+`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供 7 个能力模块（AI 按用户意图路由到 `references/` 下对应模块并按需加载）：
 
-| 指令 | 定位 | 适合谁 |
+| Skill | 定位 | 适用角色 |
 |------|------|--------|
-| `/qa` | **统一入口**：自然语言→任务解析→指令路由→记忆管理 | 所有角色 |
-| `/qa-prd` | 需求评审 | 测试工程师、测试经理 |
-| `/qa-case` | 测试用例设计 | 测试工程师 |
-| `/qa-agent` | AI 智能体专项测试 | 测试工程师 |
-| `/qa-bug` | 缺陷分析 | 测试工程师、开发 |
-| `/qa-report` | 报告生成 | 测试工程师 |
-| `/qa-team` | 团队管理 | 测试经理 |
-| `/qa-explore` | **探索性测试（v1.5 新增）** | **测试工程师** |
+| `qa-prd` | 需求评审 | 测试工程师、测试经理 |
+| `qa-case` | 测试用例设计 | 测试工程师 |
+| `qa-agent` | AI 智能体专项测试 | 测试工程师 |
+| `qa-bug` | 缺陷分析 | 测试工程师、开发 |
+| `qa-report` | 报告生成 | 测试工程师 |
+| `qa-team` | 团队管理 | 测试经理 |
+| `qa-explore` | **探索性测试** | **测试工程师** |
 
 ## 2. 安装
 
-qa-team-skills 核心为纯 Prompt 工程，无外部依赖。提供三种安装方式：
+qa-team-skills 为**单个标准 skill**（多能力模块内置在 `references/` 目录，AI 按意图按需加载），无外部依赖。提供三种安装方式：
 
-### 方式一：手动复制（通用）
+### 方式一：直接 clone 到 skills 目录（推荐）
+
+```bash
+# 示例：全局安装（OpenAI Codex CLI / 通用 .agents 约定）
+git clone <repo-url> ~/.agents/skills/qa-team-skills
+
+# Claude Code
+git clone <repo-url> ~/.claude/skills/qa-team-skills
+```
+
+无需任何安装脚本——`ci/`、`docs/`、`evals/` 等目录不含 SKILL.md，会被 agent 自动忽略。
 
 | AI Agent | 全局安装路径 | 项目内路径 |
 |----------|-------------|-----------|
@@ -30,11 +39,6 @@ qa-team-skills 核心为纯 Prompt 工程，无外部依赖。提供三种安装
 | **GitHub Copilot** | — | `.github/skills/` |
 | **OpenAI Codex CLI** | `~/.agents/skills/` | — |
 | **Cursor** | — | `.cursor/skills/` |
-
-```bash
-# 示例：全局安装到 Claude Code
-cp -r qa-team-skills ~/.claude/skills/
-```
 
 ### 方式二：一键安装
 
@@ -52,9 +56,7 @@ clawhub install qa-team-skills
 
 ## 3. 指令详解
 
-> 以下 `/qa`、`/qa-prd` 等均为**逻辑指令名**（AI 内部路由标签），**不是 CLI 斜杠命令**——请勿在命令行输入 `/qa-prd` 等，直接用自然语言下达任务即可，AI 会自动路由到对应指令。
-
-### 3.1 `/qa-prd` — 需求评审
+### 3.1 `qa-prd` — 需求评审
 
 **场景**：评审会上快速发现需求问题。
 
@@ -65,7 +67,7 @@ clawhub install qa-team-skills
 | 需求内容 | ✅ | 粘贴 PRD 原文 |
 | 关联依赖 | ❌ | 依赖的其他模块 |
 
-**输出**：11 维度问题清单（表格，含严重程度） + 业务分层建议 + 需产品经理澄清的问题列表。评审完成后，完整报告**自动导出**为 Markdown 文档到 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物，无需确认；不需要可明确说"不用导出"）。
+**输出**：11 维度问题清单（表格，含严重程度） + 业务分层建议 + 需产品经理澄清的问题列表。
 
 **11 个评审维度**：完整性 / 清晰度 / 可测试性 / 一致性 / 隐形需求 / 边界需求 / 性能需求 / 安全需求 / 兼容性需求 / 可维护性需求 / 业务分层。
 
@@ -73,7 +75,7 @@ clawhub install qa-team-skills
 
 ---
 
-### 3.2 `/qa-case` — 测试用例设计（9 种黑盒方法）
+### 3.2 `qa-case` — 测试用例设计（9 种黑盒方法）
 
 **场景**：需求评审通过后，生成标准化测试用例。
 
@@ -82,7 +84,7 @@ clawhub install qa-team-skills
 |------|------|------|
 | 产品/模块 | ✅ | 被测对象 |
 | 需求描述 | ✅ | 功能说明 + 验收条件 |
-| 评审问题清单 | ❌ | 粘贴 /qa-prd 输出，AI 不会自动读取历史对话，需手动提供 |
+| 评审问题清单 | ❌ | 粘贴 qa-prd 输出，AI 不会自动读取历史对话，需手动提供 |
 | 行业/合规要求 | ❌ | 仅强监管行业填写，AI 可参考 team/ 目录下的行业配置 |
 | 关联系统 | ❌ | Jira/禅道编号 |
 
@@ -96,7 +98,7 @@ clawhub install qa-team-skills
 
 ---
 
-### 3.3 `/qa-agent` — AI 智能体专项测试（16 维度）
+### 3.3 `qa-agent` — AI 智能体专项测试（16 维度）
 
 **场景**：AI Agent 产品有传统软件没有的测试维度，需要独立覆盖。
 
@@ -117,7 +119,7 @@ clawhub install qa-team-skills
 
 ---
 
-### 3.4 `/qa-bug` — 缺陷分析
+### 3.4 `qa-bug` — 缺陷分析
 
 **场景**：粘贴缺陷，先评估描述质量，信息充分后再做根因分析。
 
@@ -129,7 +131,7 @@ clawhub install qa-team-skills
 
 ---
 
-### 3.5 `/qa-report` — 报告生成
+### 3.5 `qa-report` — 报告生成
 
 **场景**：将测试工作数据组织为结构化报告。
 
@@ -148,24 +150,9 @@ clawhub install qa-team-skills
 
 ---
 
-### 3.6 `/qa-team` — 团队管理（11 项子能力）
+### 3.6 `qa-team` — 团队管理（11 项子能力）
 
-**场景**：测试经理汇总团队数据，生成管理报告。**纯管理定位**，支持关键词自动路由（用户明确请求团队管理时才路由，闲聊带出关键词不会误触发；匹配到多个时列出供用户选择，未匹配时列出 11 项）。
-
-**关键词路由表**：
-| 用户提到 | 路由到 |
-|---------|--------|
-| 日报/周报/汇总/合并 | 团队日报/周报汇总 |
-| 测试进度/测试看板/延期/模块进度 | 测试进度看板 |
-| 缺陷趋势/收敛/分布/密度 | 缺陷趋势分析 |
-| 成员产出/个人贡献/团队贡献/成员 | 团队成员产出 |
-| 漏测/线上缺陷/复盘/预防 | 漏测复盘 |
-| 任务分配/分工/负载/谁做 | 任务分配建议 |
-| 团队效能/效率/KPI/加班 | 团队效能统计 |
-| 新人/入职/培训/学习 | 新人培训计划 |
-| 周会/例会/纪要/待办 | 周会纪要 |
-| 准入/准出/提测/发布检查/版本检查 | 准入准出检查 |
-| 质量评估/评分/等级/版本质量 | 版本质量评估 |
+**场景**：测试经理汇总团队数据，生成管理报告。**纯管理定位**，支持关键词自动路由。
 
 **V1.0.0 子能力（P0）**：
 | 子能力 | 说明 |
@@ -191,31 +178,28 @@ clawhub install qa-team-skills
 ## 4. 目录结构
 
 ```
-qa-team-skills/
-├── SKILL.md                     # 技能入口 + 8 指令总览 + MCP 能力声明
+qa-team-skills/                ← 标准 skill 目录（直接 clone 到 agent 的 skills 目录即可）
+├── SKILL.md                     # 唯一入口：意图路由表 + 能力与信任边界声明
+├── references/                  # 7 个能力模块（AI 按需加载，不占用基础上下文）
+│   ├── qa-prd.md               # 需求评审（11 维度 + 业务分层）
+│   ├── qa-case.md              # 用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
+│   ├── qa-agent.md             # Agent 专项（16 维度含 RAG）
+│   ├── qa-bug.md               # 缺陷分析（质量评估 + 根因 + 批量）
+│   ├── qa-report.md            # 报告生成（5 种）
+│   ├── qa-team.md              # 团队管理（11 子能力 + 路由）
+│   └── qa-explore.md           # 探索性测试（三阶段 + Session 笔记 + Debrief）
 ├── VERSION / README.md / LICENSE / .clawhubignore
-├── prompts/                      # 8 个指令的 Prompt 定义
-│   ├── qa/prompt.md             # 统一入口：意图解析 → 任务编排 → 记忆管理 → 自动规划
-│   ├── qa/intent-rules.md       # 意图匹配规则（关键词→指令路由）
-│   ├── qa/validation-rules.md   # 推理校验规则（各指令输出前自检清单）
-│   ├── prd/prompt.md            # 需求评审（11 维度 + 业务分层）
-│   ├── case/prompt.md           # 用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
-│   ├── agent/prompt.md          # Agent 专项（16 维度含 RAG）
-│   ├── bug/prompt.md            # 缺陷分析（质量评估 + 根因 + 批量）
-│   ├── report/prompt.md         # 报告生成（5 种）
-│   ├── team/prompt.md           # 团队管理（11 子能力 + 路由）
-│   └── explore/prompt.md        # 探索性测试（三阶段 + Session 笔记 + Debrief）
 ├── memory/                       # 记忆模块
 │   ├── README.md                # 模块说明（含隐私须知 + 合并/清理/去重规则）
-│   ├── schema/                  # 6 个 JSON Schema 数据模型
+│   ├── schema/                  # 7 个 JSON Schema 数据模型
 │   └── data/products/           # 按产品模块沉淀的用例/缺陷/规范/报告库
-├── templates/                    # 输出模板
-│   ├── requirement.md           # 通用测试用例模板
-│   ├── agent-test.md            # Agent 专项模板（含中文 Payload）
+├── assets/                       # 输出模板（AI 按需加载）
+│   ├── requirement-template.md  # 通用测试用例模板
+│   ├── agent-test-template.md   # Agent 专项模板（含中文 Payload）
 │   └── error-output.md          # 统一错误格式
 ├── examples/
 │   ├── README.md                # 示例目录索引
-│   └── *-demo.md                # 8 个示例（覆盖 8 指令 + /qa 场景）
+│   └── *-demo.md                # 7 个示例（覆盖全部 8 指令）
 ├── team/                         # 行业配置（可选引用）
 │   ├── roles.json               # 角色映射
 │   └── standards.json           # 合规标准参考
@@ -225,13 +209,11 @@ qa-team-skills/
 │   ├── test-memory-e2e.sh       # 记忆模块端到端（14 项断言）
 │   ├── test-memory-stress.sh    # 长期积累压测（10 轮迭代 6 项断言）
 │   ├── run_llm_eval.py          # 真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
-│   ├── publish.sh               # 发布脚本（GitHub + ClawHub + skillhub.cn）
 │   ├── forbidden.txt            # 禁止词列表
-│   └── commit-msg.txt           # 提交规范
 ├── evals/                        # 评测数据集 + 历史归档（开发工具，上架时排除）
-│   ├── functional-eval.json     # 功能评测集（9 条 eval + 契约断言）
-│   ├── trigger-eval.json        # 触发评测集（41 条，含 train/validation 划分）
-│   ├── security-eval.json       # 安全对抗评测集（9 条 7 种攻击）
+│   ├── functional-eval.json     # 功能评测集（8 条 eval + 契约断言）
+│   ├── trigger-eval.json        # 触发评测集（51 条）
+│   ├── security-eval.json       # 安全对抗评测集（8 条 7 种攻击）
 │   ├── _smoke.json              # 冒烟评测集
 │   ├── human-review/            # 人工双盲评测方案（5 维度评分+双盲流程）
 │   └── history/                 # 每轮评测归档报告（基线对比）
@@ -240,7 +222,7 @@ qa-team-skills/
     ├── CHANGELOG.md             # 变更日志
     ├── process-integration.md   # 流程嵌入指南
     ├── version-policy.md        # 版本治理策略
-    ├── ci-testing.md            # CI 与质量验证（6 套脚本金字塔）
+    ├── ci-testing.md            # CI 与质量验证（5 套脚本 + 人工双盲评测金字塔）
     └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档
 ```
 
@@ -250,16 +232,14 @@ qa-team-skills/
 bash ci/validate.sh
 ```
 
-检查：8 个指令 Prompt 完整（含注入防护+自检）/ 模板文件完整 / SKILL.md 字段完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
+检查：7 个能力模块完整（含注入防护+自检+历史加载）/ SKILL.md 路由表覆盖全部模块 / 模板文件完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
 
 ## 6. 版本历史
 
 | 版本 | 说明 |
 |------|------|
-| v1.6.5 | 版本号升级至 v1.6.5（含 v1.6.4 全部修复） |
-| v1.6.4 | `/qa-prd` 报告文档导出：评审完成后自动导出完整报告到 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物自动落盘，记忆库 JSON 仍需确认） |
-| v1.6.2 | agentskills 评估修复：渐进式加载指引 + Gotchas 章节 + description 祈使句 + train/validation 划分 + 执行轨迹采集 + Windows 编码 bug 修复 |
-| v1.6.1 | ClawHub 审计 B 类修复：持久化措辞统一 + 加载前确认 + 控制流一致 + 路由表补齐 |
+| v1.8.0 | 架构重构：单 Skill + references/ 按需加载（7 能力模块）+ assets/ 模板，直接 clone 即用；清理版本注释类无效内容 |
+| v1.7.0 | Trellis 式触发重构：7 个独立 Skill + AI 自动挑选 + 双段式触发描述 |
 | v1.6.0 | /qa-agent 维度定义统一 + 记忆数据出库 + 评测集版本同步 + explore 触发覆盖补齐 |
 | v1.5.4 | ClawHub 安全审计修复：MCP 能力声明 + 隐私警告 + 持久化需用户确认 + 触发词收紧 |
 | v1.5.0 | 新增 /qa-explore 探索性测试 + /qa 自动规划 + 完整验证体系（6 套脚本金字塔 + LLM 端到端评测） |
@@ -277,8 +257,8 @@ bash ci/validate.sh
 ### 工作原理
 
 ```
-每次 /qa 启动时：
-  ① 扫描 data/products/{模块名}/ 是否存在历史数据
+每个 Skill 启动时：
+  ① 先询问用户是否加载历史记忆，确认后扫描 data/products/{模块名}/ 是否存在历史数据
   ② 存在 → 生成记忆简报（含历史用例/缺陷/规范）
   ③ 不存在 → 首次使用，跳过
   ④ 执行指令时自动参考历史数据
@@ -304,7 +284,7 @@ memory/data/products/
 ```
 
 ### 优势
-- **越用越好**：第二轮起的 `/qa` 会自动加载历史，参考上轮缺陷和规范
+- **越用越好**：第二轮起的 Skill 会自动加载历史（用户确认后），参考上轮缺陷和规范
 - **本地持久化**：纯 JSON 文件存储，内网/离线可用。写入记忆前会先询问用户确认
 - **版本可追溯**：每条用例标注来源版本，支持回滚
 
@@ -331,35 +311,7 @@ memory/data/products/
 ### 版本清理说明
 历史版本文件（旧版 v*.json）在合并快照后会保留最近 5 个版本，更早的会由 AI 询问你后才删除。已删除版本的数据仍保留在 `latest.json` 汇总快照中，不丢失。
 
-## 9. 人工校验规则（不可跳过）
-
-AI 辅助不等于 AI 决策。以下规则用于防止过度依赖、保障测试质量：
-
-### /qa-prd
-- AI 标注"严重程度 高"的问题，必须人工确认后才能在评审会上提出
-- 每个需求至少由 1 名测试人员独立阅读 PRD 后，再对比 AI 输出（防止 AI 漏检造成盲区）
-
-### /qa-case
-- P0 用例必须由测试人员审阅，确认每个步骤在测试环境中可实现
-- AI 生成的测试数据（如账号、金额、文件路径）必须在测试环境中验证存在后再执行
-
-### /qa-agent
-- 提示词注入类的 P0 用例 Payload，必须先验证 Payload 本身不会对被测环境造成破坏
-- AI 稳定性维度（重复测试）的判定依赖多次运行，建议至少执行 5 次后综合判断
-
-### /qa-bug
-- 置信度"中"或"低"的根因分析，必须有第二人复核后再给开发
-- 置信度"高"的分析，修复后必须回归关联功能（参考回归测试要点）
-
-### /qa-report
-- 自动生成的报告数据必须与 Jira/禅道原始数据抽样核对（至少抽 3 项）
-- 给管理层看的报告（季度/阶段），建议人工补充一段"定性说明"（AI 只能汇总数据，不能判断业务背景）
-
-### /qa-team
-- 团队成员产出数据不做绩效排名，仅用于发现异常波动和资源调配
-- 新人培训计划的考核节点需 Mentor 确认可行性，不可直接照搬
-
-## 10. 附：记忆成长趋势示例
+## 9. 附：记忆成长趋势示例
 
 当你说"查看测试趋势"时，技能会读取历史数据生成报告：
 
@@ -372,4 +324,4 @@ AI 辅助不等于 AI 决策。以下规则用于防止过度依赖、保障测�
 | 规范条目 | 0 | 2 | ↑ 积累 |
 ```
 
-## 11. 版本历史回溯
+## 10. 版本历史回溯

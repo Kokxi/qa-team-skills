@@ -86,7 +86,7 @@ Step 0: 历史加载
 └─ 记忆简报注入到后续所有步骤的上下文
 ```
 
-记忆简报格式详见 `prompts/qa/prompt.md`。
+记忆简报格式由各能力模块指令（`references/*.md`）的「第零步：历史加载」承载。
 
 ### 增量写入（每个指令步骤完成后）
 
@@ -99,9 +99,9 @@ Step 0: 历史加载
      → 更新 summary.json（增删统计）
 ```
 
-### 汇总快照（/qa-case 写入后必执行）
+### 汇总快照（qa-case 写入后必执行）
 
-每次 `/qa-case` 或 `/qa-agent` 写入新版本后，必须做一次合并：
+每次 `qa-case` 或 `qa-agent` 写入新版本后，必须做一次合并：
 
 ```
 ① 先读现有 latest.json 作为基线（保留被清理版本的唯一用例，避免早期数据丢失）
@@ -122,7 +122,7 @@ Step 0: 历史加载
 
 ### 历史缺陷→用例转化
 
-当 `/qa-case` 加载到同模块的历史缺陷数据时，自动将高频缺陷转化为新增用例：
+当 `qa-case` 加载到同模块的历史缺陷数据时，自动将高频缺陷转化为新增用例：
 
 ```
 历史缺陷：并发扣款 4 次（33%）
@@ -136,13 +136,13 @@ Step 0: 历史加载
 
 ### 规范库闭环
 
-当 `/qa-bug` 发现共性根因或 `/qa-team` 做漏测复盘时，自动向规范库沉淀：
+当 `qa-bug` 发现共性根因或 `qa-team` 做漏测复盘时，自动向规范库沉淀：
 
 ```
 发现共性根因（如"并发扣款连续3轮出现"）
   → 生成规范条目（category: "lession_learned" 或 "checklist"）
   → 写入 data/products/{module}/standards.json
-  → 后续 /qa-case 启动时自动读取，补充到用例中
+  → 后续 qa-case 启动时自动读取，补充到用例中
 ```
 
 ### 索引文件管理（summary.json）
@@ -153,10 +153,10 @@ Step 0: 历史加载
 
 | 写入操作 | 更新 summary.json 的字段 |
 |---------|------------------------|
-| `/qa-case` 写入 + 合并 latest.json | test_cases.total, test_cases.by_type, test_cases.by_layer, iterations[].new_test_cases |
-| `/qa-bug` 写入 | bugs.total, bugs.by_severity, bugs.by_root_cause, bugs.recurring_patterns, iterations[].new_bugs |
-| `/qa-bug` 规范沉淀 | standards.total, standards.by_category |
-| `/qa-team` 规范沉淀 | standards.total, standards.by_category |
+| `qa-case` 写入 + 合并 latest.json | test_cases.total, test_cases.by_type, test_cases.by_layer, iterations[].new_test_cases |
+| `qa-bug` 写入 | bugs.total, bugs.by_severity, bugs.by_root_cause, bugs.recurring_patterns, iterations[].new_bugs |
+| `qa-bug` 规范沉淀 | standards.total, standards.by_category |
+| `qa-team` 规范沉淀 | standards.total, standards.by_category |
 | 任意 | last_updated, iteration_count |
 
 **索引文件在历史加载中的作用**：

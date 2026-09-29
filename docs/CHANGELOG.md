@@ -2,96 +2,17 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
-## v1.6.5
+## v1.7.0
 
-### 版本号更新（2026-08-20）
+### Trellis 式触发重构（2026-08-18）
 
-- 版本号从 v1.6.4 升级至 v1.6.5（无功能变更，仅版本号升级）
-
-## v1.6.4
-
-### 人工校验章节恢复（2026-08-20）
-
-- **修复**：SKILL.md 恢复「人工校验规则（不可跳过）」章节——v1.6.3 架构审计精简时误删，导致 README 两处引用悬空（README L63「专门有一章」、L176 结构图）
-- 恢复 7 个指令的人工校验规则（prd/case/agent/bug/report/team + explore 新增：疑似 Bug 需人工复测、规范沉淀需人工确认真实复现）
-- validate.sh 新增**文档章节引用一致性检查**（5.6 节）：README/user-manual 中指向 SKILL.md 的「」章节引用与结构图章节名，必须在 SKILL.md 存在对应 `# 章节` 标题——防止同类悬空引用再发生
-- README L176 结构图注释「架构概览」修正为「指令路由边界」（与实际章节一致）
-
-### 发布流程固化（2026-08-20）
-
-- 新增 `ci/publish.sh` 一键发布脚本：前置校验（validate.sh + run-evals.sh）→ GitHub 推送 → ClawHub → skillhub.cn，支持 `--dry-run`/`--github-only`/`--skip-checks`
-- skillhub.cn 文件白名单陷阱固化：自动复制临时目录并剔除 `.clawhubignore`/`.gitignore`/`LICENSE`/`VERSION`（服务端拒绝这 4 类文件，2026-08-19 实测发现）
-- 版本号统一从 `VERSION` 文件读取，与 validate.sh 版本一致性检查联动
-- validate.sh 新增 `ci/publish.sh` 存在性检查；README/user-manual/ci-testing 结构图与文档同步
-
-### 报告文档导出（2026-08-19）
-
-- `/qa-prd` 评审完成后**自动导出完整报告为 Markdown 文档**到当前项目 `docs/reviews/review-{module}-{YYYYMMDD}.md`（交付物，无需确认；用户明确拒绝时可跳过）
-- 修复：直接调用 `/qa-team-skills` 时评审报告只停留在对话输出、无文档产物的问题
-- 记忆库 JSON 写入仍按既有规则**询问用户确认**，与报告文档（自动落盘）语义分离
-- `/qa` 统一入口单步/多步任务路由到 `/qa-prd` 时同步执行报告导出；validation-rules 新增 P006 校验
-- SKILL.md MCP 能力声明新增「报告文档导出」范围（`docs/reviews/*`），数据隐私须知同步更新
-- memory/README.md 补充评审产物双形态说明（JSON 记忆数据 + Markdown 报告文档）
-
-### 版本号更新（2026-08-19）
-
-- 版本号从 v1.6.2 升级至 v1.6.4
-
-### 质量评估修复（2026-08-19）
-
-按 skill 设计专家整体评估（P0/P1 级问题）修复：
-
-- **P0 修复**：`.gitignore` 的 `*.txt` 规则导致 `ci/forbidden.txt`、`ci/commit-msg.txt` 未被 git 跟踪——clone 仓库后 `ci/validate.sh` 必失败（缺禁止词文件）。新增例外 `!ci/forbidden.txt` / `!ci/commit-msg.txt` 并入库
-- **P1 修复**：`commit-msg.txt` 从根目录移入 `ci/`，与 README/user-manual 结构图一致
-- **P1 修复**：`docs/ci-testing.md` 基线数字过期——触发评测 38/38 → 41/41（train 24 / validation 17），契约断言 37 → 39
-- **P1 修复**：`ci/validate.sh` 补 `examples/qa-demo.md` 检查，消除示例清单三处不一致
-- **P1 修复**：README/user-manual 示例数量 7 → 8（补 qa-demo.md），README 示例表格补 `/qa` 行、"6 个指令" → "8 个指令"
-- **P1 修复**：`evals/history/` 最新评测归档报告入库，建立跨版本基线对比
-
-### 架构审计修复（2026-08-19）
-
-按批判性架构/触发链路审计（重点：`/qa-explore` 与统一入口编排断链）修复：
-
-- **P0 修复**：`/qa-explore` 指令与 `/qa` 统一入口断链——`prompts/qa/prompt.md` 补 4 处同步：指令路由列表（L10）、意图解析 action 枚举（L105）、历史数据影响表（L76-79）、记忆写入表（L258-265）
-- **P1 修复**：`evals/functional-eval.json` 补 `explore-001`（探索性测试评测，5 条断言）；`evals/security-eval.json` 补 `sec-explore-001`（角色篡改注入对抗，4 条断言）——functional-eval 8→9 条、security-eval 8→9 条
-- **P2 修复**：`templates/` 三文件接入 Prompt 体系（此前为孤儿资产）：`case/prompt.md` 引用 `requirement.md`、`agent/prompt.md` 引用 `agent-test.md`、`validation-rules.md` 引用 `error-output.md`（统一错误格式）
-- **P2 修复**：趋势查询路径硬编码 `data/products/payment/` → `data/products/{scope}/`（`qa/prompt.md` + `memory/README.md`）
-- **P2 修复**：`ci/validate.sh` 新增「指令清单三方一致性检查」——prompts/ 目录 ↔ run_llm_eval.py 映射 ↔ SKILL.md 渐进式加载表，防新增指令再漏同步
-- **P2 修复**：`ci/run-evals.sh` 规则完整性检查补 `E001`（explore 规则表此前漏检）；契约断言 39→40
-- **文档同步**：README/user-manual/ci-testing/human-review 中 functional/security-eval 条数 8→9 全部修正
-
-## v1.6.2
-
-### agentskills.io 最佳实践评估修复（2026-08-19）
-
-按 [agentskills.io skill-creation/best-practices](https://agentskills.io/skill-creation/best-practices) 评估修复 6 个质量问题：
-
-- SKILL.md「指令详情」改为**渐进式加载指引表**——明确"何时加载哪个 prompt 文件"，强化按需加载设计
-- SKILL.md trigger 注释修复"写报告"矛盾：有测试数据/任务上下文时"写报告/出份报告"路由到 `/qa-report`，与 trigger-eval 期望一致
-- SKILL.md 新增**常见陷阱（Gotchas）**章节：集中防注入 / 防幻觉 / 防过度自信 / 写入持久化 / 输出前必查规则
-- SKILL.md description 改祈使句开头（"当用户需要……时使用此技能"），补充 RAG 测试/探索性测试触发词（239 字符 < 1024 限制）
-- trigger-eval.json 补 `split` 字段（train 24 / validation 17，正反例两集均衡覆盖）防描述过拟合；run-evals.sh 按 split 分组统计并写入归档报告
-- run_llm_eval.py 增加执行轨迹采集（`trace_preview`/`trace_len`），供人工分析指令清晰度
-
-### Windows 编码 bug 修复（2026-08-19）
-
-- 修复预存编码 bug：Windows + Git Bash 下 Python 默认 GBK 输出，导致触发评测中文 query 全部乱码（准确率从 29.3% 修正为 100%）、emoji/✔ 打印抛 `UnicodeEncodeError`
-- `ci/run-evals.sh`、`ci/test-memory-e2e.sh`、`ci/test-memory-stress.sh` 统一加 `PYTHONIOENCODING=utf-8`
-
-### 文档一致性（2026-08-19）
-
-- README/user-manual 触发评测集条数 38 → 41（含 train/validation 划分）
-
-### 版本号更新（2026-08-19）
-
-- 版本号从 v1.6.1 升级至 v1.6.2
-
-## v1.6.1
-
-### 版本号更新（2026-08-18）
-
-- 版本号从 v1.6.0 升级至 v1.6.1
-- ClawHub 安全审计 B 类 6 项修复：持久化措辞统一（确认后写入）+ 记忆加载前确认 + /qa-team 控制流一致 + 关键词路由表补齐 + 示例脱敏提醒升级
+- **架构**：从"单技能包 + /qa 逻辑指令 + intent-rules 路由表"重构为 **7 个独立 Skill**（skills/ 目录，各带 SKILL.md）
+- **触发**：每个 skill 采用双段式 description（何时用 + 何时不用），AI 按自然语言语义自动挑选加载，用户无需记命令名
+- **记忆**：跨会话历史加载下沉到各 skill（先询问用户确认后才扫描），读写映射按 skill 收敛，写入确认规则保留
+- **删除**：prompts/ 目录（/qa 入口 + intent-rules + 8 个 prompt 文件），validation-rules.md 迁移至 docs/
+- **评测**：trigger-eval 期望改为 skill 路由（41 → 51 条，新增 10 条免指令名用例）；functional/security-eval 提示词改为自然语言触发；契约断言迁移到 skills/
+- **CI**：validate.sh / run-evals.sh 改查 skills/ 结构 + 双段式 description + 历史加载断言
+- **文档**：README / user-manual / process-integration / 仓库级 SKILL.md 全面适配 7 skill 结构
 
 ## v1.6.0
 

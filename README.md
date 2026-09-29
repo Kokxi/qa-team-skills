@@ -1,8 +1,8 @@
 # qa-team-skills
 
-> 为测试团队设计的统一 AI 辅助能力——统一入口 /qa + 8 个标准化指令 + 记忆模块 + 完整验证体系，覆盖需求评审到团队管理。
+> 为测试团队设计的统一 AI 辅助能力——单个标准 Skill 内置 7 个能力模块（需求评审/用例设计/Agent 专项/缺陷分析/报告/团队管理/探索性测试）+ 记忆模块 + 完整验证体系，AI 按用户意图路由、按需加载，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.6.5-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.8.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -25,9 +25,9 @@
 qa-team-skills 不是一个"全自动测试平台"。它是一套嵌入现有研发流程的 AI 辅助工具。你仍然用 Jira 管理需求、用禅道跟踪缺陷、开评审会、写周报——这些不变。变的是**每个环节的 AI 辅助有了一致的标准**。
 
 ```
-需求评审(/qa-prd) → 用例设计(/qa-case) → 缺陷分析(/qa-bug) → 报告生成(/qa-report) → 团队管理(/qa-team)
+需求评审(qa-prd) → 用例设计(qa-case) → 缺陷分析(qa-bug) → 报告生成(qa-report) → 团队管理(qa-team)
                     ↓
-              Agent专项(/qa-agent)
+              Agent专项(qa-agent)
 ```
 
 对应的流程嵌入指南见 [`docs/process-integration.md`](./docs/process-integration.md)。
@@ -52,7 +52,7 @@ qa-team-skills 不是一个"全自动测试平台"。它是一套嵌入现有研
 | **体验层** | 能用，但好不好用        | 错误提示是否清晰、操作步骤是否合理 |
 | **增值层** | 锦上添花            | 动画效果、深色模式、社交分享    |
 
-铅笔能不能写字是核心层，握笔舒不舒服是体验层，好不好看是增值层。在 `/qa-case` 中，每条用例同时标注业务分层和优先级——两个维度独立但互补，让测试资源分配不再拍脑袋。
+铅笔能不能写字是核心层，握笔舒不舒服是体验层，好不好看是增值层。在 `qa-case` 中，每条用例同时标注业务分层和优先级——两个维度独立但互补，让测试资源分配不再拍脑袋。
 
 ### 4. 通用于任何行业
 
@@ -64,18 +64,19 @@ SKILL.md 中专门有一章「人工校验规则」，不是给 AI 看的——�
 
 ***
 
-## 8 大指令
+## 7 大 Skill
 
-| 指令           | 做什么        | 适合谁        | 核心亮点                             |
+| Skill           | 做什么        | 适合谁        | 核心亮点                             |
 | ------------ | ---------- | ---------- | -------------------------------- |
-| `/qa`        | **统一入口** | 所有角色      | 自然语言→意图解析→任务编排→记忆管理→自动规划（v1.5）          |
-| `/qa-prd`    | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单 + **报告文档自动导出（v1.6.5）** |
-| `/qa-case`   | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
-| `/qa-agent`  | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
-| `/qa-bug`    | 缺陷分析       | 测试工程师、开发   | 先评估描述质量 → 再分析根因，标注置信度，支持批量       |
-| `/qa-report` | 报告生成       | 测试工程师      | 日报/周报/阶段/季度/专项，支持 Jira/禅道等系统数据 |
-| `/qa-team`   | 团队管理       | 测试经理       | 11 项子能力，含进度看板/产出统计/准入准出/质量评估     |
-| `/qa-explore` | 探索性测试     | 测试工程师      | 三阶段设计（Session 笔记→疑似 Bug/学习经验分流→Debrief 沉淀） |
+| `qa-prd`     | 需求评审       | 测试工程师、测试经理 | 11 维度系统扫描 + 业务分层建议 + 澄清问题清单      |
+| `qa-case`    | 测试用例设计     | 测试工程师      | 6 测试类型 × 9 黑盒方法 + 业务分层，自动交叉匹配    |
+| `qa-agent`   | AI 智能体专项测试 | 测试工程师      | 16 维度（含 RAG），覆盖幻觉/偷懒/稳定性/可控性     |
+| `qa-bug`     | 缺陷分析       | 测试工程师、开发   | 先评估描述质量 → 再分析根因，标注置信度，支持批量       |
+| `qa-report`  | 报告生成       | 测试工程师      | 日报/周报/阶段/季度/专项，支持 Jira/禅道等系统数据 |
+| `qa-team`    | 团队管理       | 测试经理       | 11 项子能力，含进度看板/产出统计/准入准出/质量评估     |
+| `qa-explore` | 探索性测试     | 测试工程师      | 三阶段设计（Session 笔记→疑似 Bug/学习经验分流→Debrief 沉淀） |
+
+> AI 会根据你的自然语言输入自动挑选并加载对应 Skill，无需手动指定（如"帮我设计登录功能的测试用例"→ 自动加载 qa-case）。
 
 ***
 
@@ -116,7 +117,7 @@ cp -r qa-team-skills ~/.claude/skills/
 cp -r qa-team-skills ./.github/skills/
 ```
 
-> ⚠️ **关于 `/qa` 指令的说明**：本技能的 `/qa`、`/qa-prd` 等 8 个指令是**逻辑指令**（由 AI 根据 `prompts/qa/intent-rules.md` 的意图路由规则自动解析执行），**不是各 Agent 注册的斜杠命令**——在 CLI 中输入 `/` 会打开命令面板，但里面不会有 `/qa`、`/qa-prd`，因为它们是给 AI 的路由标签，不是可执行命令。日常使用直接用自然语言下达任务即可触发，无需也不应输入 `/qa` 开头的内容（详见下方「使用」）。如需在 Claude Code / OpenCode 中拥有真正的斜杠命令补全，可自行在 `.claude/commands/`（或对应 Agent 的 commands 目录）为 8 个指令各建一个命令文件。
+> 💡 **关于 Skill 触发的说明**：本技能为**单个标准 Skill**，7 个能力模块（qa-prd、qa-case、qa-agent、qa-bug、qa-report、qa-team、qa-explore）内置于 `references/` 目录，由 AI 读取根 `SKILL.md` 的意图路由表后**按需加载对应模块**——你甚至不需要提模块名，直接说"帮我设计登录功能的测试用例"就会命中 qa-case。安装到 Agent 的 skills 目录后即生效，无需注册任何斜杠命令。
 
 #### 方式二：一键安装（npx skills）
 
@@ -137,35 +138,31 @@ clawhub install qa-team-skills  # 安装技能
 
 ### 使用
 
-本技能的 8 个指令（`/qa`、`/qa-prd` 等）是**逻辑指令**，不是 CLI 斜杠命令。**不要输入 `/qa`、`/qa-prd` 等斜杠开头的内容**——输入 `/` 会打开命令面板，但这些逻辑指令不在里面。
+**直接说自然语言即可**，AI 自动挑选并加载对应 Skill：
 
-**正确用法：直接用自然语言下达任务**，AI 根据技能触发规则自动路由到对应指令：
-
+```bash
+"帮我设计登录功能的测试用例"  → 自动加载 qa-case
+"粘贴 PRD，帮我评审"          → 自动加载 qa-prd（11 维度评审报告 + 业务分层建议）
+"描述这个 Agent，测测它"      → 自动加载 qa-agent（16 维度专项测试用例，含 RAG）
+"粘贴缺陷，分析根因"          → 自动加载 qa-bug（质量评估 → 根因分析，支持批量）
+"填入数据，出份周报"          → 自动加载 qa-report（日报/周报/阶段报告）
+"汇总团队数据，看看进度"      → 自动加载 qa-team（管理看板/趋势/产出）
+"没文档的功能，随便测测"      → 自动加载 qa-explore（Session 笔记 → 分流 → Debrief 沉淀）
 ```
-"帮我评审这个需求的 PRD"          → 触发 /qa-prd（需求评审）
-"帮我设计登录功能的测试用例"        → 触发 /qa-case（用例设计）
-"对支付接口做全量回归并输出缺陷报告" → 触发 /qa（统一入口，自动编排）
-"分析这个 Bug 的原因"             → 触发 /qa-bug（缺陷分析）
-"帮我生成这周的测试周报"           → 触发 /qa-report（报告生成）
-"汇总一下团队的测试产出"           → 触发 /qa-team（团队管理）
-```
-
-> 如果想指定走某个指令，直接在自然语言中说明即可，例如："按需求评审流程分析这份 PRD" 或 "用 /qa-prd 的方法评审"。技能名本身若被 Agent 注册为命令（如 `/qa-team-skills`），也可直接调用。
 
 ### 示例
 
-**[examples/](./examples/)** 目录包含全部 8 个指令的完整输入输出示例（均来自真实测试场景）：
+**[examples/](./examples/)** 目录包含全部能力模块的完整输入输出示例（统一入口 + 7 个能力模块，均来自真实测试场景）：
 
 | 示例                                          | 指令           | 场景                  |
 | ------------------------------------------- | ------------ | ------------------- |
-| [prd-demo.md](./examples/prd-demo.md)       | `/qa-prd`    | 订单改价需求评审，11 维度扫描    |
-| [login-demo.md](./examples/login-demo.md)   | `/qa-case`   | 登录功能 35 条用例 × 3 业务层 |
-| [case-demo.md](./examples/case-demo.md)     | `/qa-case`   | 订单改价，评审问题→用例转化      |
-| [agent-demo.md](./examples/agent-demo.md)   | `/qa-agent`  | 智能客服 16 维度，含 RAG    |
-| [bug-demo.md](./examples/bug-demo.md)       | `/qa-bug`    | 从被驳回 → 根因定位 + 批量    |
-| [report-demo.md](./examples/report-demo.md) | `/qa-report` | 三段话 → 日报/周报/阶段报告    |
-| [team-demo.md](./examples/team-demo.md)     | `/qa-team`   | 迭代末看板/产出/准出         |
-| [qa-demo.md](./examples/qa-demo.md)         | `/qa`        | 支付接口全量回归，多步编排     |
+| [prd-demo.md](./examples/prd-demo.md)       | `qa-prd`    | 订单改价需求评审，11 维度扫描    |
+| [login-demo.md](./examples/login-demo.md)   | `qa-case`   | 登录功能 35 条用例 × 3 业务层 |
+| [case-demo.md](./examples/case-demo.md)     | `qa-case`   | 订单改价，评审问题→用例转化      |
+| [agent-demo.md](./examples/agent-demo.md)   | `qa-agent`  | 智能客服 16 维度，含 RAG    |
+| [bug-demo.md](./examples/bug-demo.md)       | `qa-bug`    | 从被驳回 → 根因定位 + 批量    |
+| [report-demo.md](./examples/report-demo.md) | `qa-report` | 三段话 → 日报/周报/阶段报告    |
+| [team-demo.md](./examples/team-demo.md)     | `qa-team`   | 迭代末看板/产出/准出         |
 
 ***
 
@@ -173,32 +170,29 @@ clawhub install qa-team-skills  # 安装技能
 
 ```
 qa-team-skills/
-├── SKILL.md                      # 技能入口：8 指令总览 + 指令路由边界 + 人工校验规则
+├── SKILL.md                      # 唯一入口：意图路由表 + 能力与信任边界声明 + 通用约束
 ├── VERSION                       # 当前版本
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT
-├── prompts/                      # 8 个指令的 Prompt 定义
-│   ├── qa/prompt.md             #   统一入口：意图解析 → 任务编排 → 记忆管理 → 自动规划
-│   ├── qa/intent-rules.md       #   意图匹配规则（关键词→指令路由）
-│   ├── qa/validation-rules.md   #   推理校验规则（各指令输出前自检清单）
-│   ├── prd/prompt.md            #   需求评审（11 维度 + 业务分层）
-│   ├── case/prompt.md           #   用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
-│   ├── agent/prompt.md          #   Agent 专项（16 维度含 RAG）
-│   ├── bug/prompt.md            #   缺陷分析（质量评估 + 根因 + 批量）
-│   ├── report/prompt.md         #   报告生成（5 种）
-│   ├── team/prompt.md           #   团队管理（11 子能力 + 路由）
-│   └── explore/prompt.md        #   探索性测试（三阶段 + Session 笔记 + Debrief）★ v1.5 新增
-├── memory/                       # 记忆模块（v1.4.0 新增）
+├── references/                   # ★ 7 个能力模块（AI 按路由表按需加载）
+│   ├── qa-prd.md                #   需求评审（11 维度 + 业务分层）
+│   ├── qa-case.md               #   用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
+│   ├── qa-agent.md              #   Agent 专项（16 维度含 RAG）
+│   ├── qa-bug.md                #   缺陷分析（质量评估 + 根因 + 批量）
+│   ├── qa-report.md             #   报告生成（5 种）
+│   ├── qa-team.md               #   团队管理（11 子能力 + 路由）
+│   └── qa-explore.md            #   探索性测试（三阶段 + Session 笔记 + Debrief）
+├── memory/                       # 记忆模块
 │   ├── README.md                 #   模块说明（含合并/清理/去重规则）
-│   ├── schema/                   #   6 个 JSON Schema 数据模型
+│   ├── schema/                   #   7 个 JSON Schema 数据模型
 │   └── data/products/            #   按产品模块沉淀的用例/缺陷/规范/报告库
-├── templates/                    # 输出模板
-│   ├── requirement.md            #   通用测试用例模板
-│   ├── agent-test.md             #   Agent 专项模板（含中文 Payload）
+├── assets/                       # 输出模板（按需加载）
+│   ├── requirement-template.md   #   通用测试用例模板
+│   ├── agent-test-template.md    #   Agent 专项模板（含中文 Payload）
 │   └── error-output.md           #   统一错误格式
 ├── examples/
 │   ├── README.md
-│   └── *-demo.md                 # 8 个示例（覆盖 8 指令 + /qa 场景）
+│   └── *-demo.md                 # 7 个示例（覆盖全部 7 Skill）
 ├── team/                         # 行业配置（可选引用）
 │   ├── roles.json                #   角色映射
 │   └── standards.json            #   合规标准参考
@@ -208,13 +202,11 @@ qa-team-skills/
 │   ├── test-memory-e2e.sh        #   记忆模块端到端（14 项断言）
 │   ├── test-memory-stress.sh     #   长期积累压测（10 轮迭代 6 项断言）
 │   ├── run_llm_eval.py           #   真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
-│   ├── publish.sh                #   发布脚本（GitHub + ClawHub + skillhub.cn）
 │   ├── forbidden.txt             #   禁止词列表
-│   └── commit-msg.txt            #   提交规范
 ├── evals/                        # 评测数据集 + 历史归档
-│   ├── functional-eval.json      #   功能评测集（9 条 eval + 契约断言）
-│   ├── trigger-eval.json         #   触发评测集（41 条，含 train/validation 划分）
-│   ├── security-eval.json        #   安全对抗评测集（9 条 7 种攻击）★ v1.5 新增
+│   ├── functional-eval.json      #   功能评测集（8 条 eval + 契约断言）
+│   ├── trigger-eval.json         #   触发评测集（51 条）
+│   ├── security-eval.json        #   安全对抗评测集（8 条 7 种攻击）★ v1.5 新增
 │   ├── _smoke.json               #   冒烟评测集
 │   ├── human-review/             #   人工双盲评测方案（5 维度评分+双盲流程）
 │   └── history/                  #   每轮评测归档报告（基线对比）
@@ -223,7 +215,7 @@ qa-team-skills/
     ├── CHANGELOG.md              # 变更日志
     ├── process-integration.md    # 流程嵌入指南
     ├── version-policy.md         # 版本治理策略
-    ├── ci-testing.md             # CI 与质量验证（6 套脚本金字塔）★ v1.5 新增
+    ├── ci-testing.md             # CI 与质量验证（5 套脚本 + 人工双盲评测金字塔）★ v1.5 新增
     └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档 ★ v1.5 新增
 ```
 
@@ -233,14 +225,14 @@ qa-team-skills/
 
 | 场景                | 推荐指令组合                                     |
 | ----------------- | ------------------------------------------ |
-| **新需求从零开始**       | `/qa-prd` → `/qa-case`                     |
-| **AI Agent 产品上线** | `/qa-agent` + `/qa-case`                   |
-| **迭代测试中**         | `/qa-bug`（发现缺陷时）+ `/qa-report` 日报（每天）      |
-| **迭代结束**          | `/qa-report` 阶段报告 + `/qa-team` 准出检查 + 质量评估 |
-| **线上出事故**         | `/qa-team` 漏测复盘 + `/qa-bug` 根因分析           |
-| **季度汇报**          | `/qa-report` 季度报告 + `/qa-team` 团队效能        |
-| **新人入职**          | `/qa-team` 培训计划 + 随 Mentor 使用 `/qa-case`   |
-| **周一站会**          | `/qa-report` 周报 + `/qa-team` 团队汇总          |
+| **新需求从零开始**       | `qa-prd` → `qa-case`                     |
+| **AI Agent 产品上线** | `qa-agent` + `qa-case`                   |
+| **迭代测试中**         | `qa-bug`（发现缺陷时）+ `qa-report` 日报（每天）      |
+| **迭代结束**          | `qa-report` 阶段报告 + `qa-team` 准出检查 + 质量评估 |
+| **线上出事故**         | `qa-team` 漏测复盘 + `qa-bug` 根因分析           |
+| **季度汇报**          | `qa-report` 季度报告 + `qa-team` 团队效能        |
+| **新人入职**          | `qa-team` 培训计划 + 随 Mentor 使用 `qa-case`   |
+| **周一站会**          | `qa-report` 周报 + `qa-team` 团队汇总          |
 
 ***
 
@@ -257,33 +249,15 @@ qa-team-skills/
 
 使用本技能前，请了解以下关键信息：
 
-### MCP 能力声明
-
-本技能实际执行以下能力，特此声明以对齐信任边界：
-
-| 能力 | 范围 | 说明 |
-|------|------|------|
-| **本地文件读取** | `memory/data/products/*` | 读取历史用例/缺陷/规范/报告 |
-| **本地文件写入** | `memory/data/products/*` | 持久化测试数据到本地 JSON 文件（需用户确认） |
-| **报告文档导出** | `docs/reviews/*`（当前项目） | `/qa-prd` 评审完成后自动导出完整报告为 Markdown 文档（交付物，无需确认） |
-| **本地文件删除** | `memory/data/products/*/v*.json` | 版本清理（保留最近 5 个版本），需用户确认 |
-| **网络调用（可选）** | 外部 LLM API | 仅 `ci/run_llm_eval.py` 评测脚本使用，需用户自行配 Key |
-| **环境变量读取** | `DS_KEY`, `OR_KEY` 等 | 仅评测脚本使用，不写入任何文件 |
-
-> 用户安装后，日常使用 `/qa` 等指令时仅涉及本地文件读写。评测脚本需显式运行才触发外部调用。
-
 ### 数据持久化
-- 本技能的**记忆模块**（`memory/`）会将以下测试数据**持久化到本地文件系统**（`memory/data/products/` 目录下）：测试用例、缺陷分析、评审记录、测试报告、团队数据、探索笔记
-- **持久化的前提**：每次写入前 AI **都会先询问你确认**，只有在你确认后才写入本地文件；你拒绝则跳过，本次输出不落盘
-- 所有数据**仅本地存储**：不自动上传到外部，仅注入当前对话上下文供本次任务使用，不发送给任何第三方服务
+- 本技能的**记忆模块**（`memory/`）会在本地文件系统**自动存储**以下数据：测试用例、缺陷分析、评审记录、测试报告、团队数据、探索笔记
+- 数据按产品模块组织，存储在本地 `memory/data/products/` 目录下
+- 所有数据**仅本地存储**，不会自动传输到外部
 
-### 需要你确认的操作（均为确认后才执行）
+### 需要你确认的操作
 - 记忆写入：每次写入前 AI 会询问你是否确认持久化
 - 版本清理：AI 会询问是否删除历史版本文件（默认保留最近 5 个版本）
 - 规范沉淀：自动提取的经验教训会先征求你的同意再写入
-
-### 历史记忆加载
-- 每次任务启动时，AI 会**先询问你是否加载该模块的历史记忆**，你确认后才扫描并读取 `memory/data/products/` 下的历史数据；你拒绝则按首次使用处理，不会读取任何历史文件
 
 ### 注意事项
 - ❗ **不要**在输入中粘贴真实的生产环境凭证、支付标识、客户个人信息或敏感截图，除非你的团队已明确批准本地留存
@@ -310,7 +284,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.6.5**
+当前版本：**v1.8.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 
