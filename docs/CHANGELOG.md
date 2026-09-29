@@ -2,6 +2,17 @@
 
 All notable changes to qa-team-skills will be documented in this file.
 
+## v1.8.0
+
+### 单 Skill 架构重构（2026-09-29）
+
+- **架构**：从"导航入口 + 7 个独立子 skill（skills/ 嵌套）"重构为**单个标准 Skill + references/ 按需加载**——多数 agent 只扫描 skills 目录第一层，嵌套子技能无法被独立发现；现在直接 clone 整个仓库到 skills 目录即可使用，无安装脚本
+- **触发**：根 SKILL.md 承载意图路由表（7 个能力模块），模块指令（references/qa-*.md）由 AI 按需读取，多需求场景按顺序依次加载执行
+- **模板**：输出模板从 templates/ 迁移至 assets/（requirement-template / agent-test-template / error-output），qa-case、qa-agent 建立显式模板引用
+- **清理**：移除对 agent 无效的内容（版本注释类标注、/qa-* 斜杠指令残留、"本 skill"自称统一为"本模块"）；记忆库路径统一为 `memory/data/products/` 前缀
+- **CI**：validate.sh 适配 references/ 结构并新增路由表覆盖断言；删除 install.sh；run-evals.sh 路径同步（44/44 契约断言、51/51 触发评测通过）
+- **文档**：README / user-manual / validation-rules / error-output 全面适配单 Skill 结构
+
 ## v1.7.0
 
 ### Trellis 式触发重构（2026-08-18）
