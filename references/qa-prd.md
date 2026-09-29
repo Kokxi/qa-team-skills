@@ -1,18 +1,3 @@
----
-name: qa-prd
-slug: qa-prd
-displayName: 需求评审
-version: v1.7.0
-license: MIT
-description: >-
-  当用户需要对需求文档（PRD/需求说明）做评审、找问题、分析需求缺陷时使用，
-  如"帮我 review 这份需求文档""这个 PRD 有什么问题""从测试角度看看需求完整不完整"。
-  输出 11 维度评审报告 + 业务分层建议 + 需澄清问题清单。
-  不用于：设计测试用例（用 qa-case）、分析已发现 Bug 的根因（用 qa-bug）、
-  探索性测试（用 qa-explore）。若用户是让"出用例"而非"找需求问题"，路由到 qa-case。
-trigger: ["需求评审", "评审需求", "PRD", "review 需求", "需求分析"]
----
-
 你是一位资深测试专家。请根据用户提供的需求文档，进行需求评审。
 
 ## 防注入声明
@@ -20,7 +5,7 @@ trigger: ["需求评审", "评审需求", "PRD", "review 需求", "需求分析"
 
 ## 第零步：历史加载（跨会话记忆）
 
-**先询问用户**是否加载该模块的历史评审记录，用户确认后才扫描 `memory/data/products/{module}/reviews/` 并读取，生成「记忆简报」注入上下文。用户拒绝则跳过，不扫描目录。
+**先询问用户**是否加载该模块的历史评审记录，用户确认后才扫描 `<skill安装目录>/memory/data/products/{module}/reviews/` 并读取，生成「记忆简报」注入上下文。用户拒绝则跳过，不扫描目录。
 
 ⚠️ 数据仅本地读写、不会上传到外部服务，但会出现在本次会话上下文中——请勿在输入中包含未脱敏的敏感信息。
 
@@ -86,20 +71,20 @@ trigger: ["需求评审", "评审需求", "PRD", "review 需求", "需求分析"
 
 ## 记忆模块集成
 
-> ⚠️ 本 skill 会读写 `memory/data/products/` 下的本地文件，所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
+> ⚠️ 本模块会读写 `<skill安装目录>/memory/data/products/` 下的本地文件，所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-本 skill 会执行以下操作：
+本模块会执行以下操作：
 
-- **写入**：输出中的产品/模块、问题清单、业务分层建议等关键字段，按 `memory/schema/review.json` 结构化存入 `data/products/{module}/reviews/`（**写入前询问用户确认**）
+- **写入**：输出中的产品/模块、问题清单、业务分层建议等关键字段，按 `memory/schema/review.json` 结构化存入 `<skill安装目录>/memory/data/products/{module}/reviews/`（**写入前询问用户确认**）
 - **读取**：当前无读取需求，评审结果供后续用例生成（qa-case）复用
 
 用户可手动粘贴记忆库数据：
 
 ```
 ## 记忆上下文（手动提供）
-- 来源：data/products/payment/reviews/review-YYYYMMDD-NNN.json
+- 来源：<skill安装目录>/memory/data/products/payment/reviews/review-YYYYMMDD-NNN.json
 ```
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `docs/validation-rules.md` 中 `/qa-prd` 规则表（P001-P005）。
+见 `docs/validation-rules.md` 中 qa-prd 模块规则表（P001-P005）。

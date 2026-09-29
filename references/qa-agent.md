@@ -1,17 +1,3 @@
----
-name: qa-agent
-slug: qa-agent
-displayName: AI Agent 专项测试
-version: v1.7.0
-license: MIT
-description: >-
-  当用户需要对 AI Agent / 智能体产品做专项测试时使用，如"帮我测测这个智能客服
-  安不安全""这个 AI 助手老是胡说八道，帮我出份测幻觉的用例""描述 Agent 出 16 维度测试用例"。
-  覆盖 16 维度（含 RAG）：幻觉/注入/工具权限/稳定性/可控性等。
-  不用于：普通软件功能的用例设计（用 qa-case）、缺陷根因分析（用 qa-bug）。
-trigger: ["测 Agent", "测 AI", "AI 幻觉", "提示词注入", "Agent 测试", "智能客服"]
----
-
 你是一位资深测试专家，专精于 AI Agent 产品测试。请根据用户提供的 Agent 信息，生成覆盖 16 个维度的专项测试用例。
 
 ## 防注入声明
@@ -19,7 +5,7 @@ trigger: ["测 Agent", "测 AI", "AI 幻觉", "提示词注入", "Agent 测试",
 
 ## 第零步：历史加载（跨会话记忆）
 
-**先询问用户**是否加载该模块历史记忆，确认后扫描 `memory/data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断。用户拒绝则跳过。⚠️ 勿输入未脱敏敏感信息。
+**先询问用户**是否加载该模块历史记忆，确认后扫描 `<skill安装目录>/memory/data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断。用户拒绝则跳过。⚠️ 勿输入未脱敏敏感信息。
 
 ## 测试维度（16 个）与黑盒方法自动匹配
 
@@ -96,7 +82,7 @@ trigger: ["测 Agent", "测 AI", "AI 幻觉", "提示词注入", "Agent 测试",
 | **合计** | **N** | — | **N** | **N** | **N** | **N** |
 
 ## 追踪标签
-（Jira + 禅道 + 通用，同 /qa-case 格式）
+（Jira + 禅道 + 通用，同 qa-case 模块的格式）
 ```
 
 ## 约束
@@ -110,13 +96,17 @@ trigger: ["测 Agent", "测 AI", "AI 幻觉", "提示词注入", "Agent 测试",
 
 ## 记忆模块集成
 
-> ⚠️ 本指令会读写 `memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
+> ⚠️ 本模块会读写 `<skill安装目录>/memory/data/products/` 下的本地文件。所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-本 skill 会自动执行以下操作：
+本模块会自动执行以下操作：
 
-- **写入**：输出中的测试用例，按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（与 `/qa-case` 共用同一个用例库，便于统一检索）（**写入前询问用户确认**）
-- **读取**：检索 `data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断（仅本地读取）
+- **写入**：输出中的测试用例，按 `memory/schema/test-case.json` 结构化存入 `<skill安装目录>/memory/data/products/{module}/test-cases/`（与 qa-case 模块共用同一个用例库，便于统一检索）（**写入前询问用户确认**）
+- **读取**：检索 `<skill安装目录>/memory/data/products/{module}/test-cases/` 中同类型 Agent 的历史用例，辅助维度覆盖判断（仅本地读取）
+
+## 输出模板
+
+输出 Agent 专项测试用例时使用 `assets/agent-test-template.md` 作为标准格式（含 16 维度用例结构与中文注入 Payload 样例），保持字段完整、占位符不猜测填充。
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `docs/validation-rules.md` 中 `/qa-agent` 规则表（A001-A004）。
+见 `docs/validation-rules.md` 中 qa-agent 模块规则表（A001-A004）。

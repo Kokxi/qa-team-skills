@@ -29,4 +29,4 @@ todo.md
 .omo/
 
 # Memory runtime data (仅本地，不入库)
-memory/data/
+memory/data/.playwright-mcp/

@@ -129,7 +129,7 @@ check_count() { # file pattern expected_count desc
 }
 
 # /qa-prd 契约：11 维度 + 业务分层 + 澄清 + 严重程度 + 无评审结论
-PRD="$SKILL_DIR/skills/qa-prd/SKILL.md"
+PRD="$SKILL_DIR/references/qa-prd.md"
 check_count "$PRD" '^\| [0-9]+ \|' 11 "prd 定义了 11 个评审维度行"
 check_contains "$PRD" '业务分层' "prd 含业务分层建议"
 check_contains "$PRD" '澄清|需澄清' "prd 含澄清问题清单"
@@ -143,7 +143,7 @@ else
 fi
 
 # /qa-case 契约：6 类型 + 业务分层 + 设计方法 + 动词开头
-CASE="$SKILL_DIR/skills/qa-case/SKILL.md"
+CASE="$SKILL_DIR/references/qa-case.md"
 check_contains "$CASE" '功能/边界/异常/安全/性能/兼容性' "case 列出 6 种测试类型"
 check_contains "$CASE" '核心层.*体验层.*增值层|业务分层' "case 含业务分层"
 check_contains "$CASE" '设计方法.*必填|必填.*设计方法' "case 标注设计方法必填"
@@ -151,7 +151,7 @@ check_contains "$CASE" '动词|可执行的动词' "case 要求步骤动词开�
 check_contains "$CASE" '信息泄露|错误提示.*通用化' "case 含信息泄露防护检查"
 
 # /qa-bug 契约：质量评估 + 根因 + 置信度 + 修复建议 + 回归要点
-BUG="$SKILL_DIR/skills/qa-bug/SKILL.md"
+BUG="$SKILL_DIR/references/qa-bug.md"
 check_contains "$BUG" '质量评估|达标' "bug 含质量评估"
 check_contains "$BUG" '根因分析|根因分类' "bug 含根因分析"
 check_contains "$BUG" '置信度' "bug 标注置信度"
@@ -159,19 +159,19 @@ check_contains "$BUG" '修复建议|修复方向' "bug 含修复建议"
 check_contains "$BUG" '回归' "bug 含回归测试要点"
 
 # /qa-report 契约：报告类型 + 简明摘要 + 来源标注
-REPORT="$SKILL_DIR/skills/qa-report/SKILL.md"
+REPORT="$SKILL_DIR/references/qa-report.md"
 check_contains "$REPORT" '日报|周报|阶段|季度|专项' "report 列出报告类型"
 check_contains "$REPORT" '简明摘要|30 秒速览|30秒速览' "report 含简明摘要"
 check_contains "$REPORT" '来源标注|数据来源' "report 要求来源标注"
 
 # /qa-team 契约：子能力 + 进度表格 + 风险标注 + 简明摘要
-TEAM="$SKILL_DIR/skills/qa-team/SKILL.md"
+TEAM="$SKILL_DIR/references/qa-team.md"
 check_contains "$TEAM" '进度看板|进度.*表格|子能力' "team 含子能力路由"
 check_contains "$TEAM" '风险|延期|延期风险' "team 含风险标注"
 check_contains "$TEAM" '简明摘要|简明' "team 含简明摘要"
 
 # /qa-agent 契约：16 维度 + 设计方法必填 + RAG 维度
-AGENT="$SKILL_DIR/skills/qa-agent/SKILL.md"
+AGENT="$SKILL_DIR/references/qa-agent.md"
 check_contains "$AGENT" '16 个维度|16维度' "agent 定义 16 个维度"
 check_contains "$AGENT" '设计方法.*必填|必填.*设计方法' "agent 设计方法必填"
 check_contains "$AGENT" 'RAG' "agent 含 RAG 维度"
@@ -188,7 +188,7 @@ else
 fi
 
 # /qa-explore 契约：探索任务卡 + 时间盒 + 起点不超过3
-EXPLORE="$SKILL_DIR/skills/qa-explore/SKILL.md"
+EXPLORE="$SKILL_DIR/references/qa-explore.md"
 check_contains "$EXPLORE" '探索任务|任务卡' "explore 含探索任务卡"
 check_contains "$EXPLORE" '时间盒' "explore 含时间盒"
 check_contains "$EXPLORE" '3 个|不超过 3|不超过3' "explore 限制起点不超过3"
@@ -199,9 +199,10 @@ for rule in 'P001' 'C001' 'B001' 'R001' 'T001' 'A001' 'E001'; do
   check_contains "$VAL" "$rule" "validation-rules 含规则 $rule"
 done
 
-# 双段式 description：7 个 skill 必须含"不用于"负向段（何时不用）
+# 单 Skill 架构：根 SKILL.md 路由表必须覆盖全部 7 个能力模块
+SKILL_ROOT="$SKILL_DIR/SKILL.md"
 for skill in prd case agent bug report team explore; do
-  check_contains "$SKILL_DIR/skills/qa-$skill/SKILL.md" '不用于' "qa-$skill 含负向排除（何时不用）"
+  check_contains "$SKILL_ROOT" "references/qa-$skill.md" "根路由表含 qa-$skill 模块"
 done
 
 # ── 3. 输出结果 + 归档报告 ──────────────────────

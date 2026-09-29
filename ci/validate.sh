@@ -21,17 +21,17 @@ check_file() {
 
 check_file "SKILL.md"
 check_file "VERSION"
-check_file "skills/qa-prd/SKILL.md"
-check_file "skills/qa-case/SKILL.md"
-check_file "skills/qa-agent/SKILL.md"
-check_file "skills/qa-bug/SKILL.md"
-check_file "skills/qa-report/SKILL.md"
-check_file "skills/qa-team/SKILL.md"
-check_file "skills/qa-explore/SKILL.md"
+check_file "references/qa-prd.md"
+check_file "references/qa-case.md"
+check_file "references/qa-agent.md"
+check_file "references/qa-bug.md"
+check_file "references/qa-report.md"
+check_file "references/qa-team.md"
+check_file "references/qa-explore.md"
 check_file "docs/user-manual.md"
-check_file "templates/requirement.md"
-check_file "templates/agent-test.md"
-check_file "templates/error-output.md"
+check_file "assets/requirement-template.md"
+check_file "assets/agent-test-template.md"
+check_file "assets/error-output.md"
 check_file "ci/forbidden.txt"
 check_file ".gitignore"
 check_file "docs/process-integration.md"
@@ -48,32 +48,34 @@ check_file "examples/team-demo.md"
 # ── 2. SKILL.md 必填字段检查 ──────────────────────────
 SKILL_MD="$SKILL_DIR/SKILL.md"
 if [[ -f "$SKILL_MD" ]]; then
-  for field in "name:" "description:" "Skill 总览" "通用约束" "版本管理" "能力矩阵"; do
+  for field in "name:" "description:" "执行流程" "通用约束" "能力矩阵"; do
     if ! grep -q "$field" "$SKILL_MD"; then
       ERRORS+=("SKILL.md 缺少必填字段: $field")
     fi
   done
+  # 路由表必须覆盖全部 7 个 references 模块
+  for f in "$SKILL_DIR"/references/*.md; do
+    name=$(basename "$f")
+    if ! grep -q "references/$name" "$SKILL_MD"; then
+      ERRORS+=("SKILL.md 路由表缺少模块引用: references/$name")
+    fi
+  done
 fi
 
-# ── 2.5 各 Skill 关键章节检查 ──────────────────────────
-for skill_dir in "$SKILL_DIR"/skills/*/; do
-  name=$(basename "$skill_dir")
-  skill_md="$skill_dir/SKILL.md"
+# ── 2.5 各能力模块关键章节检查 ──────────────────────────
+for ref in "$SKILL_DIR"/references/*.md; do
+  name=$(basename "$ref" .md)
   # 检查防注入声明
-  if ! grep -q "防注入声明" "$skill_md"; then
-    ERRORS+=("$name/SKILL.md 缺少「防注入声明」章节")
-  fi
-  # 检查双段式 description（负向排除）
-  if ! grep -q "不用于" "$skill_md"; then
-    ERRORS+=("$name/SKILL.md 缺少负向排除（何时不用）")
+  if ! grep -q "防注入声明" "$ref"; then
+    ERRORS+=("references/$name.md 缺少「防注入声明」章节")
   fi
   # 检查第零步记忆加载
-  if ! grep -q "历史加载" "$skill_md"; then
-    ERRORS+=("$name/SKILL.md 缺少历史加载流程")
+  if ! grep -q "历史加载" "$ref"; then
+    ERRORS+=("references/$name.md 缺少历史加载流程")
   fi
   # 检查输出前自检
-  if ! grep -q "输出前自检" "$skill_md"; then
-    ERRORS+=("$name/SKILL.md 缺少「输出前自检」章节")
+  if ! grep -q "输出前自检" "$ref"; then
+    ERRORS+=("references/$name.md 缺少「输出前自检」章节")
   fi
 done
 
@@ -82,9 +84,9 @@ FORBIDDEN_FILE="$SKILL_DIR/ci/forbidden.txt"
 if [[ -f "$FORBIDDEN_FILE" ]]; then
   while IFS= read -r word || [[ -n "$word" ]]; do
     [[ -z "$word" || "$word" =~ ^# ]] && continue
-    matches=$(grep -rn "$word" "$SKILL_DIR/prompts" "$SKILL_DIR/SKILL.md" 2>/dev/null || true)
+    matches=$(grep -rn "$word" "$SKILL_DIR/references" "$SKILL_DIR/SKILL.md" 2>/dev/null || true)
     if [[ -n "$matches" ]]; then
-      ERRORS+=("发现硬编码行业词 '$word' 在 prompt 或 SKILL.md 中: $matches")
+      ERRORS+=("发现硬编码行业词 '$word' 在 references 或 SKILL.md 中: $matches")
     fi
   done < "$FORBIDDEN_FILE"
 else
@@ -104,9 +106,12 @@ else
 fi
 
 # ── 5. 禁止残留旧目录 ─────────────────────────
-# 旧 Prompt 目录（prompts/）在 skills/ 迁移完成后删除；删除前提示
+# 旧 Prompt 目录（prompts/）与旧子技能目录（skills/）均已完成迁移
 if [[ -d "$SKILL_DIR/prompts" ]]; then
-  WARNINGS+=("prompts/ 目录仍存在——能力已迁移至 skills/，请确认迁移完整后删除")
+  WARNINGS+=("prompts/ 目录仍存在——能力已迁移至 references/，请确认迁移完整后删除")
+fi
+if [[ -d "$SKILL_DIR/skills" ]]; then
+  WARNINGS+=("skills/ 目录仍存在——子技能已迁移至 references/，请确认迁移完整后删除")
 fi
 OLD_DIRS=("prompts/req-analyze" "prompts/case-gen")
 for d in "${OLD_DIRS[@]}"; do
@@ -129,8 +134,8 @@ if [[ ${#ERRORS[@]} -gt 0 ]]; then
 else
   VERSION=$(cat "$VERSION_FILE")
   echo "✅ qa-team-skills $VERSION 校验通过"
-  echo "   - 6 个指令 Prompt 完整（含注入防护+自检）"
-  echo "   - SKILL.md 字段完整"
+  echo "   - 7 个能力模块完整（含注入防护+自检+历史加载）"
+  echo "   - SKILL.md 字段与路由表完整"
   echo "   - 模板文件完整"
   echo "   - 无硬编码行业词"
   echo "   - 无旧目录残留"

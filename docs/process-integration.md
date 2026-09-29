@@ -1,6 +1,6 @@
 # qa-team-skills 流程嵌入指南
 
-> 如何将 6 大指令嵌入研发流程的标准节点，确保 AI 辅助融入日常而非附加品。
+> 如何将各能力模块（qa-prd/qa-case/qa-agent/qa-bug/qa-report/qa-team/qa-explore）嵌入研发流程的标准节点，确保 AI 辅助融入日常而非附加品。
 
 ## 版本生命周期中的嵌入点
 

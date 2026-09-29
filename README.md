@@ -1,8 +1,8 @@
 # qa-team-skills
 
-> 为测试团队设计的统一 AI 辅助能力——7 个独立 Skill（需求评审/用例设计/Agent 专项/缺陷分析/报告/团队管理/探索性测试）+ 记忆模块 + 完整验证体系，AI 按自然语言自动挑选加载，覆盖需求评审到团队管理。
+> 为测试团队设计的统一 AI 辅助能力——单个标准 Skill 内置 7 个能力模块（需求评审/用例设计/Agent 专项/缺陷分析/报告/团队管理/探索性测试）+ 记忆模块 + 完整验证体系，AI 按用户意图路由、按需加载，覆盖需求评审到团队管理。
 
-[![Version](https://img.shields.io/badge/version-v1.7.0-blue)](./VERSION)
+[![Version](https://img.shields.io/badge/version-v1.8.0-blue)](./VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![skills.sh](https://skills.sh/b/Kokxi/qa-team-skills)](https://skills.sh/Kokxi/qa-team-skills)
 
@@ -117,7 +117,7 @@ cp -r qa-team-skills ~/.claude/skills/
 cp -r qa-team-skills ./.github/skills/
 ```
 
-> ⚠️ **关于 Skill 触发的说明**：本技能的 7 个 Skill（qa-prd、qa-case、qa-agent、qa-bug、qa-report、qa-team、qa-explore）各自是**独立技能包**（`skills/` 目录下的 SKILL.md），由 AI 读取各 SKILL.md 的触发描述后**自动挑选加载**——你甚至不需要提 skill 名，直接说"帮我设计登录功能的测试用例"就会命中 qa-case。安装到 Agent 的 skills 目录后即生效，无需注册任何斜杠命令。
+> 💡 **关于 Skill 触发的说明**：本技能为**单个标准 Skill**，7 个能力模块（qa-prd、qa-case、qa-agent、qa-bug、qa-report、qa-team、qa-explore）内置于 `references/` 目录，由 AI 读取根 `SKILL.md` 的意图路由表后**按需加载对应模块**——你甚至不需要提模块名，直接说"帮我设计登录功能的测试用例"就会命中 qa-case。安装到 Agent 的 skills 目录后即生效，无需注册任何斜杠命令。
 
 #### 方式二：一键安装（npx skills）
 
@@ -152,7 +152,7 @@ clawhub install qa-team-skills  # 安装技能
 
 ### 示例
 
-**[examples/](./examples/)** 目录包含全部 6 个指令的完整输入输出示例（均来自真实测试场景）：
+**[examples/](./examples/)** 目录包含全部能力模块的完整输入输出示例（统一入口 + 7 个能力模块，均来自真实测试场景）：
 
 | 示例                                          | 指令           | 场景                  |
 | ------------------------------------------- | ------------ | ------------------- |
@@ -170,25 +170,25 @@ clawhub install qa-team-skills  # 安装技能
 
 ```
 qa-team-skills/
-├── SKILL.md                      # 仓库级总览：7 Skill 总览 + 架构 + 人工校验规则（人读）
+├── SKILL.md                      # 唯一入口：意图路由表 + 能力与信任边界声明 + 通用约束
 ├── VERSION                       # 当前版本
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT
-├── skills/                       # ★ 7 个独立 Skill（各带 SKILL.md，AI 自动挑选）
-│   ├── qa-prd/SKILL.md          #   需求评审（11 维度 + 业务分层）
-│   ├── qa-case/SKILL.md         #   用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
-│   ├── qa-agent/SKILL.md        #   Agent 专项（16 维度含 RAG）
-│   ├── qa-bug/SKILL.md          #   缺陷分析（质量评估 + 根因 + 批量）
-│   ├── qa-report/SKILL.md       #   报告生成（5 种）
-│   ├── qa-team/SKILL.md         #   团队管理（11 子能力 + 路由）
-│   └── qa-explore/SKILL.md      #   探索性测试（三阶段 + Session 笔记 + Debrief）
-├── memory/                       # 记忆模块（v1.4.0 新增）
+├── references/                   # ★ 7 个能力模块（AI 按路由表按需加载）
+│   ├── qa-prd.md                #   需求评审（11 维度 + 业务分层）
+│   ├── qa-case.md               #   用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
+│   ├── qa-agent.md              #   Agent 专项（16 维度含 RAG）
+│   ├── qa-bug.md                #   缺陷分析（质量评估 + 根因 + 批量）
+│   ├── qa-report.md             #   报告生成（5 种）
+│   ├── qa-team.md               #   团队管理（11 子能力 + 路由）
+│   └── qa-explore.md            #   探索性测试（三阶段 + Session 笔记 + Debrief）
+├── memory/                       # 记忆模块
 │   ├── README.md                 #   模块说明（含合并/清理/去重规则）
-│   ├── schema/                   #   6 个 JSON Schema 数据模型
+│   ├── schema/                   #   7 个 JSON Schema 数据模型
 │   └── data/products/            #   按产品模块沉淀的用例/缺陷/规范/报告库
-├── templates/                    # 输出模板
-│   ├── requirement.md            #   通用测试用例模板
-│   ├── agent-test.md             #   Agent 专项模板（含中文 Payload）
+├── assets/                       # 输出模板（按需加载）
+│   ├── requirement-template.md   #   通用测试用例模板
+│   ├── agent-test-template.md    #   Agent 专项模板（含中文 Payload）
 │   └── error-output.md           #   统一错误格式
 ├── examples/
 │   ├── README.md
@@ -203,10 +203,9 @@ qa-team-skills/
 │   ├── test-memory-stress.sh     #   长期积累压测（10 轮迭代 6 项断言）
 │   ├── run_llm_eval.py           #   真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
 │   ├── forbidden.txt             #   禁止词列表
-│   └── commit-msg.txt            #   提交规范
 ├── evals/                        # 评测数据集 + 历史归档
 │   ├── functional-eval.json      #   功能评测集（8 条 eval + 契约断言）
-│   ├── trigger-eval.json         #   触发评测集（38 条）
+│   ├── trigger-eval.json         #   触发评测集（51 条）
 │   ├── security-eval.json        #   安全对抗评测集（8 条 7 种攻击）★ v1.5 新增
 │   ├── _smoke.json               #   冒烟评测集
 │   ├── human-review/             #   人工双盲评测方案（5 维度评分+双盲流程）
@@ -216,7 +215,7 @@ qa-team-skills/
     ├── CHANGELOG.md              # 变更日志
     ├── process-integration.md    # 流程嵌入指南
     ├── version-policy.md         # 版本治理策略
-    ├── ci-testing.md             # CI 与质量验证（6 套脚本金字塔）★ v1.5 新增
+    ├── ci-testing.md             # CI 与质量验证（5 套脚本 + 人工双盲评测金字塔）★ v1.5 新增
     └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档 ★ v1.5 新增
 ```
 
@@ -285,7 +284,7 @@ qa-team-skills/
 
 ## 版本
 
-当前版本：**v1.7.0**
+当前版本：**v1.8.0**
 
 详见 [`docs/CHANGELOG.md`](./docs/CHANGELOG.md)
 

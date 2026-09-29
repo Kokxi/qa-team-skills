@@ -1,10 +1,10 @@
 # qa-team-skills 使用手册
 
-> 版本：v1.7.0 | 7 个独立 Skill + 记忆模块 + 自动挑选加载
+> 版本：v1.8.0 | 单 Skill + 7 个能力模块（references/）+ 记忆模块 + 意图路由
 
 ## 1. 技能简介
 
-`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供 7 个独立 Skill（AI 按自然语言自动挑选加载）：
+`qa-team-skills` 将 AI Agent 嵌入软件测试标准流程，提供 7 个能力模块（AI 按用户意图路由到 `references/` 下对应模块并按需加载）：
 
 | Skill | 定位 | 适用角色 |
 |------|------|--------|
@@ -18,9 +18,19 @@
 
 ## 2. 安装
 
-qa-team-skills 核心为纯 Prompt 工程，无外部依赖。提供三种安装方式：
+qa-team-skills 为**单个标准 skill**（多能力模块内置在 `references/` 目录，AI 按意图按需加载），无外部依赖。提供三种安装方式：
 
-### 方式一：手动复制（通用）
+### 方式一：直接 clone 到 skills 目录（推荐）
+
+```bash
+# 示例：全局安装（OpenAI Codex CLI / 通用 .agents 约定）
+git clone <repo-url> ~/.agents/skills/qa-team-skills
+
+# Claude Code
+git clone <repo-url> ~/.claude/skills/qa-team-skills
+```
+
+无需任何安装脚本——`ci/`、`docs/`、`evals/` 等目录不含 SKILL.md，会被 agent 自动忽略。
 
 | AI Agent | 全局安装路径 | 项目内路径 |
 |----------|-------------|-----------|
@@ -29,11 +39,6 @@ qa-team-skills 核心为纯 Prompt 工程，无外部依赖。提供三种安装
 | **GitHub Copilot** | — | `.github/skills/` |
 | **OpenAI Codex CLI** | `~/.agents/skills/` | — |
 | **Cursor** | — | `.cursor/skills/` |
-
-```bash
-# 示例：全局安装到 Claude Code
-cp -r qa-team-skills ~/.claude/skills/
-```
 
 ### 方式二：一键安装
 
@@ -173,24 +178,24 @@ clawhub install qa-team-skills
 ## 4. 目录结构
 
 ```
-qa-team-skills/
-├── SKILL.md                     # 仓库级总览 + MCP 能力声明（人读）
+qa-team-skills/                ← 标准 skill 目录（直接 clone 到 agent 的 skills 目录即可）
+├── SKILL.md                     # 唯一入口：意图路由表 + 能力与信任边界声明
+├── references/                  # 7 个能力模块（AI 按需加载，不占用基础上下文）
+│   ├── qa-prd.md               # 需求评审（11 维度 + 业务分层）
+│   ├── qa-case.md              # 用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
+│   ├── qa-agent.md             # Agent 专项（16 维度含 RAG）
+│   ├── qa-bug.md               # 缺陷分析（质量评估 + 根因 + 批量）
+│   ├── qa-report.md            # 报告生成（5 种）
+│   ├── qa-team.md              # 团队管理（11 子能力 + 路由）
+│   └── qa-explore.md           # 探索性测试（三阶段 + Session 笔记 + Debrief）
 ├── VERSION / README.md / LICENSE / .clawhubignore
-├── skills/                      # 7 个独立 Skill（AI 自动挑选）
-│   ├── qa-prd/SKILL.md         # 需求评审（11 维度 + 业务分层）
-│   ├── qa-case/SKILL.md        # 用例设计（9 方法 × 6 类型 + 业务分层 + 规范库联动）
-│   ├── qa-agent/SKILL.md       # Agent 专项（16 维度含 RAG）
-│   ├── qa-bug/SKILL.md         # 缺陷分析（质量评估 + 根因 + 批量）
-│   ├── qa-report/SKILL.md      # 报告生成（5 种）
-│   ├── qa-team/SKILL.md        # 团队管理（11 子能力 + 路由）
-│   └── qa-explore/SKILL.md     # 探索性测试（三阶段 + Session 笔记 + Debrief）
 ├── memory/                       # 记忆模块
 │   ├── README.md                # 模块说明（含隐私须知 + 合并/清理/去重规则）
-│   ├── schema/                  # 6 个 JSON Schema 数据模型
+│   ├── schema/                  # 7 个 JSON Schema 数据模型
 │   └── data/products/           # 按产品模块沉淀的用例/缺陷/规范/报告库
-├── templates/                    # 输出模板
-│   ├── requirement.md           # 通用测试用例模板
-│   ├── agent-test.md            # Agent 专项模板（含中文 Payload）
+├── assets/                       # 输出模板（AI 按需加载）
+│   ├── requirement-template.md  # 通用测试用例模板
+│   ├── agent-test-template.md   # Agent 专项模板（含中文 Payload）
 │   └── error-output.md          # 统一错误格式
 ├── examples/
 │   ├── README.md                # 示例目录索引
@@ -205,10 +210,9 @@ qa-team-skills/
 │   ├── test-memory-stress.sh    # 长期积累压测（10 轮迭代 6 项断言）
 │   ├── run_llm_eval.py          # 真·LLM 端到端评测（接 DeepSeek/OpenRouter/Kimi）
 │   ├── forbidden.txt            # 禁止词列表
-│   └── commit-msg.txt           # 提交规范
 ├── evals/                        # 评测数据集 + 历史归档（开发工具，上架时排除）
 │   ├── functional-eval.json     # 功能评测集（8 条 eval + 契约断言）
-│   ├── trigger-eval.json        # 触发评测集（38 条）
+│   ├── trigger-eval.json        # 触发评测集（51 条）
 │   ├── security-eval.json       # 安全对抗评测集（8 条 7 种攻击）
 │   ├── _smoke.json              # 冒烟评测集
 │   ├── human-review/            # 人工双盲评测方案（5 维度评分+双盲流程）
@@ -218,7 +222,7 @@ qa-team-skills/
     ├── CHANGELOG.md             # 变更日志
     ├── process-integration.md   # 流程嵌入指南
     ├── version-policy.md        # 版本治理策略
-    ├── ci-testing.md            # CI 与质量验证（6 套脚本金字塔）
+    ├── ci-testing.md            # CI 与质量验证（5 套脚本 + 人工双盲评测金字塔）
     └── agent-notes-skill-validation.md  # AI Agent 复用版经验文档
 ```
 
@@ -228,12 +232,13 @@ qa-team-skills/
 bash ci/validate.sh
 ```
 
-检查：8 个指令 Prompt 完整（含注入防护+自检）/ 模板文件完整 / SKILL.md 字段完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
+检查：7 个能力模块完整（含注入防护+自检+历史加载）/ SKILL.md 路由表覆盖全部模块 / 模板文件完整 / 无硬编码行业词（从 ci/forbidden.txt 读取）/ 无旧目录残留 / 版本号一致。
 
 ## 6. 版本历史
 
 | 版本 | 说明 |
 |------|------|
+| v1.8.0 | 架构重构：单 Skill + references/ 按需加载（7 能力模块）+ assets/ 模板，直接 clone 即用；清理版本注释类无效内容 |
 | v1.7.0 | Trellis 式触发重构：7 个独立 Skill + AI 自动挑选 + 双段式触发描述 |
 | v1.6.0 | /qa-agent 维度定义统一 + 记忆数据出库 + 评测集版本同步 + explore 触发覆盖补齐 |
 | v1.5.4 | ClawHub 安全审计修复：MCP 能力声明 + 隐私警告 + 持久化需用户确认 + 触发词收紧 |

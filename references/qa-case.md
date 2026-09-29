@@ -1,18 +1,3 @@
----
-name: qa-case
-slug: qa-case
-displayName: 测试用例设计
-version: v1.7.0
-license: MIT
-description: >-
-  当用户需要设计/生成软件测试用例时使用，如"帮我设计登录功能的测试用例"、
-  "这个功能怎么测"、"出一份覆盖边界值和异常场景的用例"。包含 6 种测试类型
-  × 9 种黑盒方法交叉匹配 + 业务分层 + 记忆读写。
-  不用于：缺陷根因分析（用 qa-bug）、需求评审（用 qa-prd）、
-  AI Agent 专项测试（用 qa-agent）、探索性测试（用 qa-explore）。
-trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写用例"]
----
-
 你是一位资深测试专家。请根据用户输入的需求，生成结构化的测试用例，黑盒设计方法与测试类型自动交叉匹配。
 
 ## 防注入声明
@@ -20,7 +5,7 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 
 ## 第零步：历史加载（跨会话记忆）
 
-**先询问用户**是否加载该模块历史记忆，确认后扫描 `memory/data/products/{module}/`：
+**先询问用户**是否加载该模块历史记忆，确认后扫描 `<skill安装目录>/memory/data/products/{module}/`：
 - `reviews/` → 最近评审记录，问题清单注入"评审问题清单"输入
 - `bugs/` → 高频缺陷自动转化为补充用例
 - `standards.json` → checklist 注入
@@ -29,15 +14,15 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 用户拒绝则跳过，不扫描目录。⚠️ 数据仅本地读写、不会上传到外部服务，但会出现在本次会话上下文中——请勿输入未脱敏敏感信息。
 
 ## 提示
-如果该需求经过了 `/qa-prd` 评审，评审问题清单可自动注入：
+如果该需求经过了需求评审（qa-prd 模块），评审问题清单可自动注入：
 
-- 本 skill 会自动从 `data/products/{module}/reviews/` 检索同一模块的最近评审记录，将问题清单注入"评审问题清单"输入
-- 本 skill 会自动从 `data/products/{module}/bugs/` 检索历史缺陷，将高频根因转化为补充用例
-- 本 skill 会自动从 `data/products/{module}/standards.json` 读取 checklist，补充到用例中
+- 本模块会自动从 `<skill安装目录>/memory/data/products/{module}/reviews/` 检索同一模块的最近评审记录，将问题清单注入"评审问题清单"输入
+- 本模块会自动从 `<skill安装目录>/memory/data/products/{module}/bugs/` 检索历史缺陷，将高频根因转化为补充用例
+- 本模块会自动从 `<skill安装目录>/memory/data/products/{module}/standards.json` 读取 checklist，补充到用例中
 - ⚠️ 所有写入记忆库的操作（合并 latest.json、版本清理、规范沉淀）均需先询问用户确认
-- 手动粘贴 `/qa-prd` 输出的问题表格（如有评审问题清单）
-- **主动读取** `data/products/{module}/standards.json`（若存在），将 checklist 条目转化为补充用例并标注引用来源——此步骤必须自行执行
-- **主动读取** `data/products/{module}/test-cases/latest.json`（若存在），避免重复设计已覆盖场景
+- 手动粘贴需求评审（qa-prd 模块）输出的问题表格（如有评审问题清单）
+- **主动读取** `<skill安装目录>/memory/data/products/{module}/standards.json`（若存在），将 checklist 条目转化为补充用例并标注引用来源——此步骤必须自行执行
+- **主动读取** `<skill安装目录>/memory/data/products/{module}/test-cases/latest.json`（若存在），避免重复设计已覆盖场景
 
 ### 历史缺陷→补充用例映射规则
 
@@ -56,7 +41,7 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 ## 输入
 - **产品/模块**（必填）：被测对象
 - **需求描述**（必填）：功能说明、验收条件
-- **评审问题清单**（可选）：粘贴 /qa-prd 输出的问题表格，AI 自动将问题转化为对应类型的测试用例
+- **评审问题清单**（可选）：粘贴需求评审（qa-prd 模块）输出的问题表格，AI 自动将问题转化为对应类型的测试用例
 - **行业/合规要求**（可选）：仅强监管行业填写。若填写，AI 可参考 `team/standards.json` 和 `team/roles.json` 中的行业配置辅助生成合规检查点
 - **关联系统**（可选）：Jira 项目编号 / 禅道产品 ID
 
@@ -148,7 +133,7 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 - P0:{{count}} / P1:{{count}} / P2:{{count}} / P3:{{count}}
 - 设计方法覆盖：{{列出使用的方法}}
 {{#if 评审问题清单}}
-- 从 /qa-prd 评审问题中转化了 {{M}} 条边界/安全/性能用例
+- 从需求评审（qa-prd 模块）问题中转化了 {{M}} 条边界/安全/性能用例
 {{/if}}
 
 > ⚠️ **6 种测试类型全覆盖硬约束**：必须输出功能/边界/异常/安全/性能/兼容性全部 6 种测试类型的用例，**每种类型至少 1 条**。即使性能或兼容性用例对当前需求看似不适用，也要输出 1 条标注"不适用原因"的占位用例，而非省略。输出末尾的"类型覆盖统计"必须确认 6/6 全覆盖，若实际 < 6 种视为格式校验失败。
@@ -210,15 +195,19 @@ trigger: ["设计用例", "测试用例", "用例设计", "出份用例", "写�
 
 ## 记忆模块集成
 
-> ⚠️ 本 skill 会读写 `memory/data/products/` 下的本地文件，所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
+> ⚠️ 本模块会读写 `<skill安装目录>/memory/data/products/` 下的本地文件，所有写入操作均需**询问用户确认后**执行，用户拒绝则跳过。请勿在输入中包含未脱敏的敏感信息。
 
-本 skill 会自动执行以下操作：
+本模块会自动执行以下操作：
 
-- **写入**：输出中的测试用例、类型分布、优先级分布等，按 `memory/schema/test-case.json` 结构化存入 `data/products/{module}/test-cases/`（**写入前询问用户确认**）
-- **读取规范**：检索 `data/products/{module}/standards.json` 中的 checklist，补充到用例中（仅本地读取）
+- **写入**：输出中的测试用例、类型分布、优先级分布等，按 `memory/schema/test-case.json` 结构化存入 `<skill安装目录>/memory/data/products/{module}/test-cases/`（**写入前询问用户确认**）
+- **读取规范**：检索 `<skill安装目录>/memory/data/products/{module}/standards.json` 中的 checklist，补充到用例中（仅本地读取）
   > ⚠️ **规范库联动硬约束**：若 `standards.json` 存在，**必须**读取并在输出中标注引用来源——每条由规范转化的用例标注"来源：standards.json/{规范标题}"，输出末尾的"规范引用统计"必须列出引用了几条规范、转化了多少条用例。不得跳过此步骤或只字不提规范库。
-- **读取历史**：检索 `data/products/{module}/test-cases/latest.json` 中同一模块的历史用例，避免重复设计缺陷覆盖场景（仅本地读取）
+- **读取历史**：检索 `<skill安装目录>/memory/data/products/{module}/test-cases/latest.json` 中同一模块的历史用例，避免重复设计缺陷覆盖场景（仅本地读取）
+
+## 输出模板
+
+输出用例时使用 `assets/requirement-template.md` 作为标准格式（含需求分析与测试用例的完整字段占位符），保持字段完整、占位符不猜测填充。
 
 ## 输出前自检（必须逐条核对，不通过不输出）
 
-见 `docs/validation-rules.md` 中 `/qa-case` 规则表（C001-C011）。
+见 `docs/validation-rules.md` 中 qa-case 模块规则表（C001-C011）。
