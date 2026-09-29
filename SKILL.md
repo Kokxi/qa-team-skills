@@ -1,5 +1,6 @@
 ---
 name: qa-team-skills
+slug: qa-team-skills
 license: MIT
 description: >-
   QA 团队测试技能包：当用户提出测试相关需求——需求评审、测试用例设计、
